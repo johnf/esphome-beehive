@@ -46,22 +46,22 @@ void BeeAudioComponent::setup() {
   }
 
   // Generate Hanning window manually (avoids ESP-DSP alignment issues)
-  for (size_t i = 0; i < this->fft_size_; i++) {
-    this->window_[i] =
-        0.5f * (1.0f - cosf(2.0f * M_PI * static_cast<float>(i) /
-                            static_cast<float>(this->fft_size_ - 1)));
-  }
-
-  // Initialise FFT tables
-  esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
-  if (ret != ESP_OK) {
-    ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
-    this->deinit_i2s_();
-    this->free_buffers_();
-    this->mark_failed();
-
-    return;
-  }
+  // for (size_t i = 0; i < this->fft_size_; i++) {
+  //   this->window_[i] =
+  //       0.5f * (1.0f - cosf(2.0f * M_PI * static_cast<float>(i) /
+  //                           static_cast<float>(this->fft_size_ - 1)));
+  // }
+  //
+  // // Initialise FFT tables
+  // esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
+  // if (ret != ESP_OK) {
+  //   ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
+  //   this->deinit_i2s_();
+  //   this->free_buffers_();
+  //   this->mark_failed();
+  //
+  //   return;
+  // }
 
   ESP_LOGCONFIG(TAG, "Bee Audio initialised successfully");
 }
@@ -164,7 +164,7 @@ bool BeeAudioComponent::init_i2s_() {
   i2s_chan_config_t chan_cfg =
       I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_0, I2S_ROLE_MASTER);
   chan_cfg.dma_desc_num = 8;
-  chan_cfg.dma_frame_num = 512;  // 8 * 512 = 4096 samples of DMA buffer
+  chan_cfg.dma_frame_num = 512; // 8 * 512 = 4096 samples of DMA buffer
 
   esp_err_t ret = i2s_new_channel(&chan_cfg, nullptr, &this->rx_chan_);
   if (ret != ESP_OK) {
@@ -178,7 +178,7 @@ bool BeeAudioComponent::init_i2s_() {
   i2s_std_config_t std_cfg = {
       .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(this->sample_rate_),
       .slot_cfg = I2S_STD_MSB_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT,
-                                                   I2S_SLOT_MODE_MONO),
+                                                  I2S_SLOT_MODE_MONO),
       .gpio_cfg =
           {
               .mclk = I2S_GPIO_UNUSED,
@@ -339,7 +339,7 @@ bool BeeAudioComponent::capture_audio_() {
 
   // INMP441 outputs 24-bit data left-justified in 32-bit word
   // Convert to normalised float [-1.0, 1.0]
-  const float scale = 1.0f / 8388608.0f;  // 2^23
+  const float scale = 1.0f / 8388608.0f; // 2^23
   for (size_t i = 0; i < this->fft_size_; i++) {
     // Shift right by 8 to get 24-bit value, then normalise
     int32_t sample = this->raw_samples_[i] >> 8;
