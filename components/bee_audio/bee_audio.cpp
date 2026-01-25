@@ -38,10 +38,10 @@ void BeeAudioComponent::setup() {
     return;
   }
 
-  // // Generate Hanning window
-  // dsps_wind_hann_f32(this->window_, this->fft_size_);
-  //
-  // // Initialise FFT tables
+  // Generate Hanning window
+  dsps_wind_hann_f32(this->window_, this->fft_size_);
+
+  // Initialise FFT tables
   // esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
   // if (ret != ESP_OK) {
   //   ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
