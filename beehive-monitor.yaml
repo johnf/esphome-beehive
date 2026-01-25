@@ -34,8 +34,6 @@ wifi:
   power_save_mode: none # Disable during measurement window
 
 api:
-  encryption:
-    key: !secret api_key
 
 logger:
   level: INFO
