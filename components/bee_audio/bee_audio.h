@@ -7,6 +7,7 @@
 
 #include "driver/i2s_std.h"
 #include "esp_dsp.h"
+#include "esp_heap_caps.h"
 
 namespace esphome {
 namespace bee_audio {

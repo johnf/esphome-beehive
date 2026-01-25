@@ -218,46 +218,48 @@ void BeeAudioComponent::deinit_i2s_() {
 bool BeeAudioComponent::allocate_buffers_() {
   ESP_LOGD(TAG, "Allocating buffers for FFT size %u...", this->fft_size_);
 
-  // Raw I2S samples (32-bit signed)
+  // ESP-DSP requires 16-byte aligned memory for SIMD operations
+  const size_t alignment = 16;
+
+  // Raw I2S samples (32-bit signed) - needs DMA capability
   this->raw_samples_ = static_cast<int32_t *>(
-      heap_caps_malloc(this->fft_size_ * sizeof(int32_t), MALLOC_CAP_DMA));
+      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(int32_t), MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL));
   if (this->raw_samples_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate raw_samples buffer");
 
     return false;
   }
 
-  // Normalised float samples
+  // Normalised float samples - 16-byte aligned for ESP-DSP
   this->samples_ = static_cast<float *>(
-      heap_caps_malloc(this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
   if (this->samples_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate samples buffer");
 
     return false;
   }
 
-  // FFT data (interleaved real/imag, so 2x size)
-  this->fft_data_ = static_cast<float *>(heap_caps_malloc(
-      this->fft_size_ * 2 * sizeof(float), MALLOC_CAP_INTERNAL));
+  // FFT data (interleaved real/imag, so 2x size) - 16-byte aligned for ESP-DSP
+  this->fft_data_ = static_cast<float *>(
+      heap_caps_aligned_alloc(alignment, this->fft_size_ * 2 * sizeof(float), MALLOC_CAP_INTERNAL));
   if (this->fft_data_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate fft_data buffer");
 
     return false;
   }
 
-  // Magnitude spectrum (only need fft_size/2 + 1 bins, but allocate full for
-  // simplicity)
+  // Magnitude spectrum - 16-byte aligned for ESP-DSP
   this->magnitude_ = static_cast<float *>(
-      heap_caps_malloc(this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
   if (this->magnitude_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate magnitude buffer");
 
     return false;
   }
 
-  // Hanning window
+  // Hanning window - 16-byte aligned for ESP-DSP
   this->window_ = static_cast<float *>(
-      heap_caps_malloc(this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
   if (this->window_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate window buffer");
 
