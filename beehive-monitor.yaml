@@ -54,13 +54,13 @@ api:
 
 logger:
   level: INFO
-# I2C bus for NAU7802 and SHT40
-# i2c:
-#   sda: GPIO21
-#   scl: GPIO22
-#   scan: true
-#   #scan: false # Faster boot
 
+# I2C bus for NAU7802 and SHT40
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  #scan: false # Faster boot
 # Custom bee audio component (INMP441 microphone)
 # Pins:
 #   - LRCLK (WS): GPIO25
