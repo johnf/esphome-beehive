@@ -21,10 +21,10 @@ substitutions:
 esphome:
   name: beehive-monitor
   friendly_name: Beehive Monitor
-  on_boot:
-    priority: -100 # Run after all components initialised
-    then:
-      - script.execute: collect_and_sleep
+#  on_boot:
+#    priority: -100 # Run after all components initialised
+#    then:
+#      - script.execute: collect_and_sleep
 
 esp32:
   board: esp32dev
@@ -32,10 +32,10 @@ esp32:
     type: esp-idf
     version: recommended
 
-external_components:
-  - source: github://johnf/esphome-beehive
-    components: [bee_audio]
-    refresh: 0s
+#external_components:
+#  - source: github://johnf/esphome-beehive
+#    components: [bee_audio]
+#    refresh: 0s
 
 # Deep sleep configuration - 5 minute intervals
 #deep_sleep:
@@ -54,13 +54,12 @@ api:
 
 logger:
   level: INFO
-
 # I2C bus for NAU7802 and SHT40
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-  scan: true
-  #scan: false # Faster boot
+# i2c:
+#   sda: GPIO21
+#   scl: GPIO22
+#   scan: true
+#   #scan: false # Faster boot
 
 # Custom bee audio component (INMP441 microphone)
 # Pins:
@@ -70,108 +69,108 @@ i2c:
 #   - VDD:        3.3V
 #   - GND:        GND
 #   - L/R:        GND (left channel)
-bee_audio:
-  id: bee_monitor
-  i2s_lrclk_pin: GPIO25
-  i2s_bclk_pin: GPIO32
-  i2s_din_pin: GPIO33
-  sample_rate: 8000
-  fft_size: 2048
+# bee_audio:
+#   id: bee_monitor
+#   i2s_lrclk_pin: GPIO25
+#   i2s_bclk_pin: GPIO32
+#   i2s_din_pin: GPIO33
+#   sample_rate: 8000
+#   fft_size: 2048
 
-sensor:
-  # Bee audio frequency bands (power in dB)
-  - platform: bee_audio
-    bee_audio_id: bee_monitor
-    band_low_freq:
-      name: "Bee Low Frequency (60-100Hz)"
-      id: bee_low_freq
-    band_baseline:
-      name: "Bee Baseline Hum (100-200Hz)"
-      id: bee_baseline
-    band_worker:
-      name: "Bee Worker Activity (180-260Hz)"
-      id: bee_worker
-    band_quacking:
-      name: "Bee Queen Quacking (200-350Hz)"
-      id: bee_quacking
-    band_tooting:
-      name: "Bee Queen Tooting (350-500Hz)"
-      id: bee_tooting
-    band_queenless_mid:
-      name: "Bee Queenless Mid (478-677Hz)"
-      id: bee_queenless_mid
-    band_queenless_high:
-      name: "Bee Queenless High (876-1080Hz)"
-      id: bee_queenless_high
-    dominant_frequency:
-      name: "Bee Dominant Frequency"
-      id: bee_dominant_freq
-    sound_level_rms:
-      name: "Bee Sound Level"
-      id: bee_sound_level
-    spectral_centroid:
-      name: "Bee Spectral Centroid"
-      id: bee_spectral_centroid
-
-  # NAU7802 load cell ADC (hive weight)
-  # Calibration: Adjust the calibrate_linear filter based on your load cells
-  # 1. Record raw value with empty hive
-  # 2. Record raw value with known weight
-  # 3. Update the linear calibration
-  - platform: nau7802
-    id: hive_weight
-    name: "Hive Weight"
-    gain: 128
-    unit_of_measurement: "kg"
-    accuracy_decimals: 2
-    filters:
-      - calibrate_linear:
-          - ${weight_cal_raw_1} -> ${weight_cal_kg_1}
-          - ${weight_cal_raw_2} -> ${weight_cal_kg_2}
-          - ${weight_cal_raw_3} -> ${weight_cal_kg_3}
-          - ${weight_cal_raw_4} -> ${weight_cal_kg_4}
-
-  # SHT40 temperature and humidity
-  - platform: sht4x
-    temperature:
-      name: "Hive Temperature"
-      id: hive_temp
-    humidity:
-      name: "Hive Humidity"
-      id: hive_humidity
-
-  # Battery voltage monitoring (optional)
-  # Connect battery through voltage divider to GPIO34
-  # - platform: adc
-  #   pin: GPIO34
-  #   name: 'Battery Voltage'
-  #   id: battery_voltage
-  #   attenuation: 11db
-  #   filters:
-  #     - multiply: 2.0  # Voltage divider ratio
-
-binary_sensor:
-  - platform: bee_audio
-    bee_audio_id: bee_monitor
-    queen_piping:
-      name: "Queen Piping Detected"
-      id: queen_piping
-
-text_sensor:
-  - platform: bee_audio
-    bee_audio_id: bee_monitor
-    hive_state:
-      name: "Hive State"
-      id: hive_state
-
-script:
-  - id: collect_and_sleep
-    then:
-      - logger.log: "Starting measurement cycle"
-      # Trigger sensor updates
-      - component.update: bee_monitor
-      - component.update: hive_weight
-      # Wait for sensors to publish and API to sync
-      - delay: 2s
-      - logger.log: "Entering deep sleep"
-      #- deep_sleep.enter: deep_sleep_control
+# sensor:
+#   # Bee audio frequency bands (power in dB)
+#   - platform: bee_audio
+#     bee_audio_id: bee_monitor
+#     band_low_freq:
+#       name: "Bee Low Frequency (60-100Hz)"
+#       id: bee_low_freq
+#     band_baseline:
+#       name: "Bee Baseline Hum (100-200Hz)"
+#       id: bee_baseline
+#     band_worker:
+#       name: "Bee Worker Activity (180-260Hz)"
+#       id: bee_worker
+#     band_quacking:
+#       name: "Bee Queen Quacking (200-350Hz)"
+#       id: bee_quacking
+#     band_tooting:
+#       name: "Bee Queen Tooting (350-500Hz)"
+#       id: bee_tooting
+#     band_queenless_mid:
+#       name: "Bee Queenless Mid (478-677Hz)"
+#       id: bee_queenless_mid
+#     band_queenless_high:
+#       name: "Bee Queenless High (876-1080Hz)"
+#       id: bee_queenless_high
+#     dominant_frequency:
+#       name: "Bee Dominant Frequency"
+#       id: bee_dominant_freq
+#     sound_level_rms:
+#       name: "Bee Sound Level"
+#       id: bee_sound_level
+#     spectral_centroid:
+#       name: "Bee Spectral Centroid"
+#       id: bee_spectral_centroid
+#
+#   # NAU7802 load cell ADC (hive weight)
+#   # Calibration: Adjust the calibrate_linear filter based on your load cells
+#   # 1. Record raw value with empty hive
+#   # 2. Record raw value with known weight
+#   # 3. Update the linear calibration
+#   - platform: nau7802
+#     id: hive_weight
+#     name: "Hive Weight"
+#     gain: 128
+#     unit_of_measurement: "kg"
+#     accuracy_decimals: 2
+#     filters:
+#       - calibrate_linear:
+#           - ${weight_cal_raw_1} -> ${weight_cal_kg_1}
+#           - ${weight_cal_raw_2} -> ${weight_cal_kg_2}
+#           - ${weight_cal_raw_3} -> ${weight_cal_kg_3}
+#           - ${weight_cal_raw_4} -> ${weight_cal_kg_4}
+#
+#   # SHT40 temperature and humidity
+#   - platform: sht4x
+#     temperature:
+#       name: "Hive Temperature"
+#       id: hive_temp
+#     humidity:
+#       name: "Hive Humidity"
+#       id: hive_humidity
+#
+#   # Battery voltage monitoring (optional)
+#   # Connect battery through voltage divider to GPIO34
+#   # - platform: adc
+#   #   pin: GPIO34
+#   #   name: 'Battery Voltage'
+#   #   id: battery_voltage
+#   #   attenuation: 11db
+#   #   filters:
+#   #     - multiply: 2.0  # Voltage divider ratio
+#
+# binary_sensor:
+#   - platform: bee_audio
+#     bee_audio_id: bee_monitor
+#     queen_piping:
+#       name: "Queen Piping Detected"
+#       id: queen_piping
+#
+# text_sensor:
+#   - platform: bee_audio
+#     bee_audio_id: bee_monitor
+#     hive_state:
+#       name: "Hive State"
+#       id: hive_state
+#
+# script:
+#   - id: collect_and_sleep
+#     then:
+#       - logger.log: "Starting measurement cycle"
+#       # Trigger sensor updates
+#       - component.update: bee_monitor
+#       - component.update: hive_weight
+#       # Wait for sensors to publish and API to sync
+#       - delay: 2s
+#       - logger.log: "Entering deep sleep"
+#       #- deep_sleep.enter: deep_sleep_control
