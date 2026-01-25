@@ -3,6 +3,10 @@
 #include <cmath>
 #include <cstring>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 namespace esphome {
 namespace bee_audio {
 
@@ -38,8 +42,10 @@ void BeeAudioComponent::setup() {
     return;
   }
 
-  // Generate Hanning window
-  dsps_wind_hann_f32(this->window_, this->fft_size_);
+  // Generate Hanning window manually (avoids ESP-DSP alignment issues)
+  for (size_t i = 0; i < this->fft_size_; i++) {
+    this->window_[i] = 0.5f * (1.0f - cosf(2.0f * M_PI * i / (this->fft_size_ - 1)));
+  }
 
   // Initialise FFT tables
   // esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
