@@ -109,13 +109,14 @@ sensor:
     id: hive_weight
     name: "Hive Weight"
     gain: 128
-    samples: 64
     unit_of_measurement: "kg"
     accuracy_decimals: 2
     filters:
       - calibrate_linear:
-          - 0 -> 0
-          - 1000000 -> 200 # Adjust based on calibration
+          - -242624 -> 0
+          - -241661 -> 1.081
+          - -240884 -> 2.493
+          - -238628 -> 3.574
 
   # SHT40 temperature and humidity
   - platform: sht4x
