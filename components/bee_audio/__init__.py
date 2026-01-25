@@ -51,8 +51,9 @@ async def to_code(config):
     cg.add(var.set_sample_rate(config[CONF_SAMPLE_RATE]))
     cg.add(var.set_fft_size(config[CONF_FFT_SIZE]))
 
-    # Add ESP-DSP library dependency
-    cg.add_library("espressif/esp-dsp", "1.4.0")
-
-    # Add platformio build flags for ESP-DSP
-    cg.add_build_flag("-DCONFIG_DSP_OPTIMIZED=1")
+    # Add ESP-DSP as IDF component
+    cg.add_idf_component(
+        name="esp-dsp",
+        repo="https://github.com/espressif/esp-dsp.git",
+        ref="v1.4.0",
+    )
