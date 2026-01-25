@@ -16,7 +16,7 @@ This project creates a battery-powered beehive monitoring system that:
 | Component | Purpose | Interface |
 |-----------|---------|-----------|
 | ESP32 | Microcontroller | - |
-| INMP441 | I2S MEMS microphone for audio FFT analysis | I2S (GPIO25, 26, 33) |
+| INMP441 | I2S MEMS microphone for audio FFT analysis | I2S (GPIO25, 32, 33) |
 | NAU7802 | 24-bit ADC for 4x 50kg load cells | I2C (0x2A) |
 | SHT40 | Temperature and humidity sensor | I2C (0x44) |
 
@@ -27,7 +27,7 @@ This project creates a battery-powered beehive monitoring system that:
 | I2C SDA | GPIO21 |
 | I2C SCL | GPIO22 |
 | I2S WS (LRCLK) | GPIO25 |
-| I2S SCK (BCLK) | GPIO26 |
+| I2S SCK (BCLK) | GPIO32 |
 | I2S SD (DIN) | GPIO33 |
 
 ## Custom Component: bee_audio
@@ -61,6 +61,13 @@ Located in `components/bee_audio/`, this component performs FFT-based audio anal
 - Frequency resolution: ~3.9 Hz per bin
 - Audio capture duration: ~256ms
 - Uses ESP-DSP library for optimised FFT
+
+### Configurable Parameters
+
+| Parameter | Range | Default |
+|-----------|-------|---------|
+| sample_rate | 4000-48000 Hz | 8000 Hz |
+| fft_size | 256, 512, 1024, 2048, 4096 | 2048 |
 
 ## Building
 

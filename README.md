@@ -40,7 +40,7 @@ temperature, and humidity monitoring.
 | INMP441 Pin | ESP32 GPIO |
 | ------------- | ------------ |
 | WS (LRCLK) | GPIO25 |
-| SCK (BCLK) | GPIO26 |
+| SCK (BCLK) | GPIO32 |
 | SD (DOUT) | GPIO33 |
 | VDD | 3.3V |
 | GND | GND |

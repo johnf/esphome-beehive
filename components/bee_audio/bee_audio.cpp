@@ -85,8 +85,10 @@ void BeeAudioComponent::update() {
   this->cached_band_worker_ = this->calculate_band_power_(BAND_WORKER);
   this->cached_band_tooting_ = this->calculate_band_power_(BAND_TOOTING);
   this->cached_band_quacking_ = this->calculate_band_power_(BAND_QUACKING);
-  this->cached_band_queenless_mid_ = this->calculate_band_power_(BAND_QUEENLESS_MID);
-  this->cached_band_queenless_high_ = this->calculate_band_power_(BAND_QUEENLESS_HIGH);
+  this->cached_band_queenless_mid_ =
+      this->calculate_band_power_(BAND_QUEENLESS_MID);
+  this->cached_band_queenless_high_ =
+      this->calculate_band_power_(BAND_QUEENLESS_HIGH);
 
   // Publish frequency band powers
   if (this->band_low_freq_sensor_ != nullptr) {
@@ -111,11 +113,13 @@ void BeeAudioComponent::update() {
   }
 
   if (this->band_queenless_mid_sensor_ != nullptr) {
-    this->band_queenless_mid_sensor_->publish_state(this->cached_band_queenless_mid_);
+    this->band_queenless_mid_sensor_->publish_state(
+        this->cached_band_queenless_mid_);
   }
 
   if (this->band_queenless_high_sensor_ != nullptr) {
-    this->band_queenless_high_sensor_->publish_state(this->cached_band_queenless_high_);
+    this->band_queenless_high_sensor_->publish_state(
+        this->cached_band_queenless_high_);
   }
 
   // Calculate and publish derived metrics
@@ -332,7 +336,7 @@ bool BeeAudioComponent::capture_audio_() {
   size_t bytes_read = 0;
 
   // Throw away some likely garbage data
-  int16_t dummy_buffer[256];
+  int32_t dummy_buffer[256];
   for (int i = 0; i < 3; i++) {
     i2s_channel_read(this->rx_chan_, dummy_buffer, sizeof(dummy_buffer),
                      &bytes_read, 100);
