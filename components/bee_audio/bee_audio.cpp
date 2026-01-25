@@ -37,6 +37,14 @@ void BeeAudioComponent::setup() {
     return;
   }
 
+  // Generate Hanning window manually (avoids ESP-DSP alignment issues)
+  // Done immediately after buffer allocation, before I2S init
+  for (size_t i = 0; i < this->fft_size_; i++) {
+    this->window_[i] =
+        0.5f * (1.0f - cosf(2.0f * M_PI * static_cast<float>(i) /
+                            static_cast<float>(this->fft_size_ - 1)));
+  }
+
   // Initialise I2S
   if (!this->init_i2s_()) {
     this->free_buffers_();
@@ -44,24 +52,6 @@ void BeeAudioComponent::setup() {
 
     return;
   }
-
-  // Generate Hanning window manually (avoids ESP-DSP alignment issues)
-  for (size_t i = 0; i < this->fft_size_; i++) {
-    this->window_[i] =
-        0.5f * (1.0f - cosf(2.0f * M_PI * static_cast<float>(i) /
-                            static_cast<float>(this->fft_size_ - 1)));
-  }
-  //
-  // // Initialise FFT tables
-  // esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
-  // if (ret != ESP_OK) {
-  //   ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
-  //   this->deinit_i2s_();
-  //   this->free_buffers_();
-  //   this->mark_failed();
-  //
-  //   return;
-  // }
 
   ESP_LOGCONFIG(TAG, "Bee Audio initialised successfully");
 }
@@ -226,6 +216,10 @@ bool BeeAudioComponent::allocate_buffers_() {
   // ESP-DSP requires 16-byte aligned memory for SIMD operations
   const size_t alignment = 16;
 
+  // Float buffers need MALLOC_CAP_8BIT to ensure byte-addressable memory
+  // (IRAM cannot be accessed by float instructions on ESP32)
+  const uint32_t float_caps = MALLOC_CAP_8BIT | MALLOC_CAP_INTERNAL;
+
   // Raw I2S samples (32-bit signed) - needs DMA capability
   this->raw_samples_ = static_cast<int32_t *>(
       heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(int32_t),
@@ -238,7 +232,7 @@ bool BeeAudioComponent::allocate_buffers_() {
 
   // Normalised float samples - 16-byte aligned for ESP-DSP
   this->samples_ = static_cast<float *>(heap_caps_aligned_alloc(
-      alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+      alignment, this->fft_size_ * sizeof(float), float_caps));
   if (this->samples_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate samples buffer");
 
@@ -247,7 +241,7 @@ bool BeeAudioComponent::allocate_buffers_() {
 
   // FFT data (interleaved real/imag, so 2x size) - 16-byte aligned for ESP-DSP
   this->fft_data_ = static_cast<float *>(heap_caps_aligned_alloc(
-      alignment, this->fft_size_ * 2 * sizeof(float), MALLOC_CAP_INTERNAL));
+      alignment, this->fft_size_ * 2 * sizeof(float), float_caps));
   if (this->fft_data_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate fft_data buffer");
 
@@ -256,7 +250,7 @@ bool BeeAudioComponent::allocate_buffers_() {
 
   // Magnitude spectrum - 16-byte aligned for ESP-DSP
   this->magnitude_ = static_cast<float *>(heap_caps_aligned_alloc(
-      alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+      alignment, this->fft_size_ * sizeof(float), float_caps));
   if (this->magnitude_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate magnitude buffer");
 
@@ -265,7 +259,7 @@ bool BeeAudioComponent::allocate_buffers_() {
 
   // Hanning window - 16-byte aligned for ESP-DSP
   this->window_ = static_cast<float *>(heap_caps_aligned_alloc(
-      alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+      alignment, this->fft_size_ * sizeof(float), float_caps));
   if (this->window_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate window buffer");
 
