@@ -18,9 +18,9 @@ static const float PRE_SWARM_CENTROID_HZ = 400.0f;
 void BeeAudioComponent::setup() {
   ESP_LOGD(TAG, "Setting up Bee Audio...");
 
-  // // Calculate frequency resolution
-  // this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
-  //                          static_cast<float>(this->fft_size_);
+  // Calculate frequency resolution
+  this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
+                           static_cast<float>(this->fft_size_);
   // ESP_LOGD(TAG, "Frequency resolution: %.2f Hz/bin", this->freq_resolution_);
   //
   // // Allocate buffers
