@@ -38,10 +38,10 @@ external_components:
     refresh: 0s
 
 # Deep sleep configuration - 5 minute intervals
-deep_sleep:
-  id: deep_sleep_control
-  run_duration: 30s # Max awake time before forced sleep
-  sleep_duration: 5min
+#deep_sleep:
+#  id: deep_sleep_control
+#  run_duration: 30s # Max awake time before forced sleep
+#  sleep_duration: 5min
 
 # WiFi with fast connect for battery efficiency
 wifi:
@@ -173,4 +173,4 @@ script:
       # Wait for sensors to publish and API to sync
       - delay: 2s
       - logger.log: "Entering deep sleep"
-      - deep_sleep.enter: deep_sleep_control
+      #- deep_sleep.enter: deep_sleep_control
