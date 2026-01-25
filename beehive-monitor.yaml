@@ -6,6 +6,18 @@
 # - SHT40 temperature and humidity sensor
 # - Deep sleep for power efficiency (5 minute intervals)
 
+substitutions:
+  # Weight calibration points (raw_value -> weight_kg)
+  # Record raw values at known weights and update these
+  weight_cal_raw_1: "-242624"
+  weight_cal_kg_1: "0"
+  weight_cal_raw_2: "-241661"
+  weight_cal_kg_2: "1.081"
+  weight_cal_raw_3: "-240884"
+  weight_cal_kg_3: "2.493"
+  weight_cal_raw_4: "-238628"
+  weight_cal_kg_4: "3.574"
+
 esphome:
   name: beehive-monitor
   friendly_name: Beehive Monitor
@@ -113,10 +125,10 @@ sensor:
     accuracy_decimals: 2
     filters:
       - calibrate_linear:
-          - -242624 -> 0
-          - -241661 -> 1.081
-          - -240884 -> 2.493
-          - -238628 -> 3.574
+          - ${weight_cal_raw_1} -> ${weight_cal_kg_1}
+          - ${weight_cal_raw_2} -> ${weight_cal_kg_2}
+          - ${weight_cal_raw_3} -> ${weight_cal_kg_3}
+          - ${weight_cal_raw_4} -> ${weight_cal_kg_4}
 
   # SHT40 temperature and humidity
   - platform: sht4x
@@ -126,8 +138,6 @@ sensor:
     humidity:
       name: "Hive Humidity"
       id: hive_humidity
-    precision: high
-    heater_max_duty: 0.0 # Disable heater for accuracy
 
   # Battery voltage monitoring (optional)
   # Connect battery through voltage divider to GPIO34
