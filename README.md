@@ -72,11 +72,11 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
    - Click **Edit** on the new device
    - Replace the contents with the configuration from `beehive-monitor.yaml`
 
-   The bee_audio component is loaded automatically from GitHub via packages:
+   The bee_audio component is loaded automatically from GitHub:
 
    ```yaml
    packages:
-     bee_audio: github://johnf/esp32-beehive/components/bee_audio
+     bee_audio: github://johnf/esp32-beehive/beehive-monitor.yaml
    ```
 
 3. **Configure secrets**

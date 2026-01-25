@@ -20,9 +20,6 @@ esp32:
     type: esp-idf
     version: recommended
 
-packages:
-  bee_audio: github://johnf/esp32-beehive/components/bee_audio
-
 # Deep sleep configuration - 5 minute intervals
 deep_sleep:
   id: deep_sleep_control
@@ -60,7 +57,7 @@ i2c:
 bee_audio:
   id: bee_monitor
   i2s_lrclk_pin: GPIO25
-  i2s_bclk_pin: GPI32O
+  i2s_bclk_pin: GPIO32
   i2s_din_pin: GPIO33
   sample_rate: 8000
   fft_size: 2048
