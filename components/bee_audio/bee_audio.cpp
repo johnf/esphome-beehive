@@ -16,7 +16,7 @@ static const float NORMAL_THRESHOLD_DB = -40.0f;
 static const float PRE_SWARM_CENTROID_HZ = 400.0f;
 
 void BeeAudioComponent::setup() {
-  ESP_LOGCONFIG(TAG, "Setting up Bee Audio...");
+  ESP_LOGD(TAG, "Setting up Bee Audio...");
 
   // // Calculate frequency resolution
   // this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
