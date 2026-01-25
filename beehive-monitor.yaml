@@ -75,39 +75,39 @@ bee_audio:
   fft_size: 2048
 
 sensor:
-  #   # Bee audio frequency bands (power in dB)
-  #   - platform: bee_audio
-  #     bee_audio_id: bee_monitor
-  #     band_low_freq:
-  #       name: "Bee Low Frequency (60-100Hz)"
-  #       id: bee_low_freq
-  #     band_baseline:
-  #       name: "Bee Baseline Hum (100-200Hz)"
-  #       id: bee_baseline
-  #     band_worker:
-  #       name: "Bee Worker Activity (180-260Hz)"
-  #       id: bee_worker
-  #     band_quacking:
-  #       name: "Bee Queen Quacking (200-350Hz)"
-  #       id: bee_quacking
-  #     band_tooting:
-  #       name: "Bee Queen Tooting (350-500Hz)"
-  #       id: bee_tooting
-  #     band_queenless_mid:
-  #       name: "Bee Queenless Mid (478-677Hz)"
-  #       id: bee_queenless_mid
-  #     band_queenless_high:
-  #       name: "Bee Queenless High (876-1080Hz)"
-  #       id: bee_queenless_high
-  #     dominant_frequency:
-  #       name: "Bee Dominant Frequency"
-  #       id: bee_dominant_freq
-  #     sound_level_rms:
-  #       name: "Bee Sound Level"
-  #       id: bee_sound_level
-  #     spectral_centroid:
-  #       name: "Bee Spectral Centroid"
-  #       id: bee_spectral_centroid
+  # Bee audio frequency bands (power in dB)
+  - platform: bee_audio
+    bee_audio_id: bee_monitor
+    band_low_freq:
+      name: "Bee Low Frequency (60-100Hz)"
+      id: bee_low_freq
+    band_baseline:
+      name: "Bee Baseline Hum (100-200Hz)"
+      id: bee_baseline
+    band_worker:
+      name: "Bee Worker Activity (180-260Hz)"
+      id: bee_worker
+    band_quacking:
+      name: "Bee Queen Quacking (200-350Hz)"
+      id: bee_quacking
+    band_tooting:
+      name: "Bee Queen Tooting (350-500Hz)"
+      id: bee_tooting
+    band_queenless_mid:
+      name: "Bee Queenless Mid (478-677Hz)"
+      id: bee_queenless_mid
+    band_queenless_high:
+      name: "Bee Queenless High (876-1080Hz)"
+      id: bee_queenless_high
+    dominant_frequency:
+      name: "Bee Dominant Frequency"
+      id: bee_dominant_freq
+    sound_level_rms:
+      name: "Bee Sound Level"
+      id: bee_sound_level
+    spectral_centroid:
+      name: "Bee Spectral Centroid"
+      id: bee_spectral_centroid
   #
   #   # NAU7802 load cell ADC (hive weight)
   #   # Calibration: Adjust the calibrate_linear filter based on your load cells
@@ -146,19 +146,19 @@ sensor:
 #   #   filters:
 #   #     - multiply: 2.0  # Voltage divider ratio
 #
-# binary_sensor:
-#   - platform: bee_audio
-#     bee_audio_id: bee_monitor
-#     queen_piping:
-#       name: "Queen Piping Detected"
-#       id: queen_piping
-#
-# text_sensor:
-#   - platform: bee_audio
-#     bee_audio_id: bee_monitor
-#     hive_state:
-#       name: "Hive State"
-#       id: hive_state
+binary_sensor:
+  - platform: bee_audio
+    bee_audio_id: bee_monitor
+    queen_piping:
+      name: "Queen Piping Detected"
+      id: queen_piping
+
+text_sensor:
+  - platform: bee_audio
+    bee_audio_id: bee_monitor
+    hive_state:
+      name: "Hive State"
+      id: hive_state
 #
 # script:
 #   - id: collect_and_sleep
