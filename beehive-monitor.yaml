@@ -73,6 +73,7 @@ bee_audio:
   i2s_din_pin: GPIO33
   sample_rate: 8000
   fft_size: 2048
+  update_interval: 10s
 
 sensor:
   # Bee audio frequency bands (power in dB)
