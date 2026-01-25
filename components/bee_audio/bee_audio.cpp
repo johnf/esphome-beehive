@@ -18,40 +18,40 @@ static const float PRE_SWARM_CENTROID_HZ = 400.0f;
 void BeeAudioComponent::setup() {
   ESP_LOGD(TAG, "Setting up Bee Audio...");
 
-  // Calculate frequency resolution
-  this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
-                           static_cast<float>(this->fft_size_);
-  ESP_LOGD(TAG, "Frequency resolution: %.2f Hz/bin", this->freq_resolution_);
-
-  // Allocate buffers
-  if (!this->allocate_buffers_()) {
-    this->mark_failed();
-
-    return;
-  }
-
-  // Initialise I2S
-  if (!this->init_i2s_()) {
-    this->free_buffers_();
-    this->mark_failed();
-
-    return;
-  }
-
-  // Generate Hanning window
-  dsps_wind_hann_f32(this->window_, this->fft_size_);
-
-  // Initialise FFT tables
-  esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
-  if (ret != ESP_OK) {
-    ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
-    this->deinit_i2s_();
-    this->free_buffers_();
-    this->mark_failed();
-
-    return;
-  }
-
+  // // Calculate frequency resolution
+  // this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
+  //                          static_cast<float>(this->fft_size_);
+  // ESP_LOGD(TAG, "Frequency resolution: %.2f Hz/bin", this->freq_resolution_);
+  //
+  // // Allocate buffers
+  // if (!this->allocate_buffers_()) {
+  //   this->mark_failed();
+  //
+  //   return;
+  // }
+  //
+  // // Initialise I2S
+  // if (!this->init_i2s_()) {
+  //   this->free_buffers_();
+  //   this->mark_failed();
+  //
+  //   return;
+  // }
+  //
+  // // Generate Hanning window
+  // dsps_wind_hann_f32(this->window_, this->fft_size_);
+  //
+  // // Initialise FFT tables
+  // esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
+  // if (ret != ESP_OK) {
+  //   ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
+  //   this->deinit_i2s_();
+  //   this->free_buffers_();
+  //   this->mark_failed();
+  //
+  //   return;
+  // }
+  //
   ESP_LOGCONFIG(TAG, "Bee Audio initialised successfully");
 }
 
