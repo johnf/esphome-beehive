@@ -3,6 +3,9 @@
 #include <cmath>
 #include <cstring>
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
@@ -43,103 +46,104 @@ void BeeAudioComponent::setup() {
   }
 
   // Generate Hanning window manually (avoids ESP-DSP alignment issues)
-  // for (size_t i = 0; i < this->fft_size_; i++) {
-  //   this->window_[i] = 0.5f * (1.0f - cosf(2.0f * M_PI * i / (this->fft_size_
-  //   - 1)));
-  // }
+  for (size_t i = 0; i < this->fft_size_; i++) {
+    this->window_[i] =
+        0.5f * (1.0f - cosf(2.0f * M_PI * static_cast<float>(i) /
+                            static_cast<float>(this->fft_size_ - 1)));
+  }
 
   // Initialise FFT tables
-  // esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
-  // if (ret != ESP_OK) {
-  //   ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
-  //   this->deinit_i2s_();
-  //   this->free_buffers_();
-  //   this->mark_failed();
-  //
-  //   return;
-  // }
-  //
+  esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
+    this->deinit_i2s_();
+    this->free_buffers_();
+    this->mark_failed();
+
+    return;
+  }
+
   ESP_LOGCONFIG(TAG, "Bee Audio initialised successfully");
 }
 
 void BeeAudioComponent::update() {
   ESP_LOGD(TAG, "Starting audio capture and analysis...");
 
-  // // Capture audio samples
-  // if (!this->capture_audio_()) {
-  //   ESP_LOGW(TAG, "Audio capture failed");
-  //
-  //   return;
-  // }
-  //
-  // // Compute FFT
-  // this->compute_fft_();
-  //
-  // // Calculate and publish frequency band powers
-  // if (this->band_low_freq_sensor_ != nullptr) {
-  //   float power = this->calculate_band_power_(BAND_LOW_FREQ);
-  //   this->band_low_freq_sensor_->publish_state(power);
-  // }
-  //
-  // if (this->band_baseline_sensor_ != nullptr) {
-  //   float power = this->calculate_band_power_(BAND_BASELINE);
-  //   this->band_baseline_sensor_->publish_state(power);
-  // }
-  //
-  // if (this->band_worker_sensor_ != nullptr) {
-  //   float power = this->calculate_band_power_(BAND_WORKER);
-  //   this->band_worker_sensor_->publish_state(power);
-  // }
-  //
-  // if (this->band_quacking_sensor_ != nullptr) {
-  //   float power = this->calculate_band_power_(BAND_QUACKING);
-  //   this->band_quacking_sensor_->publish_state(power);
-  // }
-  //
-  // if (this->band_tooting_sensor_ != nullptr) {
-  //   float power = this->calculate_band_power_(BAND_TOOTING);
-  //   this->band_tooting_sensor_->publish_state(power);
-  // }
-  //
-  // if (this->band_queenless_mid_sensor_ != nullptr) {
-  //   float power = this->calculate_band_power_(BAND_QUEENLESS_MID);
-  //   this->band_queenless_mid_sensor_->publish_state(power);
-  // }
-  //
-  // if (this->band_queenless_high_sensor_ != nullptr) {
-  //   float power = this->calculate_band_power_(BAND_QUEENLESS_HIGH);
-  //   this->band_queenless_high_sensor_->publish_state(power);
-  // }
-  //
-  // // Calculate and publish derived metrics
-  // if (this->dominant_frequency_sensor_ != nullptr) {
-  //   float freq = this->calculate_dominant_frequency_();
-  //   this->dominant_frequency_sensor_->publish_state(freq);
-  // }
-  //
-  // if (this->sound_level_rms_sensor_ != nullptr) {
-  //   float rms = this->calculate_rms_();
-  //   this->sound_level_rms_sensor_->publish_state(rms);
-  // }
-  //
-  // if (this->spectral_centroid_sensor_ != nullptr) {
-  //   float centroid = this->calculate_spectral_centroid_();
-  //   this->spectral_centroid_sensor_->publish_state(centroid);
-  // }
-  //
-  // // Detect queen piping
-  // if (this->queen_piping_sensor_ != nullptr) {
-  //   bool piping = this->detect_queen_piping_();
-  //   this->queen_piping_sensor_->publish_state(piping);
-  // }
-  //
-  // // Classify hive state
-  // if (this->hive_state_sensor_ != nullptr) {
-  //   HiveState state = this->classify_hive_state_();
-  //   this->hive_state_sensor_->publish_state(this->hive_state_to_string_(state));
-  // }
-  //
-  // ESP_LOGD(TAG, "Audio analysis complete");
+  // Capture audio samples
+  if (!this->capture_audio_()) {
+    ESP_LOGW(TAG, "Audio capture failed");
+
+    return;
+  }
+
+  // Compute FFT
+  this->compute_fft_();
+
+  // Calculate and publish frequency band powers
+  if (this->band_low_freq_sensor_ != nullptr) {
+    float power = this->calculate_band_power_(BAND_LOW_FREQ);
+    this->band_low_freq_sensor_->publish_state(power);
+  }
+
+  if (this->band_baseline_sensor_ != nullptr) {
+    float power = this->calculate_band_power_(BAND_BASELINE);
+    this->band_baseline_sensor_->publish_state(power);
+  }
+
+  if (this->band_worker_sensor_ != nullptr) {
+    float power = this->calculate_band_power_(BAND_WORKER);
+    this->band_worker_sensor_->publish_state(power);
+  }
+
+  if (this->band_quacking_sensor_ != nullptr) {
+    float power = this->calculate_band_power_(BAND_QUACKING);
+    this->band_quacking_sensor_->publish_state(power);
+  }
+
+  if (this->band_tooting_sensor_ != nullptr) {
+    float power = this->calculate_band_power_(BAND_TOOTING);
+    this->band_tooting_sensor_->publish_state(power);
+  }
+
+  if (this->band_queenless_mid_sensor_ != nullptr) {
+    float power = this->calculate_band_power_(BAND_QUEENLESS_MID);
+    this->band_queenless_mid_sensor_->publish_state(power);
+  }
+
+  if (this->band_queenless_high_sensor_ != nullptr) {
+    float power = this->calculate_band_power_(BAND_QUEENLESS_HIGH);
+    this->band_queenless_high_sensor_->publish_state(power);
+  }
+
+  // Calculate and publish derived metrics
+  if (this->dominant_frequency_sensor_ != nullptr) {
+    float freq = this->calculate_dominant_frequency_();
+    this->dominant_frequency_sensor_->publish_state(freq);
+  }
+
+  if (this->sound_level_rms_sensor_ != nullptr) {
+    float rms = this->calculate_rms_();
+    this->sound_level_rms_sensor_->publish_state(rms);
+  }
+
+  if (this->spectral_centroid_sensor_ != nullptr) {
+    float centroid = this->calculate_spectral_centroid_();
+    this->spectral_centroid_sensor_->publish_state(centroid);
+  }
+
+  // Detect queen piping
+  if (this->queen_piping_sensor_ != nullptr) {
+    bool piping = this->detect_queen_piping_();
+    this->queen_piping_sensor_->publish_state(piping);
+  }
+
+  // Classify hive state
+  if (this->hive_state_sensor_ != nullptr) {
+    HiveState state = this->classify_hive_state_();
+    this->hive_state_sensor_->publish_state(this->hive_state_to_string_(state));
+  }
+
+  ESP_LOGD(TAG, "Audio analysis complete");
 }
 
 void BeeAudioComponent::dump_config() {
@@ -156,11 +160,11 @@ void BeeAudioComponent::dump_config() {
 bool BeeAudioComponent::init_i2s_() {
   ESP_LOGD(TAG, "Initialising I2S...");
 
-  // Channel configuration
+  // Channel configuration - increase DMA buffers for our read size
   i2s_chan_config_t chan_cfg =
       I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_0, I2S_ROLE_MASTER);
-  chan_cfg.dma_desc_num = 4;
-  chan_cfg.dma_frame_num = 256;
+  chan_cfg.dma_desc_num = 8;
+  chan_cfg.dma_frame_num = 512;  // 8 * 512 = 4096 samples of DMA buffer
 
   esp_err_t ret = i2s_new_channel(&chan_cfg, nullptr, &this->rx_chan_);
   if (ret != ESP_OK) {
@@ -170,10 +174,11 @@ bool BeeAudioComponent::init_i2s_() {
   }
 
   // Standard mode configuration for INMP441
+  // INMP441 uses MSB-aligned (left-justified) format, not Philips
   i2s_std_config_t std_cfg = {
       .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(this->sample_rate_),
-      .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT,
-                                                      I2S_SLOT_MODE_MONO),
+      .slot_cfg = I2S_STD_MSB_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT,
+                                                   I2S_SLOT_MODE_MONO),
       .gpio_cfg =
           {
               .mclk = I2S_GPIO_UNUSED,
@@ -190,7 +195,7 @@ bool BeeAudioComponent::init_i2s_() {
           },
   };
 
-  // INMP441 outputs on falling edge of WS, so we read left channel
+  // INMP441 outputs on left channel when L/R is grounded
   std_cfg.slot_cfg.slot_mask = I2S_STD_SLOT_LEFT;
 
   ret = i2s_channel_init_std_mode(this->rx_chan_, &std_cfg);
@@ -201,15 +206,8 @@ bool BeeAudioComponent::init_i2s_() {
     return false;
   }
 
-  ret = i2s_channel_enable(this->rx_chan_);
-  if (ret != ESP_OK) {
-    ESP_LOGE(TAG, "Failed to enable I2S channel: %s", esp_err_to_name(ret));
-    i2s_del_channel(this->rx_chan_);
-
-    return false;
-  }
-
-  ESP_LOGD(TAG, "I2S initialised successfully");
+  // Don't enable here - enable/disable around actual reads to avoid DMA issues
+  ESP_LOGD(TAG, "I2S initialised successfully (not yet enabled)");
 
   return true;
 }
@@ -306,12 +304,26 @@ void BeeAudioComponent::free_buffers_() {
 }
 
 bool BeeAudioComponent::capture_audio_() {
+  // Enable I2S channel for capture
+  esp_err_t ret = i2s_channel_enable(this->rx_chan_);
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "Failed to enable I2S channel: %s", esp_err_to_name(ret));
+
+    return false;
+  }
+
+  // Small delay to let DMA stabilise
+  vTaskDelay(pdMS_TO_TICKS(10));
+
   size_t bytes_to_read = this->fft_size_ * sizeof(int32_t);
   size_t bytes_read = 0;
 
-  esp_err_t ret =
-      i2s_channel_read(this->rx_chan_, this->raw_samples_, bytes_to_read,
-                       &bytes_read, pdMS_TO_TICKS(1000));
+  ret = i2s_channel_read(this->rx_chan_, this->raw_samples_, bytes_to_read,
+                         &bytes_read, pdMS_TO_TICKS(1000));
+
+  // Disable I2S channel after capture
+  i2s_channel_disable(this->rx_chan_);
+
   if (ret != ESP_OK) {
     ESP_LOGE(TAG, "I2S read failed: %s", esp_err_to_name(ret));
 
@@ -319,7 +331,7 @@ bool BeeAudioComponent::capture_audio_() {
   }
 
   if (bytes_read != bytes_to_read) {
-    ESP_LOGW(TAG, "I2S read incomplete: %u/%u bytes", bytes_read,
+    ESP_LOGW(TAG, "I2S read incomplete: %zu/%zu bytes", bytes_read,
              bytes_to_read);
 
     return false;
@@ -327,7 +339,7 @@ bool BeeAudioComponent::capture_audio_() {
 
   // INMP441 outputs 24-bit data left-justified in 32-bit word
   // Convert to normalised float [-1.0, 1.0]
-  const float scale = 1.0f / 8388608.0f; // 2^23
+  const float scale = 1.0f / 8388608.0f;  // 2^23
   for (size_t i = 0; i < this->fft_size_; i++) {
     // Shift right by 8 to get 24-bit value, then normalise
     int32_t sample = this->raw_samples_[i] >> 8;
