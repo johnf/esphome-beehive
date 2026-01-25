@@ -21,8 +21,8 @@ void BeeAudioComponent::setup() {
   // Calculate frequency resolution
   this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
                            static_cast<float>(this->fft_size_);
-  // ESP_LOGD(TAG, "Frequency resolution: %.2f Hz/bin", this->freq_resolution_);
-  //
+  ESP_LOGD(TAG, "Frequency resolution: %.2f Hz/bin", this->freq_resolution_);
+
   // // Allocate buffers
   // if (!this->allocate_buffers_()) {
   //   this->mark_failed();
