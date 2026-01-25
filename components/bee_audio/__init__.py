@@ -51,9 +51,4 @@ async def to_code(config):
     cg.add(var.set_sample_rate(config[CONF_SAMPLE_RATE]))
     cg.add(var.set_fft_size(config[CONF_FFT_SIZE]))
 
-    # Add ESP-DSP as IDF component
-    cg.add_idf_component(
-        name="esp-dsp",
-        repo="https://github.com/espressif/esp-dsp.git",
-        ref="v1.4.0",
-    )
+    # ESP-DSP dependency is declared in idf_component.yml

@@ -1,0 +1,4 @@
+dependencies:
+  esp-dsp:
+    version: "^1.4.0"
+    git: https://github.com/espressif/esp-dsp.git
