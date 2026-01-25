@@ -6,15 +6,13 @@
 #include "esphome/core/component.h"
 
 #include "driver/i2s_std.h"
-#include "esp_dsp.h"
-#include "esp_err.h"
+#include "dsps_fft2r.h"
+#include "dsps_wind_hann.h"
 #include "esp_heap_caps.h"
-#include "esp_log.h"
 
 namespace esphome {
 namespace bee_audio {
 
-// Frequency band definitions (Hz)
 struct FrequencyBand {
   float low_hz;
   float high_hz;
@@ -29,7 +27,6 @@ static const FrequencyBand BAND_TOOTING = {350.0f, 500.0f};
 static const FrequencyBand BAND_QUEENLESS_MID = {478.0f, 677.0f};
 static const FrequencyBand BAND_QUEENLESS_HIGH = {876.0f, 1080.0f};
 
-// Hive state enumeration
 enum class HiveState {
   QUIET,
   NORMAL,
@@ -41,8 +38,6 @@ enum class HiveState {
 
 class BeeAudioComponent : public PollingComponent {
 public:
-  BeeAudioComponent() = default;
-
   void setup() override;
   void update() override;
   void dump_config() override;
@@ -134,10 +129,8 @@ protected:
   sensor::Sensor *sound_level_rms_sensor_{nullptr};
   sensor::Sensor *spectral_centroid_sensor_{nullptr};
 
-  // Binary sensor
   binary_sensor::BinarySensor *queen_piping_sensor_{nullptr};
 
-  // Text sensor
   text_sensor::TextSensor *hive_state_sensor_{nullptr};
 
   // Internal methods

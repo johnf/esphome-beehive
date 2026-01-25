@@ -3,13 +3,6 @@
 #include <cmath>
 #include <cstring>
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
 namespace esphome {
 namespace bee_audio {
 
@@ -148,7 +141,7 @@ void BeeAudioComponent::dump_config() {
   ESP_LOGCONFIG(TAG, "  I2S BCLK Pin: GPIO%d", this->i2s_bclk_pin_);
   ESP_LOGCONFIG(TAG, "  I2S DIN Pin: GPIO%d", this->i2s_din_pin_);
   ESP_LOGCONFIG(TAG, "  Sample Rate: %u Hz", this->sample_rate_);
-  ESP_LOGCONFIG(TAG, "  FFT Size: %u", this->fft_size_);
+  ESP_LOGCONFIG(TAG, "  FFT Size: %zu", this->fft_size_);
   ESP_LOGCONFIG(TAG, "  Frequency Resolution: %.2f Hz/bin",
                 this->freq_resolution_);
 }
@@ -304,7 +297,6 @@ void BeeAudioComponent::free_buffers_() {
 }
 
 bool BeeAudioComponent::capture_audio_() {
-  // Enable I2S channel for capture
   esp_err_t ret = i2s_channel_enable(this->rx_chan_);
   if (ret != ESP_OK) {
     ESP_LOGE(TAG, "Failed to enable I2S channel: %s", esp_err_to_name(ret));
@@ -312,16 +304,19 @@ bool BeeAudioComponent::capture_audio_() {
     return false;
   }
 
-  // Small delay to let DMA stabilise
-  vTaskDelay(pdMS_TO_TICKS(10));
-
   size_t bytes_to_read = this->fft_size_ * sizeof(int32_t);
   size_t bytes_read = 0;
 
-  ret = i2s_channel_read(this->rx_chan_, this->raw_samples_, bytes_to_read,
-                         &bytes_read, pdMS_TO_TICKS(1000));
+  // Throw away some likely grabage data
+  int16_t dummy_buffer[256];
+  for (int i = 0; i < 3; i++) {
+    i2s_channel_read(this->rx_chan_, dummy_buffer, sizeof(dummy_buffer),
+                     &bytes_read, 100);
+  }
 
-  // Disable I2S channel after capture
+  ret = i2s_channel_read(this->rx_chan_, this->raw_samples_, bytes_to_read,
+                         &bytes_read, 1000);
+
   i2s_channel_disable(this->rx_chan_);
 
   if (ret != ESP_OK) {
