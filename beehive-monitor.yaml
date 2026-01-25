@@ -52,9 +52,6 @@ wifi:
 
 api:
 
-logger:
-  level: INFO
-
 # I2C bus for NAU7802 and SHT40
 i2c:
   sda: GPIO21
