@@ -37,7 +37,7 @@ void BeeAudioComponent::setup() {
     return;
   }
 
-  // // Generate Hanning window
+  // Generate Hanning window
   dsps_wind_hann_f32(this->window_, this->fft_size_);
 
   // // Initialise FFT tables

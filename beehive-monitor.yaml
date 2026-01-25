@@ -21,10 +21,10 @@ substitutions:
 esphome:
   name: beehive-monitor
   friendly_name: Beehive Monitor
-#  on_boot:
-#    priority: -100 # Run after all components initialised
-#    then:
-#      - script.execute: collect_and_sleep
+  on_boot:
+    priority: -100 # Run after all components initialised
+    then:
+      - script.execute: collect_and_sleep
 
 esp32:
   board: esp32dev
@@ -108,12 +108,12 @@ sensor:
     spectral_centroid:
       name: "Bee Spectral Centroid"
       id: bee_spectral_centroid
-  #
-  #   # NAU7802 load cell ADC (hive weight)
-  #   # Calibration: Adjust the calibrate_linear filter based on your load cells
-  #   # 1. Record raw value with empty hive
-  #   # 2. Record raw value with known weight
-  #   # 3. Update the linear calibration
+
+  # NAU7802 load cell ADC (hive weight)
+  # Calibration: Adjust the calibrate_linear filter based on your load cells
+  # 1. Record raw value with empty hive
+  # 2. Record raw value with known weight
+  # 3. Update the linear calibration
   - platform: nau7802
     id: hive_weight
     name: "Hive Weight"
@@ -135,17 +135,17 @@ sensor:
     humidity:
       name: "Hive Humidity"
       id: hive_humidity
-#
-#   # Battery voltage monitoring (optional)
-#   # Connect battery through voltage divider to GPIO34
-#   # - platform: adc
-#   #   pin: GPIO34
-#   #   name: 'Battery Voltage'
-#   #   id: battery_voltage
-#   #   attenuation: 11db
-#   #   filters:
-#   #     - multiply: 2.0  # Voltage divider ratio
-#
+
+# Battery voltage monitoring (optional)
+# Connect battery through voltage divider to GPIO34
+# - platform: adc
+#   pin: GPIO34
+#   name: 'Battery Voltage'
+#   id: battery_voltage
+#   attenuation: 11db
+#   filters:
+#     - multiply: 2.0  # Voltage divider ratio
+
 binary_sensor:
   - platform: bee_audio
     bee_audio_id: bee_monitor
@@ -159,15 +159,15 @@ text_sensor:
     hive_state:
       name: "Hive State"
       id: hive_state
-#
-# script:
-#   - id: collect_and_sleep
-#     then:
-#       - logger.log: "Starting measurement cycle"
-#       # Trigger sensor updates
-#       - component.update: bee_monitor
-#       - component.update: hive_weight
-#       # Wait for sensors to publish and API to sync
-#       - delay: 2s
-#       - logger.log: "Entering deep sleep"
-#       #- deep_sleep.enter: deep_sleep_control
+
+script:
+  - id: collect_and_sleep
+    then:
+      - logger.log: "Starting measurement cycle"
+      # Trigger sensor updates
+      - component.update: bee_monitor
+      - component.update: hive_weight
+      # Wait for sensors to publish and API to sync
+      - delay: 2s
+      - logger.log: "Entering deep sleep"
+      #- deep_sleep.enter: deep_sleep_control
