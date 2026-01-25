@@ -116,6 +116,8 @@ sensor:
 
   # SHT40 temperature and humidity
   - platform: sht4x
+    id: hive_climate
+    update_interval: never
     temperature:
       name: "Hive Temperature"
       id: hive_temp
@@ -157,6 +159,7 @@ script:
           timeout: 10s
       - component.update: bee_monitor
       - component.update: hive_weight
+      - component.update: hive_climate
       - wait_until:
           condition:
             api.connected:
