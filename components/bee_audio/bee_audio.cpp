@@ -23,12 +23,12 @@ void BeeAudioComponent::setup() {
                            static_cast<float>(this->fft_size_);
   ESP_LOGD(TAG, "Frequency resolution: %.2f Hz/bin", this->freq_resolution_);
 
-  // // Allocate buffers
-  // if (!this->allocate_buffers_()) {
-  //   this->mark_failed();
-  //
-  //   return;
-  // }
+  // Allocate buffers
+  if (!this->allocate_buffers_()) {
+    this->mark_failed();
+
+    return;
+  }
   //
   // // Initialise I2S
   // if (!this->init_i2s_()) {
