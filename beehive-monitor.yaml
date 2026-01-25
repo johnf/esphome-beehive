@@ -59,7 +59,8 @@ logger:
 i2c:
   sda: GPIO21
   scl: GPIO22
-  scan: false # Faster boot
+  scan: true
+  #scan: false # Faster boot
 
 # Custom bee audio component (INMP441 microphone)
 # Pins:
