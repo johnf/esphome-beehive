@@ -32,10 +32,10 @@ esp32:
     type: esp-idf
     version: recommended
 
-#external_components:
-#  - source: github://johnf/esphome-beehive
-#    components: [bee_audio]
-#    refresh: 0s
+external_components:
+  - source: github://johnf/esphome-beehive
+    components: [bee_audio]
+    refresh: 0s
 
 # Deep sleep configuration - 5 minute intervals
 #deep_sleep:
