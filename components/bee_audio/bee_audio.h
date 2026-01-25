@@ -19,13 +19,13 @@ struct FrequencyBand {
 };
 
 // Research-based frequency bands for bee monitoring
-static const FrequencyBand BAND_LOW_FREQ = {60.0f, 100.0f};
-static const FrequencyBand BAND_BASELINE = {100.0f, 200.0f};
-static const FrequencyBand BAND_WORKER = {180.0f, 260.0f};
-static const FrequencyBand BAND_QUACKING = {200.0f, 350.0f};
-static const FrequencyBand BAND_TOOTING = {350.0f, 500.0f};
-static const FrequencyBand BAND_QUEENLESS_MID = {478.0f, 677.0f};
-static const FrequencyBand BAND_QUEENLESS_HIGH = {876.0f, 1080.0f};
+inline constexpr FrequencyBand BAND_LOW_FREQ = {60.0f, 100.0f};
+inline constexpr FrequencyBand BAND_BASELINE = {100.0f, 200.0f};
+inline constexpr FrequencyBand BAND_WORKER = {180.0f, 260.0f};
+inline constexpr FrequencyBand BAND_QUACKING = {200.0f, 350.0f};
+inline constexpr FrequencyBand BAND_TOOTING = {350.0f, 500.0f};
+inline constexpr FrequencyBand BAND_QUEENLESS_MID = {478.0f, 677.0f};
+inline constexpr FrequencyBand BAND_QUEENLESS_HIGH = {876.0f, 1080.0f};
 
 enum class HiveState {
   QUIET,
@@ -41,6 +41,7 @@ public:
   void setup() override;
   void update() override;
   void dump_config() override;
+  ~BeeAudioComponent() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
   // Configuration setters
@@ -132,6 +133,14 @@ protected:
   binary_sensor::BinarySensor *queen_piping_sensor_{nullptr};
 
   text_sensor::TextSensor *hive_state_sensor_{nullptr};
+
+  // Cached band powers (calculated once per update)
+  float cached_band_baseline_{0.0f};
+  float cached_band_worker_{0.0f};
+  float cached_band_tooting_{0.0f};
+  float cached_band_quacking_{0.0f};
+  float cached_band_queenless_mid_{0.0f};
+  float cached_band_queenless_high_{0.0f};
 
   // Internal methods
   bool init_i2s_();

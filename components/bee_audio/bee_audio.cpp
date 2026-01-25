@@ -15,8 +15,21 @@ static const float ACTIVE_THRESHOLD_DB = -30.0f;
 static const float NORMAL_THRESHOLD_DB = -40.0f;
 static const float PRE_SWARM_CENTROID_HZ = 400.0f;
 
+BeeAudioComponent::~BeeAudioComponent() {
+  this->deinit_i2s_();
+  this->free_buffers_();
+}
+
 void BeeAudioComponent::setup() {
   ESP_LOGD(TAG, "Setting up Bee Audio...");
+
+  // Validate FFT size is power of 2
+  if (this->fft_size_ == 0 || (this->fft_size_ & (this->fft_size_ - 1)) != 0) {
+    ESP_LOGE(TAG, "FFT size must be power of 2, got %zu", this->fft_size_);
+    this->mark_failed();
+
+    return;
+  }
 
   // Calculate frequency resolution
   this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
@@ -33,11 +46,10 @@ void BeeAudioComponent::setup() {
   // Generate Hanning window
   dsps_wind_hann_f32(this->window_, this->fft_size_);
 
-  // // Initialise FFT tables
+  // Initialise FFT tables
   esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
   if (ret != ESP_OK) {
     ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
-    this->deinit_i2s_();
     this->free_buffers_();
     this->mark_failed();
 
@@ -68,40 +80,42 @@ void BeeAudioComponent::update() {
   // Compute FFT
   this->compute_fft_();
 
-  // Calculate and publish frequency band powers
+  // Calculate and cache band powers (used by detection/classification)
+  this->cached_band_baseline_ = this->calculate_band_power_(BAND_BASELINE);
+  this->cached_band_worker_ = this->calculate_band_power_(BAND_WORKER);
+  this->cached_band_tooting_ = this->calculate_band_power_(BAND_TOOTING);
+  this->cached_band_quacking_ = this->calculate_band_power_(BAND_QUACKING);
+  this->cached_band_queenless_mid_ = this->calculate_band_power_(BAND_QUEENLESS_MID);
+  this->cached_band_queenless_high_ = this->calculate_band_power_(BAND_QUEENLESS_HIGH);
+
+  // Publish frequency band powers
   if (this->band_low_freq_sensor_ != nullptr) {
     float power = this->calculate_band_power_(BAND_LOW_FREQ);
     this->band_low_freq_sensor_->publish_state(power);
   }
 
   if (this->band_baseline_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_BASELINE);
-    this->band_baseline_sensor_->publish_state(power);
+    this->band_baseline_sensor_->publish_state(this->cached_band_baseline_);
   }
 
   if (this->band_worker_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_WORKER);
-    this->band_worker_sensor_->publish_state(power);
+    this->band_worker_sensor_->publish_state(this->cached_band_worker_);
   }
 
   if (this->band_quacking_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_QUACKING);
-    this->band_quacking_sensor_->publish_state(power);
+    this->band_quacking_sensor_->publish_state(this->cached_band_quacking_);
   }
 
   if (this->band_tooting_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_TOOTING);
-    this->band_tooting_sensor_->publish_state(power);
+    this->band_tooting_sensor_->publish_state(this->cached_band_tooting_);
   }
 
   if (this->band_queenless_mid_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_QUEENLESS_MID);
-    this->band_queenless_mid_sensor_->publish_state(power);
+    this->band_queenless_mid_sensor_->publish_state(this->cached_band_queenless_mid_);
   }
 
   if (this->band_queenless_high_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_QUEENLESS_HIGH);
-    this->band_queenless_high_sensor_->publish_state(power);
+    this->band_queenless_high_sensor_->publish_state(this->cached_band_queenless_high_);
   }
 
   // Calculate and publish derived metrics
@@ -224,7 +238,9 @@ bool BeeAudioComponent::allocate_buffers_() {
       heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(int32_t),
                               MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL));
   if (this->raw_samples_ == nullptr) {
-    ESP_LOGE(TAG, "Failed to allocate raw_samples buffer");
+    ESP_LOGE(TAG, "Failed to allocate raw_samples buffer (%zu bytes)",
+             this->fft_size_ * sizeof(int32_t));
+    this->free_buffers_();
 
     return false;
   }
@@ -233,7 +249,9 @@ bool BeeAudioComponent::allocate_buffers_() {
   this->samples_ = static_cast<float *>(heap_caps_aligned_alloc(
       alignment, this->fft_size_ * sizeof(float), float_caps));
   if (this->samples_ == nullptr) {
-    ESP_LOGE(TAG, "Failed to allocate samples buffer");
+    ESP_LOGE(TAG, "Failed to allocate samples buffer (%zu bytes)",
+             this->fft_size_ * sizeof(float));
+    this->free_buffers_();
 
     return false;
   }
@@ -242,7 +260,9 @@ bool BeeAudioComponent::allocate_buffers_() {
   this->fft_data_ = static_cast<float *>(heap_caps_aligned_alloc(
       alignment, this->fft_size_ * 2 * sizeof(float), float_caps));
   if (this->fft_data_ == nullptr) {
-    ESP_LOGE(TAG, "Failed to allocate fft_data buffer");
+    ESP_LOGE(TAG, "Failed to allocate fft_data buffer (%zu bytes)",
+             this->fft_size_ * 2 * sizeof(float));
+    this->free_buffers_();
 
     return false;
   }
@@ -251,7 +271,9 @@ bool BeeAudioComponent::allocate_buffers_() {
   this->magnitude_ = static_cast<float *>(heap_caps_aligned_alloc(
       alignment, this->fft_size_ * sizeof(float), float_caps));
   if (this->magnitude_ == nullptr) {
-    ESP_LOGE(TAG, "Failed to allocate magnitude buffer");
+    ESP_LOGE(TAG, "Failed to allocate magnitude buffer (%zu bytes)",
+             this->fft_size_ * sizeof(float));
+    this->free_buffers_();
 
     return false;
   }
@@ -260,7 +282,9 @@ bool BeeAudioComponent::allocate_buffers_() {
   this->window_ = static_cast<float *>(heap_caps_aligned_alloc(
       alignment, this->fft_size_ * sizeof(float), float_caps));
   if (this->window_ == nullptr) {
-    ESP_LOGE(TAG, "Failed to allocate window buffer");
+    ESP_LOGE(TAG, "Failed to allocate window buffer (%zu bytes)",
+             this->fft_size_ * sizeof(float));
+    this->free_buffers_();
 
     return false;
   }
@@ -307,7 +331,7 @@ bool BeeAudioComponent::capture_audio_() {
   size_t bytes_to_read = this->fft_size_ * sizeof(int32_t);
   size_t bytes_read = 0;
 
-  // Throw away some likely grabage data
+  // Throw away some likely garbage data
   int16_t dummy_buffer[256];
   for (int i = 0; i < 3; i++) {
     i2s_channel_read(this->rx_chan_, dummy_buffer, sizeof(dummy_buffer),
@@ -475,72 +499,73 @@ float BeeAudioComponent::calculate_spectral_centroid_() {
 
 bool BeeAudioComponent::detect_queen_piping_() {
   // Simple detection: check if tooting or quacking bands are significantly
-  // elevated
-  float baseline_power = this->calculate_band_power_(BAND_BASELINE);
-  float tooting_power = this->calculate_band_power_(BAND_TOOTING);
-  float quacking_power = this->calculate_band_power_(BAND_QUACKING);
-
+  // elevated (uses cached band powers from update())
   bool tooting_detected =
-      (tooting_power - baseline_power) > QUEEN_PIPING_THRESHOLD_DB;
+      (this->cached_band_tooting_ - this->cached_band_baseline_) >
+      QUEEN_PIPING_THRESHOLD_DB;
   bool quacking_detected =
-      (quacking_power - baseline_power) > QUEEN_PIPING_THRESHOLD_DB;
+      (this->cached_band_quacking_ - this->cached_band_baseline_) >
+      QUEEN_PIPING_THRESHOLD_DB;
 
   if (tooting_detected || quacking_detected) {
     ESP_LOGD(TAG,
              "Queen piping detected! Tooting: %.1f dB, Quacking: %.1f dB above "
              "baseline",
-             tooting_power - baseline_power, quacking_power - baseline_power);
+             this->cached_band_tooting_ - this->cached_band_baseline_,
+             this->cached_band_quacking_ - this->cached_band_baseline_);
   }
 
   return tooting_detected || quacking_detected;
 }
 
 HiveState BeeAudioComponent::classify_hive_state_() {
-  float baseline_power = this->calculate_band_power_(BAND_BASELINE);
-  float worker_power = this->calculate_band_power_(BAND_WORKER);
-  float tooting_power = this->calculate_band_power_(BAND_TOOTING);
-  float quacking_power = this->calculate_band_power_(BAND_QUACKING);
-  float queenless_mid_power = this->calculate_band_power_(BAND_QUEENLESS_MID);
-  float queenless_high_power = this->calculate_band_power_(BAND_QUEENLESS_HIGH);
+  // Uses cached band powers from update()
   float centroid = this->calculate_spectral_centroid_();
 
   ESP_LOGD(TAG,
            "Classification - Baseline: %.1f, Worker: %.1f, Tooting: %.1f, "
            "Quacking: %.1f",
-           baseline_power, worker_power, tooting_power, quacking_power);
+           this->cached_band_baseline_, this->cached_band_worker_,
+           this->cached_band_tooting_, this->cached_band_quacking_);
   ESP_LOGD(TAG,
            "Classification - QueenlessMid: %.1f, QueenlessHigh: %.1f, "
            "Centroid: %.1f Hz",
-           queenless_mid_power, queenless_high_power, centroid);
+           this->cached_band_queenless_mid_, this->cached_band_queenless_high_,
+           centroid);
 
   // Check for queenless condition (elevated mid and high frequency bands)
-  if ((queenless_mid_power - baseline_power) > QUEENLESS_THRESHOLD_DB &&
-      (queenless_high_power - baseline_power) > QUEENLESS_THRESHOLD_DB) {
+  if ((this->cached_band_queenless_mid_ - this->cached_band_baseline_) >
+          QUEENLESS_THRESHOLD_DB &&
+      (this->cached_band_queenless_high_ - this->cached_band_baseline_) >
+          QUEENLESS_THRESHOLD_DB) {
 
     return HiveState::QUEENLESS;
   }
 
   // Check for queen piping activity
-  if ((tooting_power - baseline_power) > QUEEN_PIPING_THRESHOLD_DB ||
-      (quacking_power - baseline_power) > QUEEN_PIPING_THRESHOLD_DB) {
+  if ((this->cached_band_tooting_ - this->cached_band_baseline_) >
+          QUEEN_PIPING_THRESHOLD_DB ||
+      (this->cached_band_quacking_ - this->cached_band_baseline_) >
+          QUEEN_PIPING_THRESHOLD_DB) {
 
     return HiveState::QUEEN_ACTIVITY;
   }
 
   // Check for pre-swarm (elevated centroid and activity)
-  if (centroid > PRE_SWARM_CENTROID_HZ && worker_power > ACTIVE_THRESHOLD_DB) {
+  if (centroid > PRE_SWARM_CENTROID_HZ &&
+      this->cached_band_worker_ > ACTIVE_THRESHOLD_DB) {
 
     return HiveState::PRE_SWARM;
   }
 
   // Check for active state
-  if (worker_power > ACTIVE_THRESHOLD_DB) {
+  if (this->cached_band_worker_ > ACTIVE_THRESHOLD_DB) {
 
     return HiveState::ACTIVE;
   }
 
   // Check for normal state
-  if (baseline_power > NORMAL_THRESHOLD_DB) {
+  if (this->cached_band_baseline_ > NORMAL_THRESHOLD_DB) {
 
     return HiveState::NORMAL;
   }
