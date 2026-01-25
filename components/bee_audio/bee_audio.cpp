@@ -162,38 +162,37 @@ bool BeeAudioComponent::init_i2s_() {
     return false;
   }
 
-  // // Standard mode configuration for INMP441
-  // i2s_std_config_t std_cfg = {
-  //     .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(this->sample_rate_),
-  //     .slot_cfg =
-  //     I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT,
-  //                                                     I2S_SLOT_MODE_MONO),
-  //     .gpio_cfg =
-  //         {
-  //             .mclk = I2S_GPIO_UNUSED,
-  //             .bclk = static_cast<gpio_num_t>(this->i2s_bclk_pin_),
-  //             .ws = static_cast<gpio_num_t>(this->i2s_lrclk_pin_),
-  //             .dout = I2S_GPIO_UNUSED,
-  //             .din = static_cast<gpio_num_t>(this->i2s_din_pin_),
-  //             .invert_flags =
-  //                 {
-  //                     .mclk_inv = false,
-  //                     .bclk_inv = false,
-  //                     .ws_inv = false,
-  //                 },
-  //         },
-  // };
-  //
-  // // INMP441 outputs on falling edge of WS, so we read left channel
-  // std_cfg.slot_cfg.slot_mask = I2S_STD_SLOT_LEFT;
-  //
-  // ret = i2s_channel_init_std_mode(this->rx_chan_, &std_cfg);
-  // if (ret != ESP_OK) {
-  //   ESP_LOGE(TAG, "Failed to init I2S standard mode: %s",
-  //   esp_err_to_name(ret)); i2s_del_channel(this->rx_chan_);
-  //
-  //   return false;
-  // }
+  // Standard mode configuration for INMP441
+  i2s_std_config_t std_cfg = {
+      .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(this->sample_rate_),
+      .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT,
+                                                      I2S_SLOT_MODE_MONO),
+      .gpio_cfg =
+          {
+              .mclk = I2S_GPIO_UNUSED,
+              .bclk = static_cast<gpio_num_t>(this->i2s_bclk_pin_),
+              .ws = static_cast<gpio_num_t>(this->i2s_lrclk_pin_),
+              .dout = I2S_GPIO_UNUSED,
+              .din = static_cast<gpio_num_t>(this->i2s_din_pin_),
+              .invert_flags =
+                  {
+                      .mclk_inv = false,
+                      .bclk_inv = false,
+                      .ws_inv = false,
+                  },
+          },
+  };
+
+  // INMP441 outputs on falling edge of WS, so we read left channel
+  std_cfg.slot_cfg.slot_mask = I2S_STD_SLOT_LEFT;
+
+  ret = i2s_channel_init_std_mode(this->rx_chan_, &std_cfg);
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "Failed to init I2S standard mode: %s", esp_err_to_name(ret));
+    i2s_del_channel(this->rx_chan_);
+
+    return false;
+  }
   //
   // ret = i2s_channel_enable(this->rx_chan_);
   // if (ret != ESP_OK) {
