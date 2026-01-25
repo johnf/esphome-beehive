@@ -52,7 +52,8 @@ async def to_code(config):
     cg.add(var.set_fft_size(config[CONF_FFT_SIZE]))
 
     # Add ESP-DSP library dependency
-    cg.add_library("espressif/esp-dsp", "1.4.0")
+    # cg.add_library("espressif/esp-dsp", "1.4.0")
+    # cg.add_library("esphome/esp-audio-libs", "1.4.0")
 
     # Add platformio build flags for ESP-DSP
     cg.add_build_flag("-DCONFIG_DSP_OPTIMIZED=1")
