@@ -5,6 +5,7 @@ ESPHome-based beehive monitoring system using ESP-IDF framework with deep sleep 
 ## Overview
 
 This project creates a battery-powered beehive monitoring system that:
+
 - Wakes every 5 minutes to collect sensor data
 - Publishes measurements to Home Assistant via API
 - Returns to deep sleep for power efficiency
@@ -85,12 +86,6 @@ esphome upload beehive-monitor.yaml
 esphome logs beehive-monitor.yaml
 ```
 
-## Configuration
-
-1. Copy `secrets.yaml.example` to `secrets.yaml`
-2. Fill in your WiFi credentials and Home Assistant API key
-3. Adjust load cell calibration in `beehive-monitor.yaml`
-
 ## Development
 
 ### File Structure
@@ -122,6 +117,7 @@ secrets.yaml          # WiFi and API credentials (not in git)
 1. Record raw NAU7802 value with empty hive platform
 2. Place known weight on platform and record raw value
 3. Update `calibrate_linear` filter in YAML:
+
    ```yaml
    filters:
      - calibrate_linear:
@@ -132,6 +128,7 @@ secrets.yaml          # WiFi and API credentials (not in git)
 ### Audio Thresholds
 
 Classification thresholds in `bee_audio.cpp` may need adjustment based on:
+
 - Microphone placement in hive
 - Hive size and colony population
 - Local acoustic environment

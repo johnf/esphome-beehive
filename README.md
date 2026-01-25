@@ -69,14 +69,36 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
 
 2. **Edit the configuration**
 
-   - Click **Edit** on the new device
-   - Replace the contents with the configuration from `beehive-monitor.yaml`
-
-   The bee_audio component is loaded automatically from GitHub:
+   Click **Edit** on the new device and use the following configuration:
 
    ```yaml
+   # Include the beehive monitoring package
    packages:
-     bee_audio: github://johnf/esp32-beehive/beehive-monitor.yaml
+     beehive: github://johnf/esp32-beehive/beehive-monitor.yaml
+
+   # Device configuration (required)
+   esphome:
+     name: beehive-monitor
+     friendly_name: Beehive Monitor
+
+   esp32:
+     board: esp32dev
+     framework:
+       type: esp-idf
+       version: recommended
+
+   # WiFi configuration (required)
+   wifi:
+     ssid: !secret wifi_ssid
+     password: !secret wifi_password
+     fast_connect: true
+
+   # Home Assistant API (required)
+   api:
+
+   # Optional: enable logging during development
+   logger:
+     level: DEBUG
    ```
 
 3. **Configure secrets**
@@ -86,7 +108,6 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
    ```yaml
    wifi_ssid: 'YourWiFiNetwork'
    wifi_password: 'YourWiFiPassword'
-   api_key: 'your-home-assistant-api-encryption-key'
    ```
 
    Or use the ESPHome Secrets editor (three-dot menu → **Secrets**).
@@ -98,6 +119,31 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
      **Manual download** to get the firmware binary
    - Flash via USB using the web installer at <https://web.esphome.io/>
    - Subsequent updates can use **Wirelessly** once connected
+
+### Power Optimisation (recommended for battery operation)
+
+For battery-powered deployments, add these settings to reduce power consumption:
+
+```yaml
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+  power_save_mode: light
+  # Static IP eliminates DHCP negotiation, saving 1-3 seconds per wake
+  manual_ip:
+    static_ip: 192.168.1.100  # Choose an IP outside your DHCP range
+    gateway: 192.168.1.1      # Your router's IP
+    subnet: 255.255.255.0
+
+api:
+  reboot_timeout: 0s  # Prevent reboots when Home Assistant is unavailable
+
+# Disable UART logging in production
+logger:
+  level: WARN
+  baud_rate: 0
+```
 
 ## Calibration
 

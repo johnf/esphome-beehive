@@ -1,10 +1,13 @@
-# ESPHome Beehive Monitoring System
+# ESPHome Beehive Monitoring Package
 #
 # Battery-powered ESP32 beehive monitor with:
 # - INMP441 microphone for FFT-based audio analysis
 # - NAU7802 ADC for 4x 50kg load cells (weight)
 # - SHT40 temperature and humidity sensor
 # - Deep sleep for power efficiency (5 minute intervals)
+#
+# Usage: Include this as a package in your device configuration.
+# See README.md for setup instructions.
 
 substitutions:
   # Weight calibration points (raw_value -> weight_kg)
@@ -19,18 +22,10 @@ substitutions:
   weight_cal_kg_4: "3.574"
 
 esphome:
-  name: beehive-monitor
-  friendly_name: Beehive Monitor
   on_boot:
     priority: -100 # Run after all components initialised
     then:
       - script.execute: collect_and_sleep
-
-esp32:
-  board: esp32dev
-  framework:
-    type: esp-idf
-    version: recommended
 
 external_components:
   - source: github://johnf/esphome-beehive
@@ -38,26 +33,16 @@ external_components:
     refresh: 0s
 
 # Deep sleep configuration - 5 minute intervals
-#deep_sleep:
-#  id: deep_sleep_control
-#  run_duration: 30s # Max awake time before forced sleep
-#  sleep_duration: 5min
-
-# WiFi with fast connect for battery efficiency
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-  fast_connect: true
-  power_save_mode: none # Disable during measurement window
-
-api:
+deep_sleep:
+  id: deep_sleep_control
+  run_duration: 30s # Max awake time before forced sleep
+  sleep_duration: 5min
 
 # I2C bus for NAU7802 and SHT40
 i2c:
   sda: GPIO21
   scl: GPIO22
-  scan: true
-  #scan: false # Faster boot
+  scan: false
 # Custom bee audio component (INMP441 microphone)
 # Pins:
 #   - LRCLK (WS): GPIO25
@@ -73,7 +58,7 @@ bee_audio:
   i2s_din_pin: GPIO33
   sample_rate: 8000
   fft_size: 2048
-  update_interval: 10s
+  update_interval: never
 
 sensor:
   # Bee audio frequency bands (power in dB)
@@ -121,6 +106,7 @@ sensor:
     gain: 128
     unit_of_measurement: "kg"
     accuracy_decimals: 2
+    update_interval: never
     filters:
       - calibrate_linear:
           - ${weight_cal_raw_1} -> ${weight_cal_kg_1}
@@ -165,10 +151,16 @@ script:
   - id: collect_and_sleep
     then:
       - logger.log: "Starting measurement cycle"
-      # Trigger sensor updates
+      - wait_until:
+          condition:
+            wifi.connected:
+          timeout: 10s
       - component.update: bee_monitor
       - component.update: hive_weight
-      # Wait for sensors to publish and API to sync
-      - delay: 2s
+      - wait_until:
+          condition:
+            api.connected:
+          timeout: 10s
+      - delay: 300ms
       - logger.log: "Entering deep sleep"
-      #- deep_sleep.enter: deep_sleep_control
+      - deep_sleep.enter: deep_sleep_control
