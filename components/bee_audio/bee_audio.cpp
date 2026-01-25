@@ -193,15 +193,15 @@ bool BeeAudioComponent::init_i2s_() {
 
     return false;
   }
-  //
-  // ret = i2s_channel_enable(this->rx_chan_);
-  // if (ret != ESP_OK) {
-  //   ESP_LOGE(TAG, "Failed to enable I2S channel: %s", esp_err_to_name(ret));
-  //   i2s_del_channel(this->rx_chan_);
-  //
-  //   return false;
-  // }
-  //
+
+  ret = i2s_channel_enable(this->rx_chan_);
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "Failed to enable I2S channel: %s", esp_err_to_name(ret));
+    i2s_del_channel(this->rx_chan_);
+
+    return false;
+  }
+
   ESP_LOGD(TAG, "I2S initialised successfully");
 
   return true;
