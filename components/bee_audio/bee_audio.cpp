@@ -18,121 +18,121 @@ static const float PRE_SWARM_CENTROID_HZ = 400.0f;
 void BeeAudioComponent::setup() {
   ESP_LOGCONFIG(TAG, "Setting up Bee Audio...");
 
-  // Calculate frequency resolution
-  this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
-                           static_cast<float>(this->fft_size_);
-  ESP_LOGD(TAG, "Frequency resolution: %.2f Hz/bin", this->freq_resolution_);
-
-  // Allocate buffers
-  if (!this->allocate_buffers_()) {
-    this->mark_failed();
-
-    return;
-  }
-
-  // Initialise I2S
-  if (!this->init_i2s_()) {
-    this->free_buffers_();
-    this->mark_failed();
-
-    return;
-  }
-
-  // Generate Hanning window
-  dsps_wind_hann_f32(this->window_, this->fft_size_);
-
-  // Initialise FFT tables
-  esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
-  if (ret != ESP_OK) {
-    ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
-    this->deinit_i2s_();
-    this->free_buffers_();
-    this->mark_failed();
-
-    return;
-  }
-
-  ESP_LOGCONFIG(TAG, "Bee Audio initialised successfully");
+  // // Calculate frequency resolution
+  // this->freq_resolution_ = static_cast<float>(this->sample_rate_) /
+  //                          static_cast<float>(this->fft_size_);
+  // ESP_LOGD(TAG, "Frequency resolution: %.2f Hz/bin", this->freq_resolution_);
+  //
+  // // Allocate buffers
+  // if (!this->allocate_buffers_()) {
+  //   this->mark_failed();
+  //
+  //   return;
+  // }
+  //
+  // // Initialise I2S
+  // if (!this->init_i2s_()) {
+  //   this->free_buffers_();
+  //   this->mark_failed();
+  //
+  //   return;
+  // }
+  //
+  // // Generate Hanning window
+  // dsps_wind_hann_f32(this->window_, this->fft_size_);
+  //
+  // // Initialise FFT tables
+  // esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
+  // if (ret != ESP_OK) {
+  //   ESP_LOGE(TAG, "FFT init failed: %s", esp_err_to_name(ret));
+  //   this->deinit_i2s_();
+  //   this->free_buffers_();
+  //   this->mark_failed();
+  //
+  //   return;
+  // }
+  //
+  // ESP_LOGCONFIG(TAG, "Bee Audio initialised successfully");
 }
 
 void BeeAudioComponent::update() {
   ESP_LOGD(TAG, "Starting audio capture and analysis...");
 
-  // Capture audio samples
-  if (!this->capture_audio_()) {
-    ESP_LOGW(TAG, "Audio capture failed");
-
-    return;
-  }
-
-  // Compute FFT
-  this->compute_fft_();
-
-  // Calculate and publish frequency band powers
-  if (this->band_low_freq_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_LOW_FREQ);
-    this->band_low_freq_sensor_->publish_state(power);
-  }
-
-  if (this->band_baseline_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_BASELINE);
-    this->band_baseline_sensor_->publish_state(power);
-  }
-
-  if (this->band_worker_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_WORKER);
-    this->band_worker_sensor_->publish_state(power);
-  }
-
-  if (this->band_quacking_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_QUACKING);
-    this->band_quacking_sensor_->publish_state(power);
-  }
-
-  if (this->band_tooting_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_TOOTING);
-    this->band_tooting_sensor_->publish_state(power);
-  }
-
-  if (this->band_queenless_mid_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_QUEENLESS_MID);
-    this->band_queenless_mid_sensor_->publish_state(power);
-  }
-
-  if (this->band_queenless_high_sensor_ != nullptr) {
-    float power = this->calculate_band_power_(BAND_QUEENLESS_HIGH);
-    this->band_queenless_high_sensor_->publish_state(power);
-  }
-
-  // Calculate and publish derived metrics
-  if (this->dominant_frequency_sensor_ != nullptr) {
-    float freq = this->calculate_dominant_frequency_();
-    this->dominant_frequency_sensor_->publish_state(freq);
-  }
-
-  if (this->sound_level_rms_sensor_ != nullptr) {
-    float rms = this->calculate_rms_();
-    this->sound_level_rms_sensor_->publish_state(rms);
-  }
-
-  if (this->spectral_centroid_sensor_ != nullptr) {
-    float centroid = this->calculate_spectral_centroid_();
-    this->spectral_centroid_sensor_->publish_state(centroid);
-  }
-
-  // Detect queen piping
-  if (this->queen_piping_sensor_ != nullptr) {
-    bool piping = this->detect_queen_piping_();
-    this->queen_piping_sensor_->publish_state(piping);
-  }
-
-  // Classify hive state
-  if (this->hive_state_sensor_ != nullptr) {
-    HiveState state = this->classify_hive_state_();
-    this->hive_state_sensor_->publish_state(this->hive_state_to_string_(state));
-  }
-
-  ESP_LOGD(TAG, "Audio analysis complete");
+  // // Capture audio samples
+  // if (!this->capture_audio_()) {
+  //   ESP_LOGW(TAG, "Audio capture failed");
+  //
+  //   return;
+  // }
+  //
+  // // Compute FFT
+  // this->compute_fft_();
+  //
+  // // Calculate and publish frequency band powers
+  // if (this->band_low_freq_sensor_ != nullptr) {
+  //   float power = this->calculate_band_power_(BAND_LOW_FREQ);
+  //   this->band_low_freq_sensor_->publish_state(power);
+  // }
+  //
+  // if (this->band_baseline_sensor_ != nullptr) {
+  //   float power = this->calculate_band_power_(BAND_BASELINE);
+  //   this->band_baseline_sensor_->publish_state(power);
+  // }
+  //
+  // if (this->band_worker_sensor_ != nullptr) {
+  //   float power = this->calculate_band_power_(BAND_WORKER);
+  //   this->band_worker_sensor_->publish_state(power);
+  // }
+  //
+  // if (this->band_quacking_sensor_ != nullptr) {
+  //   float power = this->calculate_band_power_(BAND_QUACKING);
+  //   this->band_quacking_sensor_->publish_state(power);
+  // }
+  //
+  // if (this->band_tooting_sensor_ != nullptr) {
+  //   float power = this->calculate_band_power_(BAND_TOOTING);
+  //   this->band_tooting_sensor_->publish_state(power);
+  // }
+  //
+  // if (this->band_queenless_mid_sensor_ != nullptr) {
+  //   float power = this->calculate_band_power_(BAND_QUEENLESS_MID);
+  //   this->band_queenless_mid_sensor_->publish_state(power);
+  // }
+  //
+  // if (this->band_queenless_high_sensor_ != nullptr) {
+  //   float power = this->calculate_band_power_(BAND_QUEENLESS_HIGH);
+  //   this->band_queenless_high_sensor_->publish_state(power);
+  // }
+  //
+  // // Calculate and publish derived metrics
+  // if (this->dominant_frequency_sensor_ != nullptr) {
+  //   float freq = this->calculate_dominant_frequency_();
+  //   this->dominant_frequency_sensor_->publish_state(freq);
+  // }
+  //
+  // if (this->sound_level_rms_sensor_ != nullptr) {
+  //   float rms = this->calculate_rms_();
+  //   this->sound_level_rms_sensor_->publish_state(rms);
+  // }
+  //
+  // if (this->spectral_centroid_sensor_ != nullptr) {
+  //   float centroid = this->calculate_spectral_centroid_();
+  //   this->spectral_centroid_sensor_->publish_state(centroid);
+  // }
+  //
+  // // Detect queen piping
+  // if (this->queen_piping_sensor_ != nullptr) {
+  //   bool piping = this->detect_queen_piping_();
+  //   this->queen_piping_sensor_->publish_state(piping);
+  // }
+  //
+  // // Classify hive state
+  // if (this->hive_state_sensor_ != nullptr) {
+  //   HiveState state = this->classify_hive_state_();
+  //   this->hive_state_sensor_->publish_state(this->hive_state_to_string_(state));
+  // }
+  //
+  // ESP_LOGD(TAG, "Audio analysis complete");
 }
 
 void BeeAudioComponent::dump_config() {
@@ -149,59 +149,60 @@ void BeeAudioComponent::dump_config() {
 bool BeeAudioComponent::init_i2s_() {
   ESP_LOGD(TAG, "Initialising I2S...");
 
-  // Channel configuration
-  i2s_chan_config_t chan_cfg =
-      I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_0, I2S_ROLE_MASTER);
-  chan_cfg.dma_desc_num = 4;
-  chan_cfg.dma_frame_num = 256;
-
-  esp_err_t ret = i2s_new_channel(&chan_cfg, nullptr, &this->rx_chan_);
-  if (ret != ESP_OK) {
-    ESP_LOGE(TAG, "Failed to create I2S channel: %s", esp_err_to_name(ret));
-
-    return false;
-  }
-
-  // Standard mode configuration for INMP441
-  i2s_std_config_t std_cfg = {
-      .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(this->sample_rate_),
-      .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT,
-                                                      I2S_SLOT_MODE_MONO),
-      .gpio_cfg =
-          {
-              .mclk = I2S_GPIO_UNUSED,
-              .bclk = static_cast<gpio_num_t>(this->i2s_bclk_pin_),
-              .ws = static_cast<gpio_num_t>(this->i2s_lrclk_pin_),
-              .dout = I2S_GPIO_UNUSED,
-              .din = static_cast<gpio_num_t>(this->i2s_din_pin_),
-              .invert_flags =
-                  {
-                      .mclk_inv = false,
-                      .bclk_inv = false,
-                      .ws_inv = false,
-                  },
-          },
-  };
-
-  // INMP441 outputs on falling edge of WS, so we read left channel
-  std_cfg.slot_cfg.slot_mask = I2S_STD_SLOT_LEFT;
-
-  ret = i2s_channel_init_std_mode(this->rx_chan_, &std_cfg);
-  if (ret != ESP_OK) {
-    ESP_LOGE(TAG, "Failed to init I2S standard mode: %s", esp_err_to_name(ret));
-    i2s_del_channel(this->rx_chan_);
-
-    return false;
-  }
-
-  ret = i2s_channel_enable(this->rx_chan_);
-  if (ret != ESP_OK) {
-    ESP_LOGE(TAG, "Failed to enable I2S channel: %s", esp_err_to_name(ret));
-    i2s_del_channel(this->rx_chan_);
-
-    return false;
-  }
-
+  // // Channel configuration
+  // i2s_chan_config_t chan_cfg =
+  //     I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_0, I2S_ROLE_MASTER);
+  // chan_cfg.dma_desc_num = 4;
+  // chan_cfg.dma_frame_num = 256;
+  //
+  // esp_err_t ret = i2s_new_channel(&chan_cfg, nullptr, &this->rx_chan_);
+  // if (ret != ESP_OK) {
+  //   ESP_LOGE(TAG, "Failed to create I2S channel: %s", esp_err_to_name(ret));
+  //
+  //   return false;
+  // }
+  //
+  // // Standard mode configuration for INMP441
+  // i2s_std_config_t std_cfg = {
+  //     .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(this->sample_rate_),
+  //     .slot_cfg =
+  //     I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT,
+  //                                                     I2S_SLOT_MODE_MONO),
+  //     .gpio_cfg =
+  //         {
+  //             .mclk = I2S_GPIO_UNUSED,
+  //             .bclk = static_cast<gpio_num_t>(this->i2s_bclk_pin_),
+  //             .ws = static_cast<gpio_num_t>(this->i2s_lrclk_pin_),
+  //             .dout = I2S_GPIO_UNUSED,
+  //             .din = static_cast<gpio_num_t>(this->i2s_din_pin_),
+  //             .invert_flags =
+  //                 {
+  //                     .mclk_inv = false,
+  //                     .bclk_inv = false,
+  //                     .ws_inv = false,
+  //                 },
+  //         },
+  // };
+  //
+  // // INMP441 outputs on falling edge of WS, so we read left channel
+  // std_cfg.slot_cfg.slot_mask = I2S_STD_SLOT_LEFT;
+  //
+  // ret = i2s_channel_init_std_mode(this->rx_chan_, &std_cfg);
+  // if (ret != ESP_OK) {
+  //   ESP_LOGE(TAG, "Failed to init I2S standard mode: %s",
+  //   esp_err_to_name(ret)); i2s_del_channel(this->rx_chan_);
+  //
+  //   return false;
+  // }
+  //
+  // ret = i2s_channel_enable(this->rx_chan_);
+  // if (ret != ESP_OK) {
+  //   ESP_LOGE(TAG, "Failed to enable I2S channel: %s", esp_err_to_name(ret));
+  //   i2s_del_channel(this->rx_chan_);
+  //
+  //   return false;
+  // }
+  //
   ESP_LOGD(TAG, "I2S initialised successfully");
 
   return true;
@@ -223,7 +224,8 @@ bool BeeAudioComponent::allocate_buffers_() {
 
   // Raw I2S samples (32-bit signed) - needs DMA capability
   this->raw_samples_ = static_cast<int32_t *>(
-      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(int32_t), MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL));
+      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(int32_t),
+                              MALLOC_CAP_DMA | MALLOC_CAP_INTERNAL));
   if (this->raw_samples_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate raw_samples buffer");
 
@@ -231,8 +233,8 @@ bool BeeAudioComponent::allocate_buffers_() {
   }
 
   // Normalised float samples - 16-byte aligned for ESP-DSP
-  this->samples_ = static_cast<float *>(
-      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+  this->samples_ = static_cast<float *>(heap_caps_aligned_alloc(
+      alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
   if (this->samples_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate samples buffer");
 
@@ -240,8 +242,8 @@ bool BeeAudioComponent::allocate_buffers_() {
   }
 
   // FFT data (interleaved real/imag, so 2x size) - 16-byte aligned for ESP-DSP
-  this->fft_data_ = static_cast<float *>(
-      heap_caps_aligned_alloc(alignment, this->fft_size_ * 2 * sizeof(float), MALLOC_CAP_INTERNAL));
+  this->fft_data_ = static_cast<float *>(heap_caps_aligned_alloc(
+      alignment, this->fft_size_ * 2 * sizeof(float), MALLOC_CAP_INTERNAL));
   if (this->fft_data_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate fft_data buffer");
 
@@ -249,8 +251,8 @@ bool BeeAudioComponent::allocate_buffers_() {
   }
 
   // Magnitude spectrum - 16-byte aligned for ESP-DSP
-  this->magnitude_ = static_cast<float *>(
-      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+  this->magnitude_ = static_cast<float *>(heap_caps_aligned_alloc(
+      alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
   if (this->magnitude_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate magnitude buffer");
 
@@ -258,8 +260,8 @@ bool BeeAudioComponent::allocate_buffers_() {
   }
 
   // Hanning window - 16-byte aligned for ESP-DSP
-  this->window_ = static_cast<float *>(
-      heap_caps_aligned_alloc(alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
+  this->window_ = static_cast<float *>(heap_caps_aligned_alloc(
+      alignment, this->fft_size_ * sizeof(float), MALLOC_CAP_INTERNAL));
   if (this->window_ == nullptr) {
     ESP_LOGE(TAG, "Failed to allocate window buffer");
 
