@@ -29,15 +29,15 @@ void BeeAudioComponent::setup() {
 
     return;
   }
-  //
-  // // Initialise I2S
-  // if (!this->init_i2s_()) {
-  //   this->free_buffers_();
-  //   this->mark_failed();
-  //
-  //   return;
-  // }
-  //
+
+  // Initialise I2S
+  if (!this->init_i2s_()) {
+    this->free_buffers_();
+    this->mark_failed();
+
+    return;
+  }
+
   // // Generate Hanning window
   // dsps_wind_hann_f32(this->window_, this->fft_size_);
   //
@@ -149,19 +149,19 @@ void BeeAudioComponent::dump_config() {
 bool BeeAudioComponent::init_i2s_() {
   ESP_LOGD(TAG, "Initialising I2S...");
 
-  // // Channel configuration
-  // i2s_chan_config_t chan_cfg =
-  //     I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_0, I2S_ROLE_MASTER);
-  // chan_cfg.dma_desc_num = 4;
-  // chan_cfg.dma_frame_num = 256;
-  //
-  // esp_err_t ret = i2s_new_channel(&chan_cfg, nullptr, &this->rx_chan_);
-  // if (ret != ESP_OK) {
-  //   ESP_LOGE(TAG, "Failed to create I2S channel: %s", esp_err_to_name(ret));
-  //
-  //   return false;
-  // }
-  //
+  // Channel configuration
+  i2s_chan_config_t chan_cfg =
+      I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_0, I2S_ROLE_MASTER);
+  chan_cfg.dma_desc_num = 4;
+  chan_cfg.dma_frame_num = 256;
+
+  esp_err_t ret = i2s_new_channel(&chan_cfg, nullptr, &this->rx_chan_);
+  if (ret != ESP_OK) {
+    ESP_LOGE(TAG, "Failed to create I2S channel: %s", esp_err_to_name(ret));
+
+    return false;
+  }
+
   // // Standard mode configuration for INMP441
   // i2s_std_config_t std_cfg = {
   //     .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(this->sample_rate_),
@@ -217,7 +217,7 @@ void BeeAudioComponent::deinit_i2s_() {
 }
 
 bool BeeAudioComponent::allocate_buffers_() {
-  ESP_LOGD(TAG, "Allocating buffers for FFT size %u...", this->fft_size_);
+  ESP_LOGD(TAG, "Allocating buffers for FFT size %zu...", this->fft_size_);
 
   // ESP-DSP requires 16-byte aligned memory for SIMD operations
   const size_t alignment = 16;
