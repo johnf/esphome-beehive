@@ -46,11 +46,11 @@ void BeeAudioComponent::setup() {
   }
 
   // Generate Hanning window manually (avoids ESP-DSP alignment issues)
-  // for (size_t i = 0; i < this->fft_size_; i++) {
-  //   this->window_[i] =
-  //       0.5f * (1.0f - cosf(2.0f * M_PI * static_cast<float>(i) /
-  //                           static_cast<float>(this->fft_size_ - 1)));
-  // }
+  for (size_t i = 0; i < this->fft_size_; i++) {
+    this->window_[i] =
+        0.5f * (1.0f - cosf(2.0f * M_PI * static_cast<float>(i) /
+                            static_cast<float>(this->fft_size_ - 1)));
+  }
   //
   // // Initialise FFT tables
   // esp_err_t ret = dsps_fft2r_init_fc32(nullptr, this->fft_size_);
