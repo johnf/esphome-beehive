@@ -165,5 +165,5 @@ script:
             api.connected:
           timeout: 10s
       - delay: 300ms
-      - logger.log: "Entering deep sleep"
+      - logger.log: "BeeHive: Entering deep sleep"
       - deep_sleep.enter: deep_sleep_control
