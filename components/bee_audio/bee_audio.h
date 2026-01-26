@@ -41,7 +41,7 @@ public:
   void setup() override;
   void update() override;
   void dump_config() override;
-  ~BeeAudioComponent() override;
+  ~BeeAudioComponent();
   float get_setup_priority() const override { return setup_priority::DATA; }
 
   // Configuration setters
