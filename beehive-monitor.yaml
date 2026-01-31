@@ -10,6 +10,12 @@
 # See README.md for setup instructions.
 
 substitutions:
+  # I2C bus ID (user must define the i2c bus externally)
+  i2c_bus_id: i2c_bus
+  # I2S pins for INMP441 microphone
+  i2s_lrclk_pin: GPIO1
+  i2s_bclk_pin: GPIO3
+  i2s_din_pin: GPIO7
   # Weight calibration points (raw_value -> weight_kg)
   # Record raw values at known weights and update these
   weight_cal_raw_1: "-242624"
@@ -38,11 +44,6 @@ deep_sleep:
   run_duration: 30s # Max awake time before forced sleep
   sleep_duration: 5min
 
-# I2C bus for NAU7802 and SHT40
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-  scan: false
 # Custom bee audio component (INMP441 microphone)
 # Pins:
 #   - LRCLK (WS): GPIO25
@@ -53,9 +54,9 @@ i2c:
 #   - L/R:        GND (left channel)
 bee_audio:
   id: bee_monitor
-  i2s_lrclk_pin: GPIO25
-  i2s_bclk_pin: GPIO32
-  i2s_din_pin: GPIO33
+  i2s_lrclk_pin: ${i2s_lrclk_pin}
+  i2s_bclk_pin: ${i2s_bclk_pin}
+  i2s_din_pin: ${i2s_din_pin}
   sample_rate: 8000
   fft_size: 2048
   update_interval: never
@@ -101,6 +102,7 @@ sensor:
   # 2. Record raw value with known weight
   # 3. Update the linear calibration
   - platform: nau7802
+    i2c_id: ${i2c_bus_id}
     id: hive_weight
     name: "Hive Weight"
     gain: 128
@@ -116,6 +118,7 @@ sensor:
 
   # SHT40 temperature and humidity
   - platform: sht4x
+    i2c_id: ${i2c_bus_id}
     id: hive_climate
     update_interval: never
     temperature:

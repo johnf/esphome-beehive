@@ -19,7 +19,7 @@ temperature, and humidity monitoring.
 | Component | Description | Qty |
 | ----------- | ------------- | ----- |
 | ESP32 DevKit | Main microcontroller | 1 |
-| INMP441 | I2S MEMS microphone | 1 |
+| INMP441 | I2S MEMS microphone (GPIO1, 3, 7) | 1 |
 | NAU7802 | 24-bit ADC breakout | 1 |
 | 50kg Load Cells | Half-bridge strain gauges | 4 |
 | SHT40 | Temperature/humidity sensor | 1 |
@@ -30,18 +30,23 @@ temperature, and humidity monitoring.
 
 ### I2C Bus (SHT40 & NAU7802)
 
-| Signal | ESP32 GPIO |
+The I2C bus must be defined in your device configuration and its `id` passed to the
+package via the `i2c_bus_id` substitution (defaults to `i2c_bus`).
+
+| Signal | Default GPIO |
 | -------- | ------------ |
 | SDA | GPIO21 |
 | SCL | GPIO22 |
 
 ### INMP441 Microphone
 
-| INMP441 Pin | ESP32 GPIO |
+Pin assignments are configurable via substitutions (`i2s_lrclk_pin`, `i2s_bclk_pin`, `i2s_din_pin`).
+
+| INMP441 Pin | Default ESP32 GPIO |
 | ------------- | ------------ |
-| WS (LRCLK) | GPIO25 |
-| SCK (BCLK) | GPIO32 |
-| SD (DOUT) | GPIO33 |
+| WS (LRCLK) | GPIO1 |
+| SCK (BCLK) | GPIO3 |
+| SD (DOUT) | GPIO7 |
 | VDD | 3.3V |
 | GND | GND |
 | L/R | GND (left channel) |
@@ -87,6 +92,13 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
        type: esp-idf
        version: recommended
 
+   # I2C bus (required - must define with id matching i2c_bus_id substitution)
+   i2c:
+     id: i2c_bus
+     sda: GPIO21
+     scl: GPIO22
+     scan: false
+
    # WiFi configuration (required)
    wifi:
      ssid: !secret wifi_ssid
@@ -99,6 +111,13 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
    # Optional: enable logging during development
    logger:
      level: DEBUG
+
+   # Optional: override default pin assignments or I2C bus ID
+   # substitutions:
+   #   i2c_bus_id: "i2c_bus"
+   #   i2s_lrclk_pin: "GPIO1"
+   #   i2s_bclk_pin: "GPIO3"
+   #   i2s_din_pin: "GPIO7"
    ```
 
 3. **Configure secrets**

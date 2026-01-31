@@ -17,19 +17,24 @@ This project creates a battery-powered beehive monitoring system that:
 | Component | Purpose | Interface |
 |-----------|---------|-----------|
 | ESP32 | Microcontroller | - |
-| INMP441 | I2S MEMS microphone for audio FFT analysis | I2S (GPIO25, 32, 33) |
+| INMP441 | I2S MEMS microphone for audio FFT analysis | I2S (GPIO1, 3, 7) |
 | NAU7802 | 24-bit ADC for 4x 50kg load cells | I2C (0x2A) |
 | SHT40 | Temperature and humidity sensor | I2C (0x44) |
 
-### Pin Assignments
+### Pin Assignments (Defaults)
 
-| Function | GPIO |
-|----------|------|
-| I2C SDA | GPIO21 |
-| I2C SCL | GPIO22 |
-| I2S WS (LRCLK) | GPIO25 |
-| I2S SCK (BCLK) | GPIO32 |
-| I2S SD (DIN) | GPIO33 |
+The I2C bus is defined by the user externally and referenced via the `i2c_bus_id` substitution.
+I2S pins are configurable via substitutions.
+
+| Function | Default GPIO | Substitution |
+|----------|------|-------------|
+| I2S WS (LRCLK) | GPIO1 | `i2s_lrclk_pin` |
+| I2S SCK (BCLK) | GPIO3 | `i2s_bclk_pin` |
+| I2S SD (DIN) | GPIO7 | `i2s_din_pin` |
+
+| Substitution | Default | Purpose |
+|-------------|---------|---------|
+| `i2c_bus_id` | `i2c_bus` | ID of the externally defined I2C bus |
 
 ## Custom Component: bee_audio
 
