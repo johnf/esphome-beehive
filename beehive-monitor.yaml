@@ -152,6 +152,17 @@ text_sensor:
       name: "Hive State"
       id: hive_state
 
+switch:
+  - platform: template
+    name: "Prevent Deep Sleep"
+    id: prevent_deep_sleep
+    optimistic: true
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+      - deep_sleep.prevent: deep_sleep_control
+    on_turn_off:
+      - deep_sleep.allow: deep_sleep_control
+
 script:
   - id: collect_and_sleep
     then:
@@ -168,5 +179,13 @@ script:
             api.connected:
           timeout: 10s
       - delay: 300ms
-      - logger.log: "BeeHive: Entering deep sleep"
-      - deep_sleep.enter: deep_sleep_control
+      - if:
+          condition:
+            switch.is_on: prevent_deep_sleep
+          then:
+            - logger.log: "Deep sleep prevented - staying awake"
+            - delay: 5min
+            - script.execute: collect_and_sleep
+          else:
+            - logger.log: "BeeHive: Entering deep sleep"
+            - deep_sleep.enter: deep_sleep_control
