@@ -16,6 +16,8 @@ substitutions:
   i2s_lrclk_pin: GPIO1
   i2s_bclk_pin: GPIO3
   i2s_din_pin: GPIO7
+  # GPIO pin to prevent deep sleep when held high at boot
+  prevent_sleep_pin: GPIO11
   # Weight calibration points (raw_value -> weight_kg)
   # Record raw values at known weights and update these
   weight_cal_raw_1: "-242624"
@@ -31,6 +33,12 @@ esphome:
   on_boot:
     priority: -100 # Run after all components initialised
     then:
+      - if:
+          condition:
+            binary_sensor.is_on: prevent_sleep_pin
+          then:
+            - logger.log: "Prevent sleep pin is high - disabling deep sleep"
+            - switch.turn_on: prevent_deep_sleep
       - script.execute: collect_and_sleep
 
 external_components:
@@ -139,6 +147,15 @@ sensor:
 #     - multiply: 2.0  # Voltage divider ratio
 
 binary_sensor:
+  - platform: gpio
+    pin:
+      number: ${prevent_sleep_pin}
+      mode:
+        input: true
+        pulldown: true
+    name: "Prevent Sleep Pin"
+    id: prevent_sleep_pin
+    internal: true
   - platform: bee_audio
     bee_audio_id: bee_monitor
     queen_piping:
