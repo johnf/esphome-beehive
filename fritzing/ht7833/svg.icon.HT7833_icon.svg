@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE svg>
+<!-- Generator: Adobe Illustrator 13.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 14948)  -->
+<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 32 32" height="0.444444in" id="svg2" version="1.0" viewBox="0 0 32 32" width="0.444444in" x="0px" xml:space="preserve"  xmlns:xml="http://www.w3.org/XML/1998/namespace" y="0px">
+    <desc >
+        <referenceFile >ht7833_icon.svg</referenceFile>
+    </desc>
+    <g id="icon" >
+        <g id="part" >
+            <g id="Transistor_legs" >
+                <rect fill="#8C8C8C" height="8.989" id="rect9479" width="2.692" x="14.641"  y="31.79"/>
+                <rect fill="#8C8C8C" height="8.989" id="rect9481" width="2.693" x="5.669"  y="31.79"/>
+                <rect fill="#8C8C8C" height="8.989" id="rect9483" width="2.693" x="23.614"  y="31.79"/>
+            </g>
+            <g id="Transistor_pins" >
+                <rect fill="#8C8C8C" height="11.688" id="rect9506_1_" width="2.692" x="14.641"  y="20.104"/>
+                <path d="M9.778,20.104v4.146c0,0.528-0.978,1.323-1.498,1.78c-1.282,1.113-2.61,2.273-2.61,3.74                                v2.023h2.693c0,0,0-1.25,0-1.512c0-0.646,1.13-1.736,1.688-2.211c1.246-1.088,2.431-2.113,2.431-3.437v-4.53H9.778L9.778,20.104z                                " fill="#8C8C8C" id="path9510_1_" />
+                <path d="M22.195,20.104v4.146c0,0.528,0.977,1.323,1.499,1.78c1.285,1.113,2.61,2.273,2.61,3.74                                v2.023h-2.693c0,0,0-1.25,0-1.512c0-0.646-1.13-1.736-1.686-2.211c-1.248-1.088-2.433-2.113-2.433-3.437v-4.53H22.195                                L22.195,20.104z" fill="#8C8C8C" id="path9514_1_" />
+            </g>
+            <rect fill="#1A1A1A" height="12.588" id="rect9553_1_" width="16.598" x="7.688"  y="7.512"/>
+            <path d="M23.029,7.512v3.066v10.286v2.303c0.79-0.891,1.256-1.941,1.256-3.065l0,0V7.512H23.029z                        " fill="#141414" id="path9555_1_" />
+            <path d="M8.945,7.512H7.69v12.588l0,0c0,1.125,0.466,2.175,1.256,3.065v-2.303V10.58L8.945,7.512                        L8.945,7.512z" fill="#242424" id="path9557_1_" />
+            <path d="M7.688,7.512L7.688,7.512c0,1.125,0.466,2.176,1.256,3.066h14.095                        c0.79-0.891,1.256-1.941,1.256-3.066l0,0H7.688z" fill="#1F1F1F" id="path9559_1_" />
+            <path d="M15.987,1.689c-4.584,0-8.3,2.607-8.3,5.827h16.598                        C24.285,4.297,20.572,1.689,15.987,1.689z" fill="#141414" id="path9561_1_" />
+            <rect height="12.587" id="rect9563_1_" width="14.096" x="8.945"  y="10.58"/>
+        </g>
+        <g id="label" >
+            <text fill="#e6e6e6" font-family="OCRA" font-size="5" id="label0" stroke="none" text-anchor="middle" x="16"  y="12">HT</text>
+            <text fill="#e6e6e6" font-family="OCRA" font-size="5" id="label1" stroke="none" text-anchor="middle" x="16"  y="17">7833</text>
+        </g>
+    </g>
+</svg>

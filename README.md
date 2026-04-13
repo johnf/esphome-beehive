@@ -301,6 +301,7 @@ Contributions are welcome! Please open an issue or submit a pull request.
 - [Bee Audio Analysis Research](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7506584/) - Scientific basis for frequency bands
 - [ESPHome Documentation](https://esphome.io/)
 - [ESP-DSP Library](https://github.com/espressif/esp-dsp)
+- <https://how2electronics.com/how-to-use-ina226-dc-current-sensor-with-arduino/>
 
 ## Licence
 
