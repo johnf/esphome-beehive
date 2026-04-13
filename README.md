@@ -18,25 +18,64 @@ temperature, and humidity monitoring.
 
 | Component | Description | Qty |
 | ----------- | ------------- | ----- |
-| ESP32 DevKit | Main microcontroller | 1 |
+| [FeatherS3D](https://unexpectedmaker.com/feathers3d) (ESP32-S3) | Main microcontroller | 1 |
 | INMP441 | I2S MEMS microphone (GPIO1, 3, 7) | 1 |
-| NAU7802 | 24-bit ADC breakout | 1 |
+| [Adafruit NAU7802](https://www.adafruit.com/product/4538) | 24-bit ADC breakout | 1 |
 | 50kg Load Cells | Half-bridge strain gauges | 4 |
 | SHT40 | Temperature/humidity sensor | 1 |
-| 3.7V LiPo Battery | Power source | 1 |
-| TP4056 | Battery charging module (optional) | 1 |
+| INA226 x2 | Current/voltage/power monitors | 2 |
+| CN3065 | Solar LiPo charge controller | 1 |
+| HT7833 | 3.3V LDO voltage regulator | 1 |
+| [3.7V 2000mAh LiPo](https://core-electronics.com.au/polymer-lithium-ion-battery-2000mah-38459.html) | Battery (DW01+ PCM) | 1 |
+| Solar panel | Input for CN3065 charger | 1 |
+
+## Power Architecture
+
+The battery is charged by the CN3065 solar charge controller. Two INA226 monitors
+are wired inline: one on the solar input and one on the battery line before the CN3065.
+
+The HT7833 LDO regulates battery voltage to 3.3V and feeds the FeatherS3D directly
+via its **3.3V pin** (not the JST battery connector). The FeatherS3D's onboard charger
+(MCP73831) and fuel gauge (MAX17048) are not used because the CN3065's charge protection
+would conflict with the onboard charger.
+
+Battery level is estimated from the INA226 battery bus voltage using a LiPo discharge
+curve mapping.
+
+The FeatherS3D's **LDO2** (GPIO39) provides a switchable 3.3V rail that is automatically
+disabled during deep sleep, used to power-gate sensors that aren't needed during sleep.
+
+### Battery Specifications
+
+| Parameter | Value |
+|-----------|-------|
+| Nominal voltage | 3.7V |
+| Charge voltage | 4.2V (CN3065) |
+| Overcharge protection | 4.30V ±0.05V (DW01+ PCM) |
+| Over-discharge protection | 2.4V ±0.1V (DW01+ PCM) |
+| Capacity | 2000mAh |
+| Wiring/connector rating | 1A max |
+
+### I2C Address Map
+
+| Address | Device |
+|---------|--------|
+| 0x2A | NAU7802 (load cell ADC) |
+| 0x40 | INA226 (solar) |
+| 0x44 | SHT40 (temperature/humidity) |
+| 0x45 | INA226 (battery) |
 
 ## Wiring
 
-### I2C Bus (SHT40 & NAU7802)
+### I2C Bus (SHT40, NAU7802, INA226s)
 
 The I2C bus must be defined in your device configuration and its `id` passed to the
 package via the `i2c_bus_id` substitution (defaults to `i2c_bus`).
 
 | Signal | Default GPIO |
 | -------- | ------------ |
-| SDA | GPIO21 |
-| SCL | GPIO22 |
+| SDA | GPIO8 |
+| SCL | GPIO9 |
 
 ### INMP441 Microphone
 
@@ -87,17 +126,22 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
      friendly_name: Beehive Monitor
 
    esp32:
-     board: esp32dev
      framework:
        type: esp-idf
-       version: recommended
+     variant: esp32s3
+     flash_size: 16MB  # FeatherS3D has 16MB flash
+
+   psram:
+     mode: quad
+     speed: 80MHz
 
    # I2C bus (required - must define with id matching i2c_bus_id substitution)
    i2c:
      id: i2c_bus
-     sda: GPIO21
-     scl: GPIO22
-     scan: false
+     sda: GPIO8
+     scl: GPIO9
+     scan: true
+     frequency: 400kHz
 
    # WiFi configuration (required)
    wifi:
@@ -107,17 +151,21 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
 
    # Home Assistant API (required)
    api:
+     reboot_timeout: 0s
 
    # Optional: enable logging during development
    logger:
+     hardware_uart: USB_CDC
      level: DEBUG
 
-   # Optional: override default pin assignments or I2C bus ID
+   # Optional: override default pin assignments or I2C addresses
    # substitutions:
    #   i2c_bus_id: "i2c_bus"
    #   i2s_lrclk_pin: "GPIO1"
    #   i2s_bclk_pin: "GPIO3"
    #   i2s_din_pin: "GPIO7"
+   #   ina226_solar_address: "0x40"
+   #   ina226_battery_address: "0x45"
    ```
 
 3. **Configure secrets**
@@ -212,6 +260,18 @@ The audio thresholds are set based on research values. You may need to adjust th
 | Sound Level | dB | Overall RMS sound level |
 | Spectral Centroid | Hz | Centre of mass of spectrum |
 
+### Power Monitoring
+
+| Sensor | Unit | Description |
+|--------|------|-------------|
+| Solar Bus Voltage | V | Solar panel voltage |
+| Solar Current | A | Current from solar panel |
+| Solar Power | W | Solar power input |
+| Battery Bus Voltage | V | Battery terminal voltage |
+| Battery Current | A | Battery charge/discharge current |
+| Battery Power | W | Battery power flow |
+| Battery Level | % | Estimated SoC from voltage curve |
+
 ### Hive State Classification
 
 The system classifies the hive into one of these states:
@@ -229,11 +289,15 @@ The system classifies the hive into one of these states:
 
 | State | Current Draw | Duration |
 |-------|--------------|----------|
-| Deep Sleep | ~10 µA | 5 minutes |
+| Deep Sleep | ~10 µA (ESP32 only) | 5 minutes |
 | Active | ~150 mA | ~10 seconds |
 | **Average** | **~5 mA** | - |
 
-With a 3000 mAh battery, expect approximately 25 days of operation.
+**Note**: Sensors on the main 3.3V rail (not LDO2) draw standby current during deep
+sleep. See the Hardware TODO section for power gating improvements.
+
+With a 2000 mAh battery and solar charging, runtime depends on solar input. Without
+solar, expect approximately 16 days.
 
 ## Home Assistant
 
@@ -291,6 +355,25 @@ automation:
 - Check that `on_boot` script is executing (visible in logs)
 - Verify no other components are blocking sleep
 - Ensure the `run_duration` is sufficient for sensor readings
+
+## Hardware TODO
+
+- [ ] **Schottky diode on 3.3V input**: Add a Schottky diode (e.g. BAT43) between the
+  HT7833 output and the FeatherS3D 3.3V pin (cathode toward FeatherS3D). This prevents
+  the onboard LDO from back-feeding into VR1 when USB is connected for programming.
+  The ~0.2V forward drop means the HT7833's 3.3V output delivers ~3.1V — this is within
+  the ESP32-S3's operating range (2.3–3.6V) but verify sensors are stable at that voltage,
+  or use an adjustable LDO set to ~3.5V instead.
+
+- [ ] **Prevent-sleep jumper/switch on GPIO11**: Add a 2-pin header or switch connected
+  to GPIO11 for field use. When jumpered/closed to 3.3V, this prevents deep sleep for
+  debugging or OTA updates. Currently the pin is configured with an internal pull-down but
+  has no physical mechanism in the schematic.
+
+- [ ] **Decoupling capacitors on sensor modules**: Add 100nF ceramic capacitors close to
+  the VCC pins of the INA226 modules and INMP441. Long wires in a beehive environment
+  can pick up noise, and the INMP441 is particularly sensitive as it feeds FFT analysis.
+  The Adafruit NAU7802 and SHT40 breakouts have onboard decoupling already.
 
 ## Contributing
 
