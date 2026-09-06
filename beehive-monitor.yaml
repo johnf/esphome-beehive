@@ -4,12 +4,17 @@
 # - INMP441 microphone for FFT-based audio analysis
 # - NAU7802 ADC for 4x 50kg load cells (weight)
 # - SHT40 temperature and humidity sensor
+# - 2x INA226 for solar and battery power monitoring
 # - Deep sleep for power efficiency (5 minute intervals)
 #
 # Usage: Include this as a package in your device configuration.
 # See README.md for setup instructions.
 
 substitutions:
+  # Where to fetch the bee_audio component from. Pinned to a release tag; keep
+  # it in step with the @tag on the package URL in your device configuration.
+  # Set to a local path (e.g. "components") when building from a checkout.
+  bee_audio_source: github://johnf/esphome-beehive@v1.0.0
   # I2C bus ID (user must define the i2c bus externally)
   i2c_bus_id: i2c_bus
   # I2S pins for INMP441 microphone
@@ -23,8 +28,22 @@ substitutions:
   # INA226 I2C addresses
   ina226_solar_address: "0x40"
   ina226_battery_address: "0x45"
-  # Weight calibration points (raw_value -> weight_kg)
-  # Record raw values at known weights and update these
+  # Solar current (A) above which the battery is considered charging. While
+  # charging, bus voltage reflects the charger rather than state of charge, so
+  # the battery level estimate is held at its last value.
+  charging_current_threshold: "0.02"
+  # Audio analysis. Band levels are mean power spectral density in dB re
+  # full-scale^2/Hz, independent of fft_size. See README "Audio Baseline".
+  audio_frames: "4"
+  audio_queenless_threshold: "6dB"
+  audio_queen_piping_threshold: "10dB"
+  audio_active_threshold: "-95dB"
+  audio_normal_threshold: "-105dB"
+  audio_pre_swarm_centroid: "400Hz"
+  # Weight calibration points (raw_value -> weight_kg). Record the raw value
+  # with the platform empty and again with a known weight of at least 20 kg
+  # (see README "Load Cell Calibration"). The defaults below are placeholders
+  # from a bench test and will not match your load cells.
   weight_cal_raw_1: "-242624"
   weight_cal_kg_1: "0"
   weight_cal_raw_2: "-241661"
@@ -52,9 +71,9 @@ esphome:
         - script.execute: collect_and_sleep
 
 external_components:
-  - source: github://johnf/esphome-beehive
+  - source: ${bee_audio_source}
     components: [bee_audio]
-    refresh: 0s
+    refresh: 1d
 
 # Deep sleep configuration - 5 minute intervals
 deep_sleep:
@@ -77,6 +96,13 @@ bee_audio:
   i2s_din_pin: ${i2s_din_pin}
   sample_rate: 8000
   fft_size: 2048
+  # Number of consecutive FFT frames averaged per reading (~256ms each)
+  frames: ${audio_frames}
+  queenless_threshold: ${audio_queenless_threshold}
+  queen_piping_threshold: ${audio_queen_piping_threshold}
+  active_threshold: ${audio_active_threshold}
+  normal_threshold: ${audio_normal_threshold}
+  pre_swarm_centroid: ${audio_pre_swarm_centroid}
   update_interval: never
 
 sensor:
@@ -115,10 +141,8 @@ sensor:
       id: bee_spectral_centroid
 
   # NAU7802 load cell ADC (hive weight)
-  # Calibration: Adjust the calibrate_linear filter based on your load cells
-  # 1. Record raw value with empty hive
-  # 2. Record raw value with known weight
-  # 3. Update the linear calibration
+  # The measurement script reads 7 samples per wake; the median of the first 5
+  # is published so a single noisy or not-ready read cannot skew the result.
   - platform: nau7802
     i2c_id: ${i2c_bus_id}
     id: hive_weight
@@ -128,6 +152,10 @@ sensor:
     accuracy_decimals: 2
     update_interval: never
     filters:
+      - median:
+          window_size: 7
+          send_every: 7
+          send_first_at: 5
       - calibrate_linear:
           - ${weight_cal_raw_1} -> ${weight_cal_kg_1}
           - ${weight_cal_raw_2} -> ${weight_cal_kg_2}
@@ -192,6 +220,8 @@ sensor:
   #   - Practical low: ~3.0V to preserve cell longevity
   # These points approximate the non-linear LiPo discharge curve - adjust
   # if your observed values differ from expected SoC.
+  # Skipped while charging: the CN3065 holds the bus near 4.2V regardless of
+  # state of charge, so Home Assistant keeps the last resting-voltage estimate.
   - platform: copy
     source_id: battery_bus_voltage
     name: "Battery Level"
@@ -200,7 +230,15 @@ sensor:
     accuracy_decimals: 0
     icon: "mdi:battery"
     filters:
+      - lambda: |-
+          if (id(solar_current).has_state() &&
+              fabsf(id(solar_current).state) > ${charging_current_threshold}) {
+            return {};
+          }
+          return x;
       - calibrate_linear:
+          method: exact
+          datapoints:
           - 2.50 -> 0
           - 3.00 -> 1
           - 3.30 -> 5
@@ -245,6 +283,13 @@ binary_sensor:
     queen_piping:
       name: "Queen Piping Detected"
       id: queen_piping
+  - platform: template
+    name: "Battery Charging"
+    id: battery_charging
+    device_class: battery_charging
+    lambda: |-
+      if (!id(solar_current).has_state()) return false;
+      return fabsf(id(solar_current).state) > ${charging_current_threshold};
 
 text_sensor:
   - platform: bee_audio
@@ -275,15 +320,17 @@ script:
   - id: collect_and_sleep
     then:
       - logger.log: "Starting measurement cycle"
-      - switch.turn_on: sensor_power
-      - logger.log: "Sensor power on - waiting for stabilisation"
-      - delay: 500ms
       - wait_until:
           condition:
             wifi.connected:
           timeout: 10s
       - component.update: bee_monitor
-      - component.update: hive_weight
+      # NAU7802 produces a sample every 100ms at the default 10 SPS
+      - repeat:
+          count: 7
+          then:
+            - component.update: hive_weight
+            - delay: 120ms
       - component.update: hive_climate
       - component.update: ina226_solar
       - component.update: ina226_battery
@@ -296,9 +343,8 @@ script:
           condition:
             switch.is_on: prevent_deep_sleep
           then:
-            # Keep sensors powered in prevent-sleep mode - power cycling
-            # would lose NAU7802 register state (gain, LDO, calibration)
-            # which is only restored during setup() at boot
+            # Sensor rail stays on: power cycling would lose NAU7802 register
+            # state (gain, LDO, calibration) which is only set in setup()
             - logger.log: "Deep sleep prevented - staying awake"
             - delay: 5min
             - script.execute: collect_and_sleep

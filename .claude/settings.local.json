@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "WebSearch",
-      "WebFetch(domain:esphome.io)",
-      "Bash(./build.sh:*)"
-    ]
-  }
-}

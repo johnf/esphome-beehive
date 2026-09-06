@@ -1,0 +1,53 @@
+# Example device configuration for the beehive monitor package.
+#
+# This file is what CI validates and compiles. To use it on a real device, copy
+# it next to a secrets.yaml containing wifi_ssid and wifi_password, and change
+# bee_audio_source to the pinned GitHub release (or delete the line to use the
+# package default) if you are not building from a checkout of this repository.
+
+substitutions:
+  bee_audio_source: components
+  # Uncomment to override package defaults:
+  # i2s_lrclk_pin: "GPIO1"
+  # i2s_bclk_pin: "GPIO3"
+  # i2s_din_pin: "GPIO7"
+  # ina226_solar_address: "0x40"
+  # ina226_battery_address: "0x45"
+  # audio_active_threshold: "-95dB"
+  # audio_normal_threshold: "-105dB"
+
+packages:
+  beehive: !include beehive-monitor.yaml
+
+esphome:
+  name: beehive-monitor
+  friendly_name: Beehive Monitor
+
+esp32:
+  framework:
+    type: esp-idf
+  variant: esp32s3
+  flash_size: 16MB # FeatherS3D has 16MB flash
+
+psram:
+  mode: quad
+  speed: 80MHz
+
+i2c:
+  id: i2c_bus
+  sda: GPIO8
+  scl: GPIO9
+  scan: true
+  frequency: 400kHz
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+
+api:
+  reboot_timeout: 0s
+
+logger:
+  hardware_uart: USB_CDC
+  level: DEBUG

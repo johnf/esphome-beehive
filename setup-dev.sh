@@ -5,13 +5,13 @@ if [ ! -d "cdeps/esphome-repo" ]; then
 fi
 
 if [ ! -d "cdeps/esp-dsp" ]; then
-  git clone git@github.com:espressif/esp-dsp.git cdeps/esp-dsp
+  git clone https://github.com/espressif/esp-dsp.git cdeps/esp-dsp
 fi
 
 if [ ! -d "cdeps/esp-idf" ]; then
-  git clone git@github.com:espressif/esp-idf.git cdeps/esp-idf
+  git clone https://github.com/espressif/esp-idf.git cdeps/esp-idf
 fi
 
 if [ ! -d "cdeps/ArduinoJson" ]; then
-  git clone git@github.com:bblanchon/ArduinoJson.git cdeps/ArduinoJson
+  git clone https://github.com/bblanchon/ArduinoJson.git cdeps/ArduinoJson
 fi

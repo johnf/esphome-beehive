@@ -7,8 +7,7 @@ Exposes queen piping detection as a binary sensor.
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor
-from esphome.const import CONF_ID
-from . import bee_audio_ns, BeeAudioComponent
+from . import BeeAudioComponent
 
 DEPENDENCIES = ["bee_audio"]
 

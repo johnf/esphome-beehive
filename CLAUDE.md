@@ -13,7 +13,8 @@ to detect bee colony health indicators.
 - Sample rate: 8000 Hz
 - FFT size: 2048 samples
 - Frequency resolution: ~3.9 Hz per bin
-- Audio capture duration: ~256ms
+- Frames averaged per reading: 4 (~1s of audio, Welch averaging)
+- Band levels: mean one-sided PSD in dB re FS²/Hz, independent of fft_size
 - Uses ESP-DSP library for optimised FFT
 
 ### Configurable Parameters
@@ -22,22 +23,31 @@ to detect bee colony health indicators.
 |-----------|-------|---------|
 | sample_rate | 4000-48000 Hz | 8000 Hz |
 | fft_size | 256, 512, 1024, 2048, 4096 | 2048 |
+| frames | 1-32 | 4 |
+| bands.<name>.low/high | frequency | research defaults in bee_audio.h |
+| queenless_threshold | dB | 6dB |
+| queen_piping_threshold | dB | 10dB |
+| active_threshold | dB | -95dB |
+| normal_threshold | dB | -105dB |
+| pre_swarm_centroid | frequency | 400Hz |
+
+Band names: low_freq, baseline, worker, quacking, tooting, queenless_mid,
+queenless_high. Sensors are `band_<name>` on the sensor platform.
 
 ## Building
 
 ```bash
-# Validate configuration
-esphome config beehive-monitor.yaml
-
-# Compile
-esphome compile beehive-monitor.yaml
-
-# Upload
-esphome upload beehive-monitor.yaml
-
-# View logs
-esphome logs beehive-monitor.yaml
+# example.yaml wraps the package and builds bee_audio from ./components.
+# It needs a secrets.yaml with wifi_ssid and wifi_password (dummy values are fine).
+esphome config example.yaml
+esphome compile example.yaml
+esphome upload example.yaml
+esphome logs example.yaml
 ```
+
+CI (`.github/workflows/ci.yml`) runs `esphome config` and `esphome compile` on
+`example.yaml`. Releases are git tags; `bee_audio_source` in the package and the
+package URL in README.md must be bumped to the new tag.
 
 ## Development
 
@@ -53,6 +63,7 @@ components/
     bee_audio.h       # C++ header
     bee_audio.cpp     # ESP-IDF I2S + ESP-DSP FFT implementation
 beehive-monitor.yaml  # Main ESPHome package configuration
+example.yaml          # Device config used for local builds and CI
 fritzing/             # Fritzing schematic
 ```
 

@@ -1,2 +1,4 @@
 cdeps/
 fritzing/.fritzing-parts/
+.esphome/
+secrets.yaml

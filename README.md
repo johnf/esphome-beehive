@@ -11,6 +11,7 @@ temperature, and humidity monitoring.
 - **Weight Monitoring**: Track hive weight changes using 4x 50kg load cells via
   NAU7802 ADC
 - **Environmental Sensing**: Temperature and humidity via SHT40 sensor
+- **Power Monitoring**: Solar and battery current, voltage and power via two INA226s
 - **Battery Optimised**: Deep sleep between 5-minute measurement cycles
 - **Home Assistant Integration**: Automatic sensor discovery and state reporting
 
@@ -92,7 +93,23 @@ Pin assignments are configurable via substitutions (`i2s_lrclk_pin`, `i2s_bclk_p
 
 ### Load Cells
 
-Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU7802:
+Each 50kg half-bridge cell has three wires: red (centre tap), white and black.
+Place one cell at each corner of the platform and wire them into a full
+Wheatstone bridge:
+
+1. Number the cells 1 to 4 clockwise.
+2. Join the white wire of each cell to the black wire of the next cell around
+   the platform (1→2, 2→3, 3→4, 4→1), forming a ring.
+3. Connect the four red wires to the NAU7802 as below.
+
+| Cell (red wire) | NAU7802 |
+| --------------- | ------- |
+| Cell 1 | E+ |
+| Cell 3 | E- |
+| Cell 2 | A+ |
+| Cell 4 | A- |
+
+If the weight reads negative when load is added, swap A+ and A-.
 
 ## Installation
 
@@ -116,9 +133,9 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
    Click **Edit** on the new device and use the following configuration:
 
    ```yaml
-   # Include the beehive monitoring package
+   # Include the beehive monitoring package (pinned to a release tag)
    packages:
-     beehive: github://johnf/esphome-beehive/beehive-monitor.yaml
+     beehive: github://johnf/esphome-beehive/beehive-monitor.yaml@v1.0.0
 
    # Device configuration (required)
    esphome:
@@ -158,7 +175,8 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
      hardware_uart: USB_CDC
      level: DEBUG
 
-   # Optional: override default pin assignments or I2C addresses
+   # Optional: override default pin assignments, I2C addresses, calibration
+   # or audio thresholds (see beehive-monitor.yaml for the full list)
    # substitutions:
    #   i2c_bus_id: "i2c_bus"
    #   i2s_lrclk_pin: "GPIO1"
@@ -166,7 +184,10 @@ Connect the four 50kg load cells in a Wheatstone bridge configuration to the NAU
    #   i2s_din_pin: "GPIO7"
    #   ina226_solar_address: "0x40"
    #   ina226_battery_address: "0x45"
+   #   audio_active_threshold: "-95dB"
    ```
+
+   A complete working example is in [example.yaml](example.yaml).
 
 3. **Configure secrets**
 
@@ -216,19 +237,70 @@ logger:
 
 ### Load Cell Calibration
 
-1. View the device logs in ESPHome dashboard (click **Logs**)
-2. With no weight on the platform, note the raw sensor value
-3. Place a known weight (e.g., 20 kg) on the platform and note the raw value
-4. Click **Edit** on the device and update the calibration:
+The package ships with placeholder calibration values that will not match your
+load cells. Calibrate before trusting any weight reading.
+
+1. View the device logs in the ESPHome dashboard (click **Logs**). Each wake
+   logs seven raw NAU7802 values; use the middle of the range
+2. With no weight on the platform, note the raw value
+3. Place a known weight on the platform and note the raw value. Use at least
+   20 kg so the calibration spans a realistic hive weight; a second known
+   weight (e.g. 40 kg) improves accuracy further
+4. Let the platform settle for a minute after each change before reading
+5. Click **Edit** on the device and set the calibration substitutions:
 
    ```yaml
-   filters:
-     - calibrate_linear:
-         - <raw_empty> -> 0
-         - <raw_loaded> -> <known_weight_kg>
+   substitutions:
+     weight_cal_raw_1: "<raw_empty>"
+     weight_cal_kg_1: "0"
+     weight_cal_raw_2: "<raw_20kg>"
+     weight_cal_kg_2: "20"
+     weight_cal_raw_3: "<raw_40kg>"
+     weight_cal_kg_3: "40"
+     weight_cal_raw_4: "<raw_40kg>"
+     weight_cal_kg_4: "40"
    ```
 
-5. Click **Install** → **Wirelessly** to update the device
+   A least-squares line is fitted through the four points, so repeating a
+   point is fine if you only have two known weights.
+
+6. Click **Install** → **Wirelessly** to update the device
+
+### Audio Baseline
+
+Frequency band levels are reported as mean power spectral density in dB
+relative to full scale (dB re FS²/Hz). This is independent of `fft_size` and
+`frames`, so thresholds survive changes to those settings. Sound Level is
+plain dBFS. The INMP441 reaches full scale at roughly 120 dB SPL, so add 120
+to convert either figure to an approximate sound pressure level.
+
+Each reading averages four consecutive FFT frames (about one second of audio).
+Increase `audio_frames` for steadier band levels at the cost of awake time.
+
+The classification thresholds are exposed as substitutions and will need
+tuning for your microphone placement, hive size and background noise:
+
+| Substitution | Default | Meaning |
+|--------------|---------|---------|
+| `audio_active_threshold` | -95dB | Worker band above this → `active` |
+| `audio_normal_threshold` | -105dB | Baseline band above this → `normal`, below → `quiet` |
+| `audio_queenless_threshold` | 6dB | Both queenless bands this far above baseline → `queenless` |
+| `audio_queen_piping_threshold` | 10dB | Tooting or quacking this far above baseline → piping |
+| `audio_pre_swarm_centroid` | 400Hz | Centroid above this while active → `pre_swarm` |
+
+To tune, record the band sensors in Home Assistant for a few days and set
+`audio_normal_threshold` between the quietest night-time baseline level and the
+daytime level, and `audio_active_threshold` around the worker band level on a
+busy afternoon. The band edges themselves can be overridden with a `bands:`
+block on the `bee_audio` component, for example:
+
+```yaml
+bee_audio:
+  bands:
+    worker:
+      low: 170Hz
+      high: 280Hz
+```
 
 ### Audio Baseline
 
@@ -270,7 +342,12 @@ The audio thresholds are set based on research values. You may need to adjust th
 | Battery Bus Voltage | V | Battery terminal voltage |
 | Battery Current | A | Battery charge/discharge current |
 | Battery Power | W | Battery power flow |
-| Battery Level | % | Estimated SoC from voltage curve |
+| Battery Level | % | Estimated SoC from resting voltage curve |
+| Battery Charging | on/off | Solar current above `charging_current_threshold` |
+
+Battery Level is only updated while the battery is not charging. Under solar
+charge the CN3065 holds the bus near 4.2 V regardless of state of charge, so
+the last resting-voltage estimate is kept until the next reading after dark.
 
 ### Hive State Classification
 
@@ -287,17 +364,19 @@ The system classifies the hive into one of these states:
 
 ## Power Consumption
 
+Indicative figures only; the battery INA226 reports the real draw of your build.
+
 | State | Current Draw | Duration |
 |-------|--------------|----------|
-| Deep Sleep | ~10 µA (ESP32 only) | 5 minutes |
-| Active | ~150 mA | ~10 seconds |
+| Deep Sleep | ~10 µA (ESP32 only, sensor rail off) | 5 minutes |
+| Active | ~150 mA | ~5-15 seconds (WiFi connect, ~1 s audio, ~1 s weight) |
 | **Average** | **~5 mA** | - |
 
-**Note**: Sensors on the main 3.3V rail (not LDO2) draw standby current during deep
+**Note**: Any sensor not powered from LDO2 draws standby current during deep
 sleep. See the Hardware TODO section for power gating improvements.
 
 With a 2000 mAh battery and solar charging, runtime depends on solar input. Without
-solar, expect approximately 16 days.
+solar, expect roughly two weeks.
 
 ## Home Assistant
 
@@ -318,11 +397,15 @@ automation:
           title: 'Beehive Alert'
           message: 'Hive may be queenless - check colony!'
 
+  # Piping is detected from a one-second sample every five minutes, so a
+  # single detection may be noise. Require it to persist across two readings.
   - alias: 'Alert on Queen Piping'
     trigger:
       - platform: state
         entity_id: binary_sensor.beehive_monitor_queen_piping_detected
         to: 'on'
+        for:
+          minutes: 6
     action:
       - service: notify.mobile_app
         data:
@@ -342,7 +425,10 @@ automation:
 
 - Ensure load cells are properly mounted and not touching the frame
 - Check for loose connections on the NAU7802
-- Increase the `samples` value for more averaging
+- Recalibrate with weights spanning the real hive weight range; extrapolating
+  from a few kilograms magnifies noise
+- Each reading is already the median of five raw samples; if the log shows
+  "No measurements ready!" on every sample, check the NAU7802 power and I2C
 
 ### WiFi connection issues
 
@@ -374,6 +460,34 @@ automation:
   the VCC pins of the INA226 modules and INMP441. Long wires in a beehive environment
   can pick up noise, and the INMP441 is particularly sensitive as it feeds FFT analysis.
   The Adafruit NAU7802 and SHT40 breakouts have onboard decoupling already.
+
+## Development
+
+Clone the repository and build the example configuration, which uses the
+component from the local `components/` directory rather than the pinned
+release:
+
+```bash
+cat > secrets.yaml <<'EOF'
+wifi_ssid: my-ssid
+wifi_password: my-password
+EOF
+esphome config example.yaml
+esphome compile example.yaml
+```
+
+CI runs the same two commands on every push and pull request.
+
+`setup-dev.sh` clones ESPHome, ESP-IDF and ESP-DSP into `cdeps/` so that
+`clangd` can resolve headers when editing the C++ component.
+
+### Releasing
+
+Device configurations pin the package and component to a tag. To release:
+
+1. Update `bee_audio_source` in `beehive-monitor.yaml` and the `packages` URL
+   in this README to the new tag
+2. Commit, then `git tag vX.Y.Z && git push --tags`
 
 ## Contributing
 
