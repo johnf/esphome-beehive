@@ -21,9 +21,10 @@ from it; Fritzing's XML netlist export is not needed.
 
 ## Reading the output
 
-- **PARTS** lists each label (A6, U2...) with its pin index to name map. The
-  FeatherS3 part has duplicate-looking pins: 18/19 are the STEMMA connector,
-  20/21 the header SDA/SCL on IO8/IO9, 36/37 the JST battery pads.
+- **PARTS** lists each label (FeatherS3D, INA226, C1...) with its pin index
+  to name map. The FeatherS3D part has duplicate-looking pins: 18/19 are the
+  STEMMA connector, 20/21 the header SDA/SCL on IO8/IO9, 36/37 the JST battery
+  pads. Ceramic capacitor pins are named 0 and 1.
 - Nets are printed as `label.pin`. `[GND symbol]` marks the net tied to the
   schematic ground symbols.
 - **MERGED in build** means a stripboard strip or breadboard wire shorts two
@@ -42,3 +43,9 @@ from it; Fritzing's XML netlist export is not needed.
   of `beehive-monitor.yaml`. Cross-check them against the nets when reviewing.
 - The INA226 module pins IN+ and IN- are the two ends of its 0.1 Ω shunt; VBS
   must be wired to the bus being measured.
+- The CN3065 part file buses Batt- with the other grounds; the extractor
+  overrides that (`BUS_OVERRIDES`) because the module's protection FETs sit
+  between Batt- and Out-. The cell must only touch Batt+ and Batt-.
+- C1 (470 µF) is bulk decoupling on VBAT at the FeatherS3D. C2 and C3
+  (100 nF) decouple the LDO2 rail and belong physically at the INA226 and
+  INMP441 VCC pins, even though the schematic hangs them off the rail.

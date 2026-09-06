@@ -21,8 +21,10 @@ substitutions:
   i2s_lrclk_pin: GPIO1
   i2s_bclk_pin: GPIO3
   i2s_din_pin: GPIO7
-  # GPIO pin to prevent deep sleep when held high at boot
-  prevent_sleep_pin: GPIO11
+  # Home Assistant boolean helper that keeps the device awake for OTA updates
+  ota_mode_entity: input_boolean.beehive_ota_mode
+  # Longest the device stays awake in OTA mode before clearing the helper
+  ota_mode_max_awake: 30min
   # GPIO pin that controls power to all sensors (e.g. FeatherS3D LDO2)
   sensor_power_pin: GPIO39
   # INA226 I2C address (A0 and A1 strapped to GND)
@@ -62,12 +64,6 @@ esphome:
         - delay: 500ms
     - priority: -100 # Run after all components initialised
       then:
-        - if:
-            condition:
-              binary_sensor.is_on: prevent_sleep_pin
-            then:
-              - logger.log: "Prevent sleep pin is high - disabling deep sleep"
-              - switch.turn_on: prevent_deep_sleep
         - script.execute: collect_and_sleep
 
 external_components:
@@ -80,6 +76,12 @@ deep_sleep:
   id: deep_sleep_control
   run_duration: 60s # Max awake time before forced sleep
   sleep_duration: 5min
+
+ota:
+  - platform: esphome
+    id: ota_esphome
+    on_begin:
+      - switch.turn_on: prevent_deep_sleep
 
 # Custom bee audio component (INMP441 microphone)
 # Pins (configured via substitutions):
@@ -216,15 +218,26 @@ sensor:
       id: battery_level
 
 binary_sensor:
-  - platform: gpio
-    pin:
-      number: ${prevent_sleep_pin}
-      mode:
-        input: true
-        pulldown: true
-    name: "Prevent Sleep Pin"
-    id: prevent_sleep_pin
-    internal: true
+  # Home Assistant pushes the helper state as soon as the API connects, so the
+  # device sees it on every wake without an automation racing the sleep timer
+  - platform: homeassistant
+    id: ota_mode
+    entity_id: ${ota_mode_entity}
+    on_state:
+      - if:
+          condition:
+            binary_sensor.is_on: ota_mode
+          then:
+            - switch.turn_on: prevent_deep_sleep
+          else:
+            - if:
+                condition:
+                  switch.is_on: prevent_deep_sleep
+                then:
+                  - switch.turn_off: prevent_deep_sleep
+                  # Restart the cycle so the device sleeps now, not in 5 minutes
+                  - script.stop: collect_and_sleep
+                  - script.execute: collect_and_sleep
   - platform: bee_audio
     bee_audio_id: bee_monitor
     queen_piping:
@@ -260,10 +273,28 @@ switch:
     restore_mode: ALWAYS_OFF
     on_turn_on:
       - deep_sleep.prevent: deep_sleep_control
+      - script.execute: ota_mode_timeout
     on_turn_off:
       - deep_sleep.allow: deep_sleep_control
+      - script.stop: ota_mode_timeout
 
 script:
+  # Guards against a forgotten helper: clears it in Home Assistant so the next
+  # wake goes straight back to sleep. Needs "Allow the device to perform Home
+  # Assistant actions" enabled on the ESPHome integration entry.
+  - id: ota_mode_timeout
+    mode: restart
+    then:
+      - delay: ${ota_mode_max_awake}
+      - logger.log: "OTA mode timed out - clearing helper and allowing sleep"
+      - homeassistant.action:
+          action: input_boolean.turn_off
+          data:
+            entity_id: ${ota_mode_entity}
+      - switch.turn_off: prevent_deep_sleep
+      - script.stop: collect_and_sleep
+      - script.execute: collect_and_sleep
+
   - id: collect_and_sleep
     then:
       - logger.log: "Starting measurement cycle"
@@ -285,6 +316,10 @@ script:
           condition:
             api.connected:
           timeout: 10s
+      - wait_until:
+          condition:
+            lambda: return id(ota_mode).has_state();
+          timeout: 3s
       - delay: 300ms
       - if:
           condition:
@@ -292,7 +327,7 @@ script:
           then:
             # Sensor rail stays on: power cycling would lose NAU7802 register
             # state (gain, LDO, calibration) which is only set in setup()
-            - logger.log: "Deep sleep prevented - staying awake"
+            - logger.log: "OTA mode - staying awake"
             - delay: 5min
             - script.execute: collect_and_sleep
           else:

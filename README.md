@@ -119,6 +119,19 @@ Wheatstone bridge:
 
 If the weight reads negative when load is added, swap A+ and A-.
 
+### Capacitors
+
+| Ref | Value | Placement |
+| --- | ----- | --------- |
+| C1 | 470 µF electrolytic, 6.3 V | Across VBAT and GND at the FeatherS3D pins |
+| C2 | 100 nF ceramic | Across VCC and GND at the INA226 module |
+| C3 | 100 nF ceramic | Across VDD and GND at the INMP441 |
+
+C1 stops WiFi transmit bursts browning out the LDO when the cell is cold or low.
+C2 and C3 must sit right at the module pins; long wires in a beehive pick up
+noise, and the INMP441 feeds the FFT analysis. The NAU7802 and SHT40 breakouts
+have onboard decoupling already.
+
 ## Installation
 
 ### Prerequisites
@@ -213,7 +226,41 @@ If the weight reads negative when load is added, swap A+ and A-.
    - For first-time installation, choose **Plug into this computer** or
      **Manual download** to get the firmware binary
    - Flash via USB using the web installer at <https://web.esphome.io/>
-   - Subsequent updates can use **Wirelessly** once connected
+   - Subsequent updates can use **Wirelessly** once connected; see
+     [OTA Updates](#ota-updates) for how to keep the device awake
+
+### OTA Updates
+
+The device is only awake for a few seconds every five minutes, which is not long
+enough to install firmware wirelessly. The package therefore reads a Home
+Assistant boolean helper on every wake and stays awake while it is on.
+
+1. In Home Assistant, go to **Settings → Devices & services → Helpers**, create a
+   **Toggle** helper and name it `Beehive OTA mode`, so its entity ID is
+   `input_boolean.beehive_ota_mode`. Use the `ota_mode_entity` substitution if
+   you pick a different name or run several hives.
+2. Turn the helper on. Within five minutes the device wakes, sees it, and logs
+   `OTA mode - staying awake`. It keeps taking readings every five minutes.
+3. Click **Install → Wirelessly** in the ESPHome dashboard. Once an upload
+   starts the device will not sleep until it reboots into the new firmware.
+4. After the reboot the device stays awake while the helper is on, so you can
+   watch the logs. Turn the helper off and the device goes back to sleep
+   straight away.
+
+If the helper is left on, the device clears it after `ota_mode_max_awake`
+(default 30 minutes) and goes back to sleep. For that to work, open the ESPHome
+integration entry for the device in Home Assistant and enable **Allow the device
+to perform Home Assistant actions**. Without it the device still sleeps after
+the timeout, but stays awake again on the next wake until you turn the helper off.
+
+The package defines the `ota` component. To add a password or other options,
+extend it in your device configuration rather than declaring a second one:
+
+```yaml
+ota:
+  - id: !extend ota_esphome
+    password: !secret ota_password
+```
 
 ### Power Optimisation (recommended for battery operation)
 
@@ -394,7 +441,7 @@ with the battery.
 | **Average** | **~5 mA** | - |
 
 **Note**: Any sensor not powered from LDO2 draws standby current during deep
-sleep. See the Hardware TODO section for power gating improvements.
+sleep.
 
 With a 2000 mAh battery and solar charging, runtime depends on solar input. Without
 solar, expect roughly two weeks.
@@ -460,20 +507,9 @@ automation:
 ### Deep sleep not working
 
 - Check that `on_boot` script is executing (visible in logs)
+- Check the OTA mode helper is off in Home Assistant
 - Verify no other components are blocking sleep
 - Ensure the `run_duration` is sufficient for sensor readings
-
-## Hardware TODO
-
-- [ ] **Prevent-sleep jumper/switch on GPIO11**: Add a 2-pin header or switch connected
-  to GPIO11 for field use. When jumpered/closed to 3.3V, this prevents deep sleep for
-  debugging or OTA updates. Currently the pin is configured with an internal pull-down but
-  has no physical mechanism in the schematic.
-
-- [ ] **Decoupling capacitors on sensor modules**: Add 100nF ceramic capacitors close to
-  the VCC pins of the INA226 module and INMP441. Long wires in a beehive environment
-  can pick up noise, and the INMP441 is particularly sensitive as it feeds FFT analysis.
-  The Adafruit NAU7802 and SHT40 breakouts have onboard decoupling already.
 
 ## Development
 

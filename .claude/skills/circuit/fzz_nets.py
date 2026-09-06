@@ -14,6 +14,8 @@ Fritzing encoding notes (the reason this script exists):
   the list of REMOVED segments: "x.yh" cuts (x,y)-(x+1,y), "x.yv" cuts
   (x,y)-(x,y+1). With "vertical strips" every h segment is listed.
 - All ground symbols are one net.
+- BUS_OVERRIDES replaces a part's declared buses where the part file is wrong
+  for the board actually used.
 """
 import glob
 import os
@@ -34,6 +36,17 @@ PARTS_DIR_CANDIDATES = [
     '/opt/fritzing/fritzing-parts/core',
 ]
 GND_MODULES = {'GroundModuleID'}
+# The third-party CN3065 part buses Solar-, Batt- and Out- together. The real
+# module has DW01/FS8205 protection FETs between Batt- and the other grounds,
+# so Batt- (pins 4 and 7) is its own node.
+BUS_OVERRIDES = {
+    'CN3065-Mini-Solar-Charger-Module_1': [
+        ['connector0', 'connector2'],                 # Solar+
+        ['connector1', 'connector3', 'connector9'],   # Solar-, Out-
+        ['connector4', 'connector7'],                 # Batt-
+        ['connector5', 'connector6', 'connector8'],   # Batt+, Out+
+    ],
+}
 BB_WIRE, SCH_WIRE = 64, 128
 
 
@@ -78,7 +91,7 @@ class Sketch:
             d = (c.findtext('description') or '').strip()
             names[c.get('id')] = d if (n.startswith('Pin ') and d) else (n or d)
         self.pins[t.get('moduleId')] = names
-        self.buses[t.get('moduleId')] = [
+        self.buses[t.get('moduleId')] = BUS_OVERRIDES.get(t.get('moduleId')) or [
             [m.get('connectorId') for m in b.iter('nodeMember')] for b in t.iter('bus')]
 
     def _load_core_parts(self, extra_dirs):
