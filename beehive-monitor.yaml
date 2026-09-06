@@ -4,7 +4,7 @@
 # - INMP441 microphone for FFT-based audio analysis
 # - NAU7802 ADC for 4x 50kg load cells (weight)
 # - SHT40 temperature and humidity sensor
-# - 2x INA226 for solar and battery power monitoring
+# - INA226 for solar power monitoring, onboard MAX17048 fuel gauge for battery
 # - Deep sleep for power efficiency (5 minute intervals)
 #
 # Usage: Include this as a package in your device configuration.
@@ -25,12 +25,9 @@ substitutions:
   prevent_sleep_pin: GPIO11
   # GPIO pin that controls power to all sensors (e.g. FeatherS3D LDO2)
   sensor_power_pin: GPIO39
-  # INA226 I2C addresses
+  # INA226 I2C address (A0 and A1 strapped to GND)
   ina226_solar_address: "0x40"
-  ina226_battery_address: "0x45"
-  # Solar current (A) above which the battery is considered charging. While
-  # charging, bus voltage reflects the charger rather than state of charge, so
-  # the battery level estimate is held at its last value.
+  # Solar current (A) above which the battery is considered charging
   charging_current_threshold: "0.02"
   # Audio analysis. Band levels are mean power spectral density in dB re
   # full-scale^2/Hz, independent of fft_size. See README "Audio Baseline".
@@ -204,79 +201,19 @@ sensor:
       name: "Solar Shunt Voltage"
       id: solar_shunt_voltage
 
-  # Battery side - monitors battery charge/discharge
-  - platform: ina226
+  # Battery voltage and state of charge from the FeatherS3D's onboard MAX17048
+  # fuel gauge (register-compatible with the MAX17043). It is on the always-on
+  # LDO1 rail, so its ModelGauge state survives deep sleep.
+  - platform: max17043
     i2c_id: ${i2c_bus_id}
-    address: ${ina226_battery_address}
-    id: ina226_battery
+    id: fuel_gauge
     update_interval: never
-    current:
-      name: "Battery Current"
-      id: battery_current
-    power:
-      name: "Battery Power"
-      id: battery_power
-    bus_voltage:
-      name: "Battery Bus Voltage"
-      id: battery_bus_voltage
-    shunt_voltage:
-      name: "Battery Shunt Voltage"
-      id: battery_shunt_voltage
-
-  # Battery level estimated from INA226 bus voltage using a LiPo discharge curve.
-  # Based on a single-cell 3.7V 2000mAh LiPo with DW01+ PCM:
-  #   - Over-charge protection:  4.30V (PCM cuts charging)
-  #   - Over-discharge protection: 2.4V (PCM cuts load)
-  #   - Practical low: ~3.0V to preserve cell longevity
-  # These points approximate the non-linear LiPo discharge curve - adjust
-  # if your observed values differ from expected SoC.
-  # Skipped while charging: the CN3065 holds the bus near 4.2V regardless of
-  # state of charge, so Home Assistant keeps the last resting-voltage estimate.
-  - platform: copy
-    source_id: battery_bus_voltage
-    name: "Battery Level"
-    id: battery_level
-    unit_of_measurement: "%"
-    accuracy_decimals: 0
-    icon: "mdi:battery"
-    filters:
-      - lambda: |-
-          if (id(solar_current).has_state() &&
-              fabsf(id(solar_current).state) > ${charging_current_threshold}) {
-            return {};
-          }
-          return x;
-      - calibrate_linear:
-          method: exact
-          datapoints:
-          - 2.50 -> 0
-          - 3.00 -> 1
-          - 3.30 -> 5
-          - 3.50 -> 10
-          - 3.60 -> 20
-          - 3.70 -> 40
-          - 3.75 -> 50
-          - 3.80 -> 60
-          - 3.85 -> 70
-          - 3.90 -> 80
-          - 4.00 -> 90
-          - 4.10 -> 95
-          - 4.20 -> 100
-      - clamp:
-          min_value: 0
-          max_value: 100
-
-  # Battery voltage via ADC is not used - the board's JST connector and
-  # onboard fuel gauge (MAX17048) cannot be used as the CN3065 solar
-  # charge controller would conflict with the FeatherS3's onboard charger.
-  # Power is fed directly to the 3.3V pin instead.
-  # - platform: adc
-  #   pin: GPIO34
-  #   name: "Battery Voltage"
-  #   id: battery_voltage_adc
-  #   attenuation: 11db
-  #   filters:
-  #     - multiply: 2.0  # Voltage divider ratio
+    battery_voltage:
+      name: "Battery Voltage"
+      id: battery_voltage
+    battery_level:
+      name: "Battery Level"
+      id: battery_level
 
 binary_sensor:
   - platform: gpio
@@ -343,7 +280,7 @@ script:
             - delay: 120ms
       - component.update: hive_climate
       - component.update: ina226_solar
-      - component.update: ina226_battery
+      - component.update: fuel_gauge
       - wait_until:
           condition:
             api.connected:

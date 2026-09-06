@@ -85,3 +85,4 @@ fritzing/             # Fritzing schematic
 - NAU7802 component (built into ESPHome)
 - SHT4x component (built into ESPHome)
 - INA226 component (built into ESPHome)
+- MAX17043 component (built into ESPHome, drives the onboard MAX17048)

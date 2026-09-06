@@ -11,7 +11,8 @@ temperature, and humidity monitoring.
 - **Weight Monitoring**: Track hive weight changes using 4x 50kg load cells via
   NAU7802 ADC
 - **Environmental Sensing**: Temperature and humidity via SHT40 sensor
-- **Power Monitoring**: Solar and battery current, voltage and power via two INA226s
+- **Power Monitoring**: Solar current, voltage and power via INA226; battery voltage
+  and state of charge via the FeatherS3D's onboard MAX17048 fuel gauge
 - **Battery Optimised**: Deep sleep between 5-minute measurement cycles
 - **Home Assistant Integration**: Automatic sensor discovery and state reporting
 
@@ -24,27 +25,34 @@ temperature, and humidity monitoring.
 | [Adafruit NAU7802](https://www.adafruit.com/product/4538) | 24-bit ADC breakout | 1 |
 | 50kg Load Cells | Half-bridge strain gauges | 4 |
 | SHT40 | Temperature/humidity sensor | 1 |
-| INA226 x2 | Current/voltage/power monitors | 2 |
+| INA226 | Solar current/voltage/power monitor | 1 |
 | CN3065 | Solar LiPo charge controller | 1 |
-| HT7833 | 3.3V LDO voltage regulator | 1 |
 | [3.7V 2000mAh LiPo](https://core-electronics.com.au/polymer-lithium-ion-battery-2000mah-38459.html) | Battery (DW01+ PCM) | 1 |
-| Solar panel | Input for CN3065 charger | 1 |
+| Solar panel | 6V nominal, 3-5W (CN3065 input is rated for 6V panels) | 1 |
 
 ## Power Architecture
 
-The battery is charged by the CN3065 solar charge controller. Two INA226 monitors
-are wired inline: one on the solar input and one on the battery line before the CN3065.
+The battery is charged by the CN3065 solar charge controller. An INA226 sits
+high-side between the solar panel and the CN3065 solar input. The battery connects
+directly to the CN3065 battery terminal.
 
-The HT7833 LDO regulates battery voltage to 3.3V and feeds the FeatherS3D directly
-via its **3.3V pin** (not the JST battery connector). The FeatherS3D's onboard charger
-(MCP73831) and fuel gauge (MAX17048) are not used because the CN3065's charge protection
-would conflict with the onboard charger.
+The CN3065 output feeds the FeatherS3D's **VBAT pin**, so the board's own LDO
+regulates 3.3V. Feeding the 3.3V pin instead would leave LDO2 unpowered, as its
+input is the VBAT/USB node rather than the 3.3V rail.
 
-Battery level is estimated from the INA226 battery bus voltage using a LiPo discharge
-curve mapping.
+The FeatherS3D's onboard charger only has power while USB is plugged in, so in the
+field the CN3065 is the only charger. On USB, both chargers are 4.2V CC/CV parts and
+share the cell harmlessly, with the DW01+ PCM as a backstop.
+
+Battery voltage and state of charge come from the FeatherS3D's onboard MAX17048 fuel
+gauge (I2C 0x36), which sees the cell via the VBAT pin. It sits on the always-on
+LDO1 rail, so its ModelGauge state survives deep sleep.
 
 The FeatherS3D's **LDO2** (GPIO39) provides a switchable 3.3V rail that is automatically
 disabled during deep sleep, used to power-gate sensors that aren't needed during sleep.
+All sensors, including the I2C pull-ups on their breakouts, are on this rail.
+
+The INA226 address pins A0 and A1 must be strapped to GND for address 0x40.
 
 ### Battery Specifications
 
@@ -62,13 +70,13 @@ disabled during deep sleep, used to power-gate sensors that aren't needed during
 | Address | Device |
 |---------|--------|
 | 0x2A | NAU7802 (load cell ADC) |
+| 0x36 | MAX17048 fuel gauge (onboard FeatherS3D) |
 | 0x40 | INA226 (solar) |
 | 0x44 | SHT40 (temperature/humidity) |
-| 0x45 | INA226 (battery) |
 
 ## Wiring
 
-### I2C Bus (SHT40, NAU7802, INA226s)
+### I2C Bus (SHT40, NAU7802, INA226, MAX17048)
 
 The I2C bus must be defined in your device configuration and its `id` passed to the
 package via the `i2c_bus_id` substitution (defaults to `i2c_bus`).
@@ -183,7 +191,6 @@ If the weight reads negative when load is added, swap A+ and A-.
    #   i2s_bclk_pin: "GPIO3"
    #   i2s_din_pin: "GPIO7"
    #   ina226_solar_address: "0x40"
-   #   ina226_battery_address: "0x45"
    #   audio_active_threshold: "-95dB"
    ```
 
@@ -358,15 +365,9 @@ The audio thresholds are set based on research values. You may need to adjust th
 | Solar Bus Voltage | V | Solar panel voltage |
 | Solar Current | A | Current from solar panel |
 | Solar Power | W | Solar power input |
-| Battery Bus Voltage | V | Battery terminal voltage |
-| Battery Current | A | Battery charge/discharge current |
-| Battery Power | W | Battery power flow |
-| Battery Level | % | Estimated SoC from resting voltage curve |
+| Battery Voltage | V | Cell voltage from the MAX17048 |
+| Battery Level | % | State of charge from the MAX17048 ModelGauge |
 | Battery Charging | on/off | Solar current above `charging_current_threshold` |
-
-Battery Level is only updated while the battery is not charging. Under solar
-charge the CN3065 holds the bus near 4.2 V regardless of state of charge, so
-the last resting-voltage estimate is kept until the next reading after dark.
 
 ### Hive State Classification
 
@@ -383,7 +384,8 @@ The system classifies the hive into one of these states:
 
 ## Power Consumption
 
-Indicative figures only; the battery INA226 reports the real draw of your build.
+Indicative figures only; measure the real draw of your build with a meter in series
+with the battery.
 
 | State | Current Draw | Duration |
 |-------|--------------|----------|
@@ -463,20 +465,13 @@ automation:
 
 ## Hardware TODO
 
-- [ ] **Schottky diode on 3.3V input**: Add a Schottky diode (e.g. BAT43) between the
-  HT7833 output and the FeatherS3D 3.3V pin (cathode toward FeatherS3D). This prevents
-  the onboard LDO from back-feeding into VR1 when USB is connected for programming.
-  The ~0.2V forward drop means the HT7833's 3.3V output delivers ~3.1V — this is within
-  the ESP32-S3's operating range (2.3–3.6V) but verify sensors are stable at that voltage,
-  or use an adjustable LDO set to ~3.5V instead.
-
 - [ ] **Prevent-sleep jumper/switch on GPIO11**: Add a 2-pin header or switch connected
   to GPIO11 for field use. When jumpered/closed to 3.3V, this prevents deep sleep for
   debugging or OTA updates. Currently the pin is configured with an internal pull-down but
   has no physical mechanism in the schematic.
 
 - [ ] **Decoupling capacitors on sensor modules**: Add 100nF ceramic capacitors close to
-  the VCC pins of the INA226 modules and INMP441. Long wires in a beehive environment
+  the VCC pins of the INA226 module and INMP441. Long wires in a beehive environment
   can pick up noise, and the INMP441 is particularly sensitive as it feeds FFT analysis.
   The Adafruit NAU7802 and SHT40 breakouts have onboard decoupling already.
 

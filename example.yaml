@@ -12,7 +12,6 @@ substitutions:
   # i2s_bclk_pin: "GPIO3"
   # i2s_din_pin: "GPIO7"
   # ina226_solar_address: "0x40"
-  # ina226_battery_address: "0x45"
   # audio_active_threshold: "-95dB"
   # audio_normal_threshold: "-105dB"
 
