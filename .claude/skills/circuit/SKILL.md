@@ -49,3 +49,15 @@ from it; Fritzing's XML netlist export is not needed.
 - C1 (470 µF) is bulk decoupling on VBAT at the FeatherS3D. C2 and C3
   (100 nF) decouple the LDO2 rail and belong physically at the INA226 and
   INMP441 VCC pins, even though the schematic hangs them off the rail.
+- The generic female headers J_SOLAR, J_CHG, J_PWR (2-way) and J_HIVE, J_SUB
+  (8-way) stand in for JST-XH sockets. J_HIVE (main board) and J_SUB (hive
+  board) are the two ends of one pin-for-pin cable, drawn in both views as
+  wires between matching pins. Header pins print as `pin1`..`pinN`.
+- Two stripboards: "Main board" (FeatherS3D, INA226, NAU7802, C1, C2, the
+  four sockets) and "Hive board" (SHT40, INMP441, C3, J_SUB). The CN3065,
+  battery and panel are off-board and connect through the sockets.
+- INA226 A0/A1 are left open: the CJMCU-226 module has 10 kΩ pull-downs on
+  both, so the address is 0x40. If the sketch still shows them tied to GND
+  the Fritzing side has not been updated yet.
+- The wires between the two boards and to the off-board parts are cables,
+  not stripboard jumpers.

@@ -29,6 +29,13 @@ temperature, and humidity monitoring.
 | CN3065 | Solar LiPo charge controller | 1 |
 | [3.7V 2000mAh LiPo](https://core-electronics.com.au/polymer-lithium-ion-battery-2000mah-38459.html) | Battery (DW01+ PCM) | 1 |
 | Solar panel | 6V nominal, 3-5W (CN3065 input is rated for 6V panels) | 1 |
+| Stripboard 30 x 40 holes | Main board (under the bottom board) | 1 |
+| Stripboard 16 x 15 holes | Hive board (inside the brood box) | 1 |
+| JST-XH 8-way socket and cable | Hive cable, one socket per board | 2 sockets, 1 cable |
+| JST-XH 2-way socket | Solar in, charger in, charger out | 3 |
+| JST-PH 2-way pigtail | CN3065 solar and output sockets | 2 |
+| 100 nF ceramic capacitor | C2, C3 | 2 |
+| 470 µF 6.3 V electrolytic capacitor | C1 | 1 |
 
 ## Power Architecture
 
@@ -52,7 +59,10 @@ The FeatherS3D's **LDO2** (GPIO39) provides a switchable 3.3V rail that is autom
 disabled during deep sleep, used to power-gate sensors that aren't needed during sleep.
 All sensors, including the I2C pull-ups on their breakouts, are on this rail.
 
-The INA226 address pins A0 and A1 must be strapped to GND for address 0x40.
+The INA226 address pins A0 and A1 are left unconnected. The CJMCU-226 module
+has 10 kΩ pull-downs on both, which gives address 0x40. Confirm this on your
+unit before building: unpowered, A0 to GND and A1 to GND should each read about
+10 kΩ. If either reads open, strap that pad to GND.
 
 ### Battery Specifications
 
@@ -75,6 +85,54 @@ The INA226 address pins A0 and A1 must be strapped to GND for address 0x40.
 | 0x44 | SHT40 (temperature/humidity) |
 
 ## Wiring
+
+The circuit is split across two stripboards joined by a pluggable cable. The
+Fritzing sketch `fritzing/BeeHive.fzz` is the design of record and its
+breadboard view holds the stripboard layout. Both boards use vertical strips
+(strips run top to bottom in the breadboard view) and hole coordinates below
+are `(column, row)` counted from 0 at the top-left.
+
+### Boards and Connectors
+
+**Main board** (30 x 40, under the bottom board with the battery, CN3065 and
+solar panel plug): FeatherS3D, INA226, NAU7802, C1, C2 and four sockets. The
+Feather sits across the top with its 16-pin row on row 3 and 12-pin row on
+row 11; every strip under those rows is cut above the top row and below the
+bottom row (cuts `x.3v` and `x.10v` for columns 3-18 and 3-14) so the two rows
+do not short, except column 15 which carries the Feather GND pin the full
+height of the board as the ground rail. LDO2 (column 3, row 3) is jumpered to
+column 2, which is the 3.3 V rail. The load cells wire straight into the
+NAU7802 screw terminal.
+
+**Hive board** (16 x 15, inside the brood box): SHT40, INMP441, C3 and the
+cable socket. It is wired up the inside of the hive and unplugs at the main
+board.
+
+| Socket | Board, holes | Pin 1 | Pin 2 | Pin 3 | Pin 4 | Pin 5 | Pin 6 | Pin 7 | Pin 8 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| J_HIVE | Main (2-9, 38) | 3V3 | SDA | SCL | GND | GND | WS | SCK | SD |
+| J_SUB | Hive (2-9, 1) | 3V3 | SDA | SCL | GND | GND | WS | SCK | SD |
+| J_SOLAR | Main (27-28, 8) | Panel + | Panel - | | | | | | |
+| J_CHG | Main (27-28, 20) | CN3065 SOLAR + | CN3065 SOLAR - | | | | | | |
+| J_PWR | Main (14-15, 38) | CN3065 OUT + | CN3065 OUT - | | | | | | |
+
+The hive cable is wired pin for pin. Ground sits between SCL and the I2S
+clocks so the cable can run a metre or two. JST-XH is 2.5 mm pitch, which
+fits the 2.54 mm stripboard grid with a little lean on the 8-way socket.
+
+The CN3065 module is not on the stripboard. Its three JST-PH sockets take the
+panel current from J_CHG (after the INA226 shunt), the battery directly, and
+send the output to J_PWR via short pigtails. The INA226 address pads A0 and A1
+are left open; the module pulls them down (see Power Architecture).
+
+Strip cuts on the main board beyond the Feather rows: `5.11v 6.11v` isolate
+the IO33/IO38 pins from the J_HIVE ground strips, `19.24v 20.24v 21.24v
+24.24v` separate the INA226 pins from the NAU7802 pins that share those
+strips, and `27.16v` separates panel + from charger +. On the hive board the
+cuts are `6.4v` (SHT40 VIN off the ground strip) and `10.6v 11.6v` (the
+microphone's top and bottom pin rows). The sketch has the jumper wires and
+exact placements; check the build against it with
+`python3 .claude/skills/circuit/fzz_nets.py fritzing/BeeHive.fzz`.
 
 ### I2C Bus (SHT40, NAU7802, INA226, MAX17048)
 
@@ -123,9 +181,9 @@ If the weight reads negative when load is added, swap A+ and A-.
 
 | Ref | Value | Placement |
 | --- | ----- | --------- |
-| C1 | 470 µF electrolytic, 6.3 V | Across VBAT and GND at the FeatherS3D pins |
-| C2 | 100 nF ceramic | Across VCC and GND at the INA226 module |
-| C3 | 100 nF ceramic | Across VDD and GND at the INMP441 |
+| C1 | 470 µF electrolytic, 6.3 V | VBAT and GND strips two rows below the FeatherS3D, main board (14-15, 13) |
+| C2 | 100 nF ceramic | INA226 VCC and GND strips, main board (24-25, 11) |
+| C3 | 100 nF ceramic | INMP441 VDD and GND strips, hive board (11-12, 10) |
 
 C1 stops WiFi transmit bursts browning out the LDO when the cell is cold or low.
 C2 and C3 must sit right at the module pins; long wires in a beehive pick up

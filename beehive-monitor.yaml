@@ -27,7 +27,7 @@ substitutions:
   ota_mode_max_awake: 30min
   # GPIO pin that controls power to all sensors (e.g. FeatherS3D LDO2)
   sensor_power_pin: GPIO39
-  # INA226 I2C address (A0 and A1 strapped to GND)
+  # INA226 I2C address (A0 and A1 pulled low on the CJMCU-226 module)
   ina226_solar_address: "0x40"
   # Solar current (A) above which the battery is considered charging
   charging_current_threshold: "0.02"
