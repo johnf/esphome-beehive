@@ -277,6 +277,22 @@ to convert either figure to an approximate sound pressure level.
 Each reading averages four consecutive FFT frames (about one second of audio).
 Increase `audio_frames` for steadier band levels at the cost of awake time.
 
+The Modulation Index and Modulation Frequency sensors come from a separate,
+longer capture (`audio_modulation_duration`, default 10 s). Abdollahi et al.
+(2026) found that the rate at which the buzz amplitude fluctuates predicts
+colony strength far better than the average spectrum: weak colonies modulate
+below 10 Hz, strong colonies spread up to about 35 Hz, and the 10-25 Hz range
+is the most discriminating. The component takes a 100 ms / 12.5 ms hop STFT of
+the 150-250 Hz band, then a second FFT over that envelope. Modulation Index is
+the percentage of envelope power (1-40 Hz) that lies in 10-25 Hz, so it is
+independent of microphone gain and colony loudness. Modulation Frequency is
+the strongest modulation rate. Both are new and uncalibrated: log them for a
+season alongside inspections before trusting them, and compare night-time
+readings (roughly 8-11 pm, when foragers are home) rather than daytime ones.
+The band and rate can be overridden with `modulation_band:` and
+`modulation_rate:` blocks on the `bee_audio` component. Omit both modulation
+sensors to skip the capture entirely and shorten awake time.
+
 The classification thresholds are exposed as substitutions and will need
 tuning for your microphone placement, hive size and background noise:
 
@@ -287,6 +303,7 @@ tuning for your microphone placement, hive size and background noise:
 | `audio_queenless_threshold` | 6dB | Both queenless bands this far above baseline → `queenless` |
 | `audio_queen_piping_threshold` | 10dB | Tooting or quacking this far above baseline → piping |
 | `audio_pre_swarm_centroid` | 400Hz | Centroid above this while active → `pre_swarm` |
+| `audio_modulation_duration` | 10s | Audio captured for the modulation spectrum (4-60 s) |
 
 To tune, record the band sensors in Home Assistant for a few days and set
 `audio_normal_threshold` between the quietest night-time baseline level and the
@@ -331,6 +348,8 @@ The audio thresholds are set based on research values. You may need to adjust th
 | Dominant Frequency | Hz | Peak frequency in 60-600 Hz range |
 | Sound Level | dB | Overall RMS sound level |
 | Spectral Centroid | Hz | Centre of mass of spectrum |
+| Modulation Index | % | Share of 150-250 Hz envelope power modulating at 10-25 Hz |
+| Modulation Frequency | Hz | Strongest modulation rate of the 150-250 Hz envelope (1-40 Hz) |
 
 ### Power Monitoring
 
@@ -496,6 +515,7 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ## References
 
 - [Bee Audio Analysis Research](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7506584/) - Scientific basis for frequency bands
+- [Abdollahi et al. 2026, Modulation Tensorgrams for Colony Strength](https://arxiv.org/abs/2607.20386) - Basis for the modulation spectrum sensors
 - [ESPHome Documentation](https://esphome.io/)
 - [ESP-DSP Library](https://github.com/espressif/esp-dsp)
 - <https://how2electronics.com/how-to-use-ina226-dc-current-sensor-with-arduino/>

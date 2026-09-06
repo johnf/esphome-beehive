@@ -77,6 +77,17 @@ public:
   void set_normal_threshold(float db) { this->normal_threshold_db_ = db; }
   void set_pre_swarm_centroid(float hz) { this->pre_swarm_centroid_hz_ = hz; }
 
+  // Modulation spectrum configuration
+  void set_modulation_duration(uint32_t ms) {
+    this->modulation_duration_ms_ = ms;
+  }
+  void set_modulation_band(float low_hz, float high_hz) {
+    this->modulation_band_ = {low_hz, high_hz};
+  }
+  void set_modulation_rate(float low_hz, float high_hz) {
+    this->modulation_rate_ = {low_hz, high_hz};
+  }
+
   // Sensors
   void set_band_sensor(Band band, sensor::Sensor *sensor) {
     this->band_sensors_[band] = sensor;
@@ -89,6 +100,12 @@ public:
   }
   void set_spectral_centroid_sensor(sensor::Sensor *sensor) {
     this->spectral_centroid_sensor_ = sensor;
+  }
+  void set_modulation_index_sensor(sensor::Sensor *sensor) {
+    this->modulation_index_sensor_ = sensor;
+  }
+  void set_modulation_frequency_sensor(sensor::Sensor *sensor) {
+    this->modulation_frequency_sensor_ = sensor;
   }
   void set_queen_piping_sensor(binary_sensor::BinarySensor *sensor) {
     this->queen_piping_sensor_ = sensor;
@@ -114,6 +131,10 @@ protected:
   float normal_threshold_db_{-105.0f};
   float pre_swarm_centroid_hz_{400.0f};
 
+  uint32_t modulation_duration_ms_{10000};
+  FrequencyBand modulation_band_{150.0f, 250.0f};
+  FrequencyBand modulation_rate_{10.0f, 25.0f};
+
   i2s_chan_handle_t rx_chan_{nullptr};
   bool fft_initialised_{false};
 
@@ -126,10 +147,28 @@ protected:
   float window_power_sum_{0.0f}; // sum of window^2, for PSD normalisation
   float rms_db_{-200.0f};
 
+  // Modulation spectrum: a 100 ms / 12.5 ms hop STFT gives the band envelope
+  // at ~80 Hz, which is then analysed with a second FFT in 256-hop segments.
+  size_t stft_window_{0};
+  size_t stft_hop_{0};
+  size_t stft_fft_size_{0};
+  size_t envelope_len_{0};
+  int32_t *hop_samples_{nullptr};  // stft_hop_ samples, DMA capable
+  float *stft_input_{nullptr};     // stft_window_ samples, sliding
+  float *stft_window_fn_{nullptr}; // stft_window_
+  float *stft_data_{nullptr};      // 2 * stft_fft_size_ interleaved re/im
+  float *envelope_{nullptr};       // envelope_len_
+  float *mod_window_fn_{nullptr};  // MOD_SEGMENT
+  float *mod_psd_{nullptr};        // MOD_SEGMENT / 2
+  float modulation_index_{0.0f};
+  float modulation_frequency_{0.0f};
+
   sensor::Sensor *band_sensors_[BAND_COUNT] = {};
   sensor::Sensor *dominant_frequency_sensor_{nullptr};
   sensor::Sensor *sound_level_rms_sensor_{nullptr};
   sensor::Sensor *spectral_centroid_sensor_{nullptr};
+  sensor::Sensor *modulation_index_sensor_{nullptr};
+  sensor::Sensor *modulation_frequency_sensor_{nullptr};
   binary_sensor::BinarySensor *queen_piping_sensor_{nullptr};
   text_sensor::TextSensor *hive_state_sensor_{nullptr};
 
@@ -139,7 +178,17 @@ protected:
   void deinit_i2s_();
   bool allocate_buffers_();
   void free_buffers_();
+  bool discard_startup_samples_();
   bool capture_and_analyse_();
+  bool modulation_enabled_() const {
+    return this->modulation_index_sensor_ != nullptr ||
+           this->modulation_frequency_sensor_ != nullptr;
+  }
+  bool allocate_modulation_buffers_();
+  bool capture_modulation_();
+  void analyse_envelope_();
+  float peak_frequency_(const float *psd, int start_bin, int end_bin,
+                        float resolution) const;
   float calculate_band_power_(const FrequencyBand &band) const;
   float calculate_dominant_frequency_() const;
   float calculate_spectral_centroid_() const;

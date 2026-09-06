@@ -1,7 +1,8 @@
 """
 Bee Audio Sensor Platform
 
-Exposes frequency band power sensors, dominant frequency, sound level, and spectral centroid.
+Exposes frequency band power sensors, dominant frequency, sound level, spectral
+centroid, and modulation spectrum metrics.
 """
 
 import esphome.codegen as cg
@@ -13,6 +14,7 @@ from esphome.const import (
     STATE_CLASS_MEASUREMENT,
     UNIT_DECIBEL,
     UNIT_HERTZ,
+    UNIT_PERCENT,
 )
 from . import BANDS, BeeAudioComponent
 
@@ -22,6 +24,8 @@ CONF_BEE_AUDIO_ID = "bee_audio_id"
 CONF_DOMINANT_FREQUENCY = "dominant_frequency"
 CONF_SOUND_LEVEL_RMS = "sound_level_rms"
 CONF_SPECTRAL_CENTROID = "spectral_centroid"
+CONF_MODULATION_INDEX = "modulation_index"
+CONF_MODULATION_FREQUENCY = "modulation_frequency"
 
 POWER_SENSOR_SCHEMA = sensor.sensor_schema(
     unit_of_measurement=UNIT_DECIBEL,
@@ -37,6 +41,13 @@ FREQUENCY_SENSOR_SCHEMA = sensor.sensor_schema(
     state_class=STATE_CLASS_MEASUREMENT,
 )
 
+MODULATION_INDEX_SCHEMA = sensor.sensor_schema(
+    unit_of_measurement=UNIT_PERCENT,
+    icon="mdi:sine-wave",
+    accuracy_decimals=1,
+    state_class=STATE_CLASS_MEASUREMENT,
+)
+
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(CONF_BEE_AUDIO_ID): cv.use_id(BeeAudioComponent),
@@ -44,6 +55,8 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_DOMINANT_FREQUENCY): FREQUENCY_SENSOR_SCHEMA,
         cv.Optional(CONF_SOUND_LEVEL_RMS): POWER_SENSOR_SCHEMA,
         cv.Optional(CONF_SPECTRAL_CENTROID): FREQUENCY_SENSOR_SCHEMA,
+        cv.Optional(CONF_MODULATION_INDEX): MODULATION_INDEX_SCHEMA,
+        cv.Optional(CONF_MODULATION_FREQUENCY): FREQUENCY_SENSOR_SCHEMA,
     }
 )
 
@@ -67,3 +80,11 @@ async def to_code(config):
     if spectral_centroid := config.get(CONF_SPECTRAL_CENTROID):
         sens = await sensor.new_sensor(spectral_centroid)
         cg.add(parent.set_spectral_centroid_sensor(sens))
+
+    if modulation_index := config.get(CONF_MODULATION_INDEX):
+        sens = await sensor.new_sensor(modulation_index)
+        cg.add(parent.set_modulation_index_sensor(sens))
+
+    if modulation_frequency := config.get(CONF_MODULATION_FREQUENCY):
+        sens = await sensor.new_sensor(modulation_frequency)
+        cg.add(parent.set_modulation_frequency_sensor(sens))

@@ -40,6 +40,9 @@ substitutions:
   audio_active_threshold: "-95dB"
   audio_normal_threshold: "-105dB"
   audio_pre_swarm_centroid: "400Hz"
+  # Seconds of audio for the modulation spectrum (colony strength proxy).
+  # Longer is steadier but the device stays awake for the whole capture.
+  audio_modulation_duration: "10s"
   # Weight calibration points (raw_value -> weight_kg). Record the raw value
   # with the platform empty and again with a known weight of at least 20 kg
   # (see README "Load Cell Calibration"). The defaults below are placeholders
@@ -78,7 +81,7 @@ external_components:
 # Deep sleep configuration - 5 minute intervals
 deep_sleep:
   id: deep_sleep_control
-  run_duration: 45s # Max awake time before forced sleep
+  run_duration: 60s # Max awake time before forced sleep
   sleep_duration: 5min
 
 # Custom bee audio component (INMP441 microphone)
@@ -103,6 +106,7 @@ bee_audio:
   active_threshold: ${audio_active_threshold}
   normal_threshold: ${audio_normal_threshold}
   pre_swarm_centroid: ${audio_pre_swarm_centroid}
+  modulation_duration: ${audio_modulation_duration}
   update_interval: never
 
 sensor:
@@ -139,6 +143,12 @@ sensor:
     spectral_centroid:
       name: "Bee Spectral Centroid"
       id: bee_spectral_centroid
+    modulation_index:
+      name: "Bee Modulation Index"
+      id: bee_modulation_index
+    modulation_frequency:
+      name: "Bee Modulation Frequency"
+      id: bee_modulation_frequency
 
   # NAU7802 load cell ADC (hive weight)
   # The measurement script reads 7 samples per wake; the median of the first 5

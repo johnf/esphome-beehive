@@ -14,6 +14,7 @@ to detect bee colony health indicators.
 - FFT size: 2048 samples
 - Frequency resolution: ~3.9 Hz per bin
 - Frames averaged per reading: 4 (~1s of audio, Welch averaging)
+- Modulation capture: separate 10s capture, feeds the task watchdog while blocking
 - Band levels: mean one-sided PSD in dB re FS²/Hz, independent of fft_size
 - Uses ESP-DSP library for optimised FFT
 
@@ -30,9 +31,19 @@ to detect bee colony health indicators.
 | active_threshold | dB | -95dB |
 | normal_threshold | dB | -105dB |
 | pre_swarm_centroid | frequency | 400Hz |
+| modulation_duration | 4-60s | 10s |
+| modulation_band.low/high | frequency | 150-250Hz |
+| modulation_rate.low/high | frequency | 10-25Hz |
 
 Band names: low_freq, baseline, worker, quacking, tooting, queenless_mid,
 queenless_high. Sensors are `band_<name>` on the sensor platform.
+
+Modulation spectrum (Abdollahi et al. 2026, arXiv 2607.20386): a 100 ms /
+12.5 ms hop STFT of `modulation_band` gives an ~80 Hz envelope; a Welch FFT
+over 256-hop segments gives modulation power 0-40 Hz. `modulation_index` is the
+percentage of 1-40 Hz envelope power inside `modulation_rate`;
+`modulation_frequency` is the peak rate. The capture only runs when one of
+those sensors is configured.
 
 ## Building
 

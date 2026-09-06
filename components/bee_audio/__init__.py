@@ -28,6 +28,9 @@ CONF_QUEEN_PIPING_THRESHOLD = "queen_piping_threshold"
 CONF_ACTIVE_THRESHOLD = "active_threshold"
 CONF_NORMAL_THRESHOLD = "normal_threshold"
 CONF_PRE_SWARM_CENTROID = "pre_swarm_centroid"
+CONF_MODULATION_DURATION = "modulation_duration"
+CONF_MODULATION_BAND = "modulation_band"
+CONF_MODULATION_RATE = "modulation_rate"
 
 bee_audio_ns = cg.esphome_ns.namespace("bee_audio")
 BeeAudioComponent = bee_audio_ns.class_("BeeAudioComponent", cg.PollingComponent)
@@ -80,6 +83,16 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_ACTIVE_THRESHOLD, default="-95dB"): cv.decibel,
         cv.Optional(CONF_NORMAL_THRESHOLD, default="-105dB"): cv.decibel,
         cv.Optional(CONF_PRE_SWARM_CENTROID, default="400Hz"): cv.frequency,
+        cv.Optional(CONF_MODULATION_DURATION, default="10s"): cv.All(
+            cv.positive_time_period_milliseconds,
+            cv.Range(min=cv.TimePeriod(seconds=4), max=cv.TimePeriod(seconds=60)),
+        ),
+        cv.Optional(
+            CONF_MODULATION_BAND, default={CONF_LOW: "150Hz", CONF_HIGH: "250Hz"}
+        ): BAND_SCHEMA,
+        cv.Optional(
+            CONF_MODULATION_RATE, default={CONF_LOW: "10Hz", CONF_HIGH: "25Hz"}
+        ): BAND_SCHEMA,
     }
 ).extend(cv.polling_component_schema("never"))
 
@@ -104,6 +117,15 @@ async def to_code(config):
     cg.add(var.set_active_threshold(config[CONF_ACTIVE_THRESHOLD]))
     cg.add(var.set_normal_threshold(config[CONF_NORMAL_THRESHOLD]))
     cg.add(var.set_pre_swarm_centroid(config[CONF_PRE_SWARM_CENTROID]))
+    cg.add(
+        var.set_modulation_duration(
+            config[CONF_MODULATION_DURATION].total_milliseconds
+        )
+    )
+    band = config[CONF_MODULATION_BAND]
+    cg.add(var.set_modulation_band(band[CONF_LOW], band[CONF_HIGH]))
+    rate = config[CONF_MODULATION_RATE]
+    cg.add(var.set_modulation_rate(rate[CONF_LOW], rate[CONF_HIGH]))
 
     esp32.add_idf_component(
         name="esp-dsp",
