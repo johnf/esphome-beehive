@@ -2,3 +2,4 @@ cdeps/
 fritzing/.fritzing-parts/
 .esphome/
 secrets.yaml
+.claude/worktrees/
