@@ -29,7 +29,7 @@ temperature, and humidity monitoring.
 | CN3065 | Solar LiPo charge controller | 1 |
 | [3.7V 2000mAh LiPo](https://core-electronics.com.au/polymer-lithium-ion-battery-2000mah-38459.html) | Battery (DW01+ PCM) | 1 |
 | Solar panel | 6V nominal, 3-5W (CN3065 input is rated for 6V panels) | 1 |
-| Stripboard 30 x 40 holes | Main board (under the bottom board) | 1 |
+| Stripboard 30 x 29 holes | Main board (under the bottom board) | 1 |
 | Stripboard 16 x 15 holes | Hive board (inside the brood box) | 1 |
 | JST-XH 8-way socket and cable | Hive cable, one socket per board | 2 sockets, 1 cable |
 | JST-XH 2-way socket | Solar in, charger in, charger out | 3 |
@@ -94,15 +94,20 @@ are `(column, row)` counted from 0 at the top-left.
 
 ### Boards and Connectors
 
-**Main board** (30 x 40, under the bottom board with the battery, CN3065 and
+**Main board** (30 x 29, under the bottom board with the battery, CN3065 and
 solar panel plug): FeatherS3D, INA226, NAU7802, C1, C2 and four sockets. The
 Feather sits across the top with its 16-pin row on row 3 and 12-pin row on
 row 11; every strip under those rows is cut above the top row and below the
 bottom row (cuts `x.3v` and `x.10v` for columns 3-18 and 3-14) so the two rows
 do not short, except column 15 which carries the Feather GND pin the full
-height of the board as the ground rail. LDO2 (column 3, row 3) is jumpered to
-column 2, which is the 3.3 V rail. The load cells wire straight into the
-NAU7802 screw terminal.
+height of the board as the ground rail. J_HIVE sits directly below the Feather
+on row 14 so the SDA, SCL, WS, SCK and SD strips run straight into it, and the
+NAU7802 sits below that, rotated so its header (row 17) puts DRDY, SDA, SCL,
+GND, AVDD and VCC on columns 2-7: SDA, SCL and GND share strips with the
+Feather and J_HIVE, and the screw terminal faces the bottom edge. LDO2
+(column 3, row 3) is jumpered to column 2, which feeds J_HIVE pin 1, and along
+row 1 to column 25 (INA226 VCC and C2); row 28 carries it on to the NAU7802
+VCC on column 7. The INA226 is on the right with its header on row 21.
 
 **Hive board** (16 x 15, inside the brood box): SHT40, INMP441, C3 and the
 cable socket. It is wired up the inside of the hive and unplugs at the main
@@ -110,11 +115,11 @@ board.
 
 | Socket | Board, holes | Pin 1 | Pin 2 | Pin 3 | Pin 4 | Pin 5 | Pin 6 | Pin 7 | Pin 8 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| J_HIVE | Main (2-9, 38) | 3V3 | SDA | SCL | GND | GND | WS | SCK | SD |
+| J_HIVE | Main (2-9, 14) | 3V3 | SDA | SCL | GND | GND | WS | SCK | SD |
 | J_SUB | Hive (2-9, 1) | 3V3 | SDA | SCL | GND | GND | WS | SCK | SD |
 | J_SOLAR | Main (27-28, 8) | Panel + | Panel - | | | | | | |
 | J_CHG | Main (27-28, 20) | CN3065 SOLAR + | CN3065 SOLAR - | | | | | | |
-| J_PWR | Main (14-15, 38) | CN3065 OUT + | CN3065 OUT - | | | | | | |
+| J_PWR | Main (14-15, 22) | CN3065 OUT + | CN3065 OUT - | | | | | | |
 
 The hive cable is wired pin for pin. Ground sits between SCL and the I2S
 clocks so the cable can run a metre or two. JST-XH is 2.5 mm pitch, which
@@ -126,9 +131,12 @@ send the output to J_PWR via short pigtails. The INA226 address pads A0 and A1
 are left open; the module pulls them down (see Power Architecture).
 
 Strip cuts on the main board beyond the Feather rows: `5.11v 6.11v` isolate
-the IO33/IO38 pins from the J_HIVE ground strips, `19.24v 20.24v 21.24v
-24.24v` separate the INA226 pins from the NAU7802 pins that share those
-strips, and `27.16v` separates panel + from charger +. On the hive board the
+the IO33/IO38 pins from the J_HIVE ground strips, `2.15v 6.15v 7.15v` keep
+the NAU7802 DRDY, AVDD and VCC pins off the 3.3 V, ground and WS strips they
+sit under, and `27.16v` separates panel + from charger +. Ground reaches the
+J_HIVE and NAU7802 ground strips and column 24 (C2, INA226) along row 12, the
+socket grounds on column 28 along row 23, and SDA/SCL cross to the INA226 on
+rows 26 and 27. On the hive board the
 cuts are `6.4v` (SHT40 VIN off the ground strip) and `10.6v 11.6v` (the
 microphone's top and bottom pin rows). The sketch has the jumper wires and
 exact placements; check the build against it with
