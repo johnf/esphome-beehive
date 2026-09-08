@@ -14,7 +14,7 @@ substitutions:
   # Where to fetch the bee_audio component from. Pinned to a release tag; keep
   # it in step with the @tag on the package URL in your device configuration.
   # Set to a local path (e.g. "components") when building from a checkout.
-  bee_audio_source: github://johnf/esphome-beehive@v1.0.0
+  bee_audio_source: github://johnf/esphome-beehive
   # I2C bus ID (user must define the i2c bus externally)
   i2c_bus_id: i2c_bus
   # I2S pins for INMP441 microphone
