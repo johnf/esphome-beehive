@@ -220,9 +220,13 @@ have onboard decoupling already.
    Click **Edit** on the new device and use the following configuration:
 
    ```yaml
-   # Include the beehive monitoring package (pinned to a release tag)
+   # Include the beehive monitoring package. `refresh: always` re-fetches the
+   # default branch on every run instead of using ESPHome's cached copy.
    packages:
-     beehive: github://johnf/esphome-beehive/beehive-monitor.yaml@v1.0.0
+     beehive:
+       url: https://github.com/johnf/esphome-beehive
+       files: [beehive-monitor.yaml]
+       refresh: always
 
    # Device configuration (required)
    esphome:
@@ -599,11 +603,9 @@ CI runs the same two commands on every push and pull request.
 
 ### Releasing
 
-Device configurations pin the package and component to a tag. To release:
-
-1. Update `bee_audio_source` in `beehive-monitor.yaml` and the `packages` URL
-   in this README to the new tag
-2. Commit, then `git tag vX.Y.Z && git push --tags`
+There are no releases. Device configurations track the default branch and
+re-fetch it on every run, so a push to `main` reaches devices on their next
+build.
 
 ## Contributing
 

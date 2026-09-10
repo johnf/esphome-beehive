@@ -57,8 +57,8 @@ esphome logs example.yaml
 ```
 
 CI (`.github/workflows/ci.yml`) runs `esphome config` and `esphome compile` on
-`example.yaml`. Releases are git tags; `bee_audio_source` in the package and the
-package URL in README.md must be bumped to the new tag.
+`example.yaml`. There are no releases: device configurations track the default
+branch and use `refresh: always` so nothing is cached.
 
 ## Development
 

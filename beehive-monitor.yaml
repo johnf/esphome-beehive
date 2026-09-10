@@ -11,9 +11,9 @@
 # See README.md for setup instructions.
 
 substitutions:
-  # Where to fetch the bee_audio component from. Pinned to a release tag; keep
-  # it in step with the @tag on the package URL in your device configuration.
-  # Set to a local path (e.g. "components") when building from a checkout.
+  # Where to fetch the bee_audio component from. Unpinned, so it tracks the
+  # default branch. Set to a local path (e.g. "components") when building from
+  # a checkout.
   bee_audio_source: github://johnf/esphome-beehive
   # I2C bus ID (user must define the i2c bus externally)
   i2c_bus_id: i2c_bus
@@ -69,7 +69,8 @@ esphome:
 external_components:
   - source: ${bee_audio_source}
     components: [bee_audio]
-    refresh: 1d
+    # Re-fetch on every run rather than trusting the cache
+    refresh: always
 
 # Deep sleep configuration - 5 minute intervals
 deep_sleep:
