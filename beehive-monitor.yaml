@@ -223,6 +223,9 @@ binary_sensor:
   - platform: homeassistant
     id: ota_mode
     entity_id: ${ota_mode_entity}
+    # Every wake is a fresh boot, so the helper state is always an initial
+    # state; without this on_state never fires and the device sleeps anyway
+    trigger_on_initial_state: true
     on_state:
       - if:
           condition:
