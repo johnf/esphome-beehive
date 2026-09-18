@@ -28,10 +28,11 @@ temperature, and humidity monitoring.
 | INA226 | Solar current/voltage/power monitor | 1 |
 | CN3065 | Solar LiPo charge controller | 1 |
 | [3.7V 2000mAh LiPo](https://core-electronics.com.au/polymer-lithium-ion-battery-2000mah-38459.html) | Battery (DW01+ PCM) | 1 |
-| Solar panel | 6V nominal, 3-5W (CN3065 input is rated for 6V panels) | 1 |
-| Stripboard 30 x 29 holes | Main board (under the bottom board) | 1 |
+| Solar panel | 6V nominal, 1W or larger (CN3065 input is rated for 6V panels) | 1 |
+| Stripboard 24 x 41 holes | Main board (under the bottom board) | 1 |
 | Stripboard 16 x 15 holes | Hive board (inside the brood box) | 1 |
 | JST-XH 8-way socket and cable | Hive cable, one socket per board | 2 sockets, 1 cable |
+| JST-XH 12-way socket and cable | Load cell socket (J_CELLS) | 1 |
 | JST-XH 2-way socket | Solar in, charger in, charger out | 3 |
 | JST-PH 2-way pigtail | CN3065 solar and output sockets | 2 |
 | 100 nF ceramic capacitor | C2, C3 | 2 |
@@ -64,6 +65,47 @@ has 10 kΩ pull-downs on both, which gives address 0x40. Confirm this on your
 unit before building: unpowered, A0 to GND and A1 to GND should each read about
 10 kΩ. If either reads open, strap that pad to GND.
 
+CJMCU-226 modules come with two header pinouts: after ALE some read SDA then
+SCL, others SCL then SDA. The Fritzing part (`fritzing/ina226/`) and the
+stripboard layout follow the first, with SDA on pin 5. Check the silkscreen
+before soldering the header; if yours is the other variant, do not plug the
+module straight into its socket, but cross SDA and SCL with two short flying
+leads.
+
+### Solar Performance
+
+The CN3065 regulates its own input voltage. In direct sun it held the panel at
+4.77V for over an hour while the current drifted, well below the 6V maximum
+power point of a nominal 6V panel. Panel power is therefore capped near 0.8W no
+matter how much sun a 1W panel sees.
+
+That cap matters less than it looks. The CN3065 is a linear charger, so it
+passes current through roughly one-for-one and burns the voltage difference as
+heat. Charge current, not panel watts, is what fills the cell.
+
+Measured on a 110 x 60 mm 1W 6V polycrystalline panel in direct spring sun
+(Sydney, sun about 52° above the horizon, panel not aimed):
+
+| Quantity | Value |
+|----------|-------|
+| Panel voltage | 4.77V (clamped by the CN3065) |
+| Panel current | 113-121 mA |
+| Panel power | 0.54-0.58W |
+| Fraction of nameplate | 55-58% |
+
+At ~113 mA against an average draw of ~2.3 mA, roughly half an hour of direct
+sun per day covers the device's entire daily consumption, and four good hours
+put in over eight times what it uses. A 1W panel is ample for this load.
+
+Siting buys far more than panel size. The same panel shaded and badly angled
+produced 5-50 mW, one to two orders of magnitude below its direct-sun output,
+and the battery fell 2.7% per day through it. If the battery is losing ground,
+move the panel before buying a bigger one.
+
+If you do want more margin, wire two panels in **parallel** to roughly double
+the current at the clamped voltage. Series gains nothing, because the charger
+regulates its input down regardless of what the panels could deliver.
+
 ### Battery Specifications
 
 | Parameter | Value |
@@ -94,20 +136,45 @@ are `(column, row)` counted from 0 at the top-left.
 
 ### Boards and Connectors
 
-**Main board** (30 x 29, under the bottom board with the battery, CN3065 and
-solar panel plug): FeatherS3D, INA226, NAU7802, C1, C2 and four sockets. The
+**Main board** (24 x 41, under the bottom board with the battery, CN3065 and
+solar panel plug): FeatherS3D, INA226, NAU7802, C1, C2 and five sockets. The
 Feather sits across the top with its 16-pin row on row 3 and 12-pin row on
 row 11; every strip under those rows is cut above the top row and below the
 bottom row (cuts `x.3v` and `x.10v` for columns 3-18 and 3-14) so the two rows
-do not short, except column 15 which carries the Feather GND pin the full
-height of the board as the ground rail. J_HIVE sits directly below the Feather
-on row 14 so the SDA, SCL, WS, SCK and SD strips run straight into it, and the
-NAU7802 sits below that, rotated so its header (row 17) puts DRDY, SDA, SCL,
-GND, AVDD and VCC on columns 2-7: SDA, SCL and GND share strips with the
-Feather and J_HIVE, and the screw terminal faces the bottom edge. LDO2
-(column 3, row 3) is jumpered to column 2, which feeds J_HIVE pin 1, and along
-row 1 to column 25 (INA226 VCC and C2); row 28 carries it on to the NAU7802
-VCC on column 7. The INA226 is on the right with its header on row 21.
+do not short, except column 15, which carries the Feather GND pin the full
+height of the board as the ground rail. Column 2 is the 3.3 V rail, fed from
+LDO2 (column 3, row 3) by the jumper on row 2.
+
+Columns 2-9 run straight from the Feather's bottom row to J_HIVE on the bottom
+edge (row 40), so 3V3, SDA, SCL, WS, SCK and SD reach the hive socket without a
+jumper; columns 5 and 6 (IO33 and IO38, cut at `5.11v 6.11v`) become its two
+ground pins via row 14. Everything else sits to the right of that corridor:
+C1 and the VBAT tap at the top right, J_PWR on the right edge at row 15, the
+INA226 with its header on row 18 (VCC, GND, SCL, SDA, ALE, VBS, IN-, IN+ on
+columns 14-21, GND landing on the rail, C2 directly above it on row 17),
+J_SOLAR and J_CHG on the right edge at rows 28 and 31, the NAU7802 with its
+header on row 29 (DRDY, SDA, SCL, GND, AVDD, VCC on columns 12-17, GND on the
+rail, screw terminal facing the bottom edge) and J_CELLS on the bottom edge
+beside J_HIVE. Column 23 is a second ground rail for C1 and the three
+right-edge sockets; column 22 carries VBAT, panel + and charger + in three
+segments. Row 39 stays empty under the two bottom sockets.
+
+| Row | Jumper | Net |
+| --- | ------ | --- |
+| 2 | (3,2) → (2,2) | LDO2 to the 3.3 V rail |
+| 12 | (14,12) → (22,12) | VBAT to C1 and J_PWR |
+| 13 | (2,13) → (14,13) | 3.3 V to INA226 VCC and C2 |
+| 13 | (15,13) → (23,13) | Ground to the right rail |
+| 14 | (15,14) → (6,14) → (5,14) | Ground to J_HIVE pins 4 and 5 |
+| 15 | (4,15) → (16,15) | SCL to the INA226 |
+| 16 | (3,16) → (13,16) → (17,16) | SDA to the NAU7802 and INA226 |
+| 26 | (14,26) → (17,26) | 3.3 V to NAU7802 VCC |
+| 26 | (19,26) → (20,26) | INA226 VBS to IN- |
+| 26 | (21,26) → (22,26) | INA226 IN+ to J_SOLAR + |
+| 27 | (16,27) → (14,27) | SCL to the NAU7802 |
+| 33 | (20,33) → (22,33) | INA226 IN- to J_CHG + |
+| 38 | (12,38) → (13,38), (15,38) → (16,38), (18,38) → (19,38), (21,38) → (22,38) | Load cell ring, see [Load Cells](#load-cells) |
+| 38 | (11,38), (14,38), (17,38), (20,38) | Flying leads into the NAU7802 screw terminal |
 
 **Hive board** (16 x 15, inside the brood box): SHT40, INMP441, C3 and the
 cable socket. It is wired up the inside of the hive and unplugs at the main
@@ -115,32 +182,35 @@ board.
 
 | Socket | Board, holes | Pin 1 | Pin 2 | Pin 3 | Pin 4 | Pin 5 | Pin 6 | Pin 7 | Pin 8 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| J_HIVE | Main (2-9, 14) | 3V3 | SDA | SCL | GND | GND | WS | SCK | SD |
+| J_HIVE | Main (2-9, 40) | 3V3 | SDA | SCL | GND | GND | WS | SCK | SD |
 | J_SUB | Hive (2-9, 1) | 3V3 | SDA | SCL | GND | GND | WS | SCK | SD |
-| J_SOLAR | Main (27-28, 8) | Panel + | Panel - | | | | | | |
-| J_CHG | Main (27-28, 20) | CN3065 SOLAR + | CN3065 SOLAR - | | | | | | |
-| J_PWR | Main (14-15, 22) | CN3065 OUT + | CN3065 OUT - | | | | | | |
+| J_SOLAR | Main (22-23, 28) | Panel + | Panel - | | | | | | |
+| J_CHG | Main (22-23, 31) | CN3065 SOLAR + | CN3065 SOLAR - | | | | | | |
+| J_PWR | Main (22-23, 15) | CN3065 OUT + | CN3065 OUT - | | | | | | |
+| J_CELLS | Main (11-22, 40) | 12 pins, see [Load Cells](#load-cells) | | | | | | | |
 
 The hive cable is wired pin for pin. Ground sits between SCL and the I2S
 clocks so the cable can run a metre or two. JST-XH is 2.5 mm pitch, which
-fits the 2.54 mm stripboard grid with a little lean on the 8-way socket.
+fits the 2.54 mm stripboard grid with a little lean on the 8-way socket and
+about half a millimetre over the 12-way. Every socket sits on a board edge, so
+side-entry (S*B-XH-A) or top-entry (B*B-XH-A) housings both work.
 
 The CN3065 module is not on the stripboard. Its three JST-PH sockets take the
 panel current from J_CHG (after the INA226 shunt), the battery directly, and
 send the output to J_PWR via short pigtails. The INA226 address pads A0 and A1
 are left open; the module pulls them down (see Power Architecture).
 
-Strip cuts on the main board beyond the Feather rows: `5.11v 6.11v` isolate
-the IO33/IO38 pins from the J_HIVE ground strips, `2.15v 6.15v 7.15v` keep
-the NAU7802 DRDY, AVDD and VCC pins off the 3.3 V, ground and WS strips they
-sit under, and `27.16v` separates panel + from charger +. Ground reaches the
-J_HIVE and NAU7802 ground strips and column 24 (C2, INA226) along row 12, the
-socket grounds on column 28 along row 23, and SDA/SCL cross to the INA226 on
-rows 26 and 27. On the hive board the
-cuts are `6.4v` (SHT40 VIN off the ground strip) and `10.6v 11.6v` (the
-microphone's top and bottom pin rows). The sketch has the jumper wires and
-exact placements; check the build against it with
-`python3 .claude/skills/circuit/fzz_nets.py fritzing/BeeHive.fzz`.
+Strip cuts on the main board beyond the Feather rows: `5.11v 6.11v` turn the
+IO33 and IO38 strips into the J_HIVE grounds, `14.12v` separates VBAT from the
+3.3 V segment that feeds the INA226, `13.15v 16.14v 17.15v` keep the SDA and
+SCL taps off the Feather pins and pads above them, `17.25v 14.26v 16.27v
+12.28v` split the INA226 columns from the NAU7802 header (VCC, SCL, AVDD and
+DRDY), `22.15v 22.29v` divide column 22 into VBAT, panel + and charger +, and
+`11.37v` to `22.37v` isolate the J_CELLS pins (rows 38-40) from everything
+above them. On the hive board the cuts are `6.4v` (SHT40 VIN off the ground
+strip) and `10.6v 11.6v` (the microphone's top and bottom pin rows). The
+sketch has the jumper wires and exact placements; check the build against it
+with `python3 .claude/skills/circuit/fzz_nets.py fritzing/BeeHive.fzz`.
 
 ### I2C Bus (SHT40, NAU7802, INA226, MAX17048)
 
@@ -168,23 +238,36 @@ Pin assignments are configurable via substitutions (`i2s_lrclk_pin`, `i2s_bclk_p
 ### Load Cells
 
 Each 50kg half-bridge cell has three wires: red (centre tap), white and black.
-Place one cell at each corner of the platform and wire them into a full
-Wheatstone bridge:
+All twelve go to J_CELLS, the 12-way JST-XH socket on the bottom edge of the
+main board. The bridge is made on the board, so nothing is spliced at the
+platform. Place one cell at each corner and number them 1 to 4 clockwise.
 
-1. Number the cells 1 to 4 clockwise.
-2. Join the outer wires of neighbouring cells like colour to like colour,
-   alternating around the platform: white 1 to white 2, black 2 to black 3,
-   white 3 to white 4, black 4 to black 1. Joining white to black instead
-   makes the two gauges in every bridge arm cancel, and the reading barely
-   moves under load.
-3. Connect the four red wires to the NAU7802 as below.
+| J_CELLS pin | Wire | J_CELLS pin | Wire |
+| ----------- | ---- | ----------- | ---- |
+| 1 | Cell 1 red | 7 | Cell 3 red |
+| 2 | Cell 1 white | 8 | Cell 3 white |
+| 3 | Cell 2 white | 9 | Cell 4 white |
+| 4 | Cell 2 red | 10 | Cell 4 red |
+| 5 | Cell 2 black | 11 | Cell 4 black |
+| 6 | Cell 3 black | 12 | Cell 1 black |
 
-| Cell (red wire) | NAU7802 |
-| --------------- | ------- |
-| Cell 1 | E+ |
-| Cell 3 | E- |
-| Cell 2 | A+ |
-| Cell 4 | A- |
+The jumpers on row 38 bridge pins 2-3, 5-6, 8-9 and 11-12, joining like
+colours round the platform (white 1-2, black 2-3, white 3-4, black 4-1) into a
+full Wheatstone bridge. Like must join like: in each cell the white and black
+halves change in opposite directions under load, so a white-to-black ring
+cancels in every bridge arm and the output barely moves. The four red wires
+land on row 38 under the NAU7802 screw terminal and run into it with short
+leads:
+
+| Cell (red wire) | Row 38 hole | NAU7802 |
+| --------------- | ----------- | ------- |
+| Cell 1 | (11,38) | E+ |
+| Cell 2 | (14,38) | A- |
+| Cell 3 | (17,38) | E- |
+| Cell 4 | (20,38) | A+ |
+
+E+ and E- are the bridge excitation (the breakout's AVDD and GND); A- and A+
+are the channel A input. The B- and B+ terminals are the unused channel B.
 
 If the weight reads negative when load is added, swap A+ and A-.
 
@@ -192,8 +275,8 @@ If the weight reads negative when load is added, swap A+ and A-.
 
 | Ref | Value | Placement |
 | --- | ----- | --------- |
-| C1 | 470 µF electrolytic, 6.3 V | VBAT and GND strips two rows below the FeatherS3D, main board (14-15, 13) |
-| C2 | 100 nF ceramic | INA226 VCC and GND strips, main board (24-25, 11) |
+| C1 | 470 µF electrolytic, 6.3 V | VBAT and GND strips at the top right, main board (22-23, 11) |
+| C2 | 100 nF ceramic | INA226 VCC and GND strips directly above its header, main board (14-15, 17) |
 | C3 | 100 nF ceramic | INMP441 VDD and GND strips, hive board (11-12, 10) |
 
 C1 stops WiFi transmit bursts browning out the LDO when the cell is cold or low.
@@ -493,7 +576,7 @@ The audio thresholds are set based on research values. You may need to adjust th
 | Solar Power | W | Solar power input |
 | Battery Voltage | V | Cell voltage from the MAX17048 |
 | Battery Level | % | State of charge from the MAX17048 ModelGauge |
-| Battery Charging | on/off | Solar current above `charging_current_threshold` |
+| Solar Producing | on/off | Solar current above `charging_current_threshold`. Panel output, not net battery current: the device draws more than the charger supplies during the wake window, so the battery only gains during deep sleep |
 
 ### Hive State Classification
 
@@ -517,13 +600,17 @@ with the battery.
 |-------|--------------|----------|
 | Deep Sleep | ~10 µA (ESP32 only, sensor rail off) | 5 minutes |
 | Active | ~150 mA | ~5-15 seconds (WiFi connect, ~1 s audio, ~1 s weight) |
-| **Average** | **~5 mA** | - |
+| **Average** | **~2.3 mA** | - |
+
+The average is measured, not estimated: the fuel gauge fell 2.7% per day over
+three days with the panel shaded, which is about 54 mAh/day out of 2000 mAh.
 
 **Note**: Any sensor not powered from LDO2 draws standby current during deep
 sleep.
 
-With a 2000 mAh battery and solar charging, runtime depends on solar input. Without
-solar, expect roughly two weeks.
+With a 2000 mAh battery and no solar input at all, that 2.7% per day works out
+to roughly a month from full. Any reasonable sun keeps it topped up
+indefinitely; see [Solar Performance](#solar-performance).
 
 ## Home Assistant
 
@@ -598,6 +685,20 @@ automation:
 - Check the OTA mode helper is off in Home Assistant
 - Verify no other components are blocking sleep
 - Ensure the `run_duration` is sufficient for sensor readings
+
+### Battery slowly discharging
+
+Compare Solar Power against the figures in
+[Solar Performance](#solar-performance). Around 0.5W and 110 mA at midday is a
+healthy 1W panel; tens of milliwatts means it is shaded or badly angled, which
+is by far the most common cause.
+
+- Check Solar Bus Voltage. Near the cell voltage means the panel is not driving
+  the charger; around 4.8V means it is
+- Reposition the panel before replacing it, and watch for shade that only falls
+  across it for part of the day
+- Solar Current is sampled only during the wake window, so what the panel does
+  during deep sleep is invisible
 
 ## Development
 

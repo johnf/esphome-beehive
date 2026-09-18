@@ -49,13 +49,24 @@ from it; Fritzing's XML netlist export is not needed.
 - C1 (470 µF) is bulk decoupling on VBAT at the FeatherS3D. C2 and C3
   (100 nF) decouple the LDO2 rail and belong physically at the INA226 and
   INMP441 VCC pins, even though the schematic hangs them off the rail.
-- The generic female headers J_SOLAR, J_CHG, J_PWR (2-way) and J_HIVE, J_SUB
-  (8-way) stand in for JST-XH sockets. J_HIVE (main board) and J_SUB (hive
+- The generic female headers J_SOLAR, J_CHG, J_PWR (2-way), J_HIVE, J_SUB
+  (8-way) and J_CELLS (12-way) stand in for JST-XH sockets. J_HIVE (main board) and J_SUB (hive
   board) are the two ends of one pin-for-pin cable, drawn in both views as
   wires between matching pins. Header pins print as `pin1`..`pinN`.
 - Two stripboards: "Main board" (FeatherS3D, INA226, NAU7802, C1, C2, the
-  four sockets) and "Hive board" (SHT40, INMP441, C3, J_SUB). The CN3065,
-  battery and panel are off-board and connect through the sockets.
+  five sockets) and "Hive board" (SHT40, INMP441, C3, J_SUB). The CN3065,
+  battery, panel and load cells are off-board and connect through the sockets.
+- CELL1..CELL4 are the SparkFun LOAD_CELL core part (pins B, W, R). Their
+  white/black ring joins are the jumpers between adjacent J_CELLS pins, and
+  the red centre taps run from row 38 into the NAU7802 screw terminal. In
+  the part E+ is connector57 (bused with AVDD), E- is connector58 (bused with
+  GND), A-/A+ are 59/60; B-/B+ (61/62) are the unused channel B. GroundCells
+  is the ground symbol for the E- cell.
+- The INA226 part is `ina226-module_2` (source in `fritzing/ina226/`), with
+  SDA on pin 5 and SCL on pin 6 to match the module variant in use.
+- FeatherS3D connectors 16-19 and 32-37 are the STEMMA QT socket and
+  battery/solder pads, not through-hole pins. The extractor ignores them in
+  physical nets; if Fritzing snaps them to holes after a move, that is noise.
 - INA226 A0/A1 are left open: the CJMCU-226 module has 10 kΩ pull-downs on
   both, so the address is 0x40. If the sketch still shows them tied to GND
   the Fritzing side has not been updated yet.

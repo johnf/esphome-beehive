@@ -47,6 +47,11 @@ BUS_OVERRIDES = {
         ['connector5', 'connector6', 'connector8'],   # Batt+, Out+
     ],
 }
+# Connectors that are not through-hole pins (STEMMA socket, solder pads); they
+# sit over stripboard holes without touching them.
+PHANTOM = {
+    'featherS3_1': {f'connector{n}' for n in list(range(16, 20)) + list(range(32, 38))},
+}
 BB_WIRE, SCH_WIRE = 64, 128
 
 
@@ -140,6 +145,9 @@ class Sketch:
     def pin_name(self, mi, cid):
         return self.pins.get(self.mid[mi], {}).get(cid, cid)
 
+    def is_phantom(self, node):
+        return node[1] in PHANTOM.get(self.mid[node[0]], ())
+
     def label(self, mi, cid):
         return f'{self.title[mi]}.{self.pin_name(mi, cid)}'
 
@@ -197,6 +205,8 @@ class Sketch:
                             continue
                         if view == 'sch' and self.is_strip(b[0]):
                             continue
+                        if view == 'bb' and (self.is_phantom(a) or self.is_phantom(b)):
+                            continue
                         uf.union(a, b)
             for bus in self.buses.get(self.mid[mi], []):
                 for c in bus[1:]:
@@ -234,6 +244,8 @@ class Sketch:
             for c in v.iter('connector'):
                 for k in c.iter('connect'):
                     m = k.get('modelIndex')
+                    if self.is_phantom((mi, c.get('connectorId'))):
+                        continue
                     if m in self.inst and self.is_strip(m):
                         x, y = self.strip_xy(k.get('connectorId'))
                         rows.append((self.title[mi], self.pin_name(mi, c.get('connectorId')),

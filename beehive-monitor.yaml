@@ -32,7 +32,7 @@ substitutions:
   sensor_power_pin: GPIO39
   # INA226 I2C address (A0 and A1 pulled low on the CJMCU-226 module)
   ina226_solar_address: "0x40"
-  # Solar current (A) above which the battery is considered charging
+  # Solar current (A) above which the panel counts as producing
   charging_current_threshold: "0.02"
   # Audio analysis. Band levels are mean power spectral density in dB re
   # full-scale^2/Hz, independent of fft_size. See README "Audio Baseline".
@@ -250,12 +250,17 @@ binary_sensor:
     queen_piping:
       name: "Queen Piping Detected"
       id: queen_piping
+  # The INA226 only sees the panel during the wake window, and the device draws
+  # more than the charger supplies while awake, so this reports panel output
+  # rather than net battery current
   - platform: template
-    name: "Battery Charging"
-    id: battery_charging
-    device_class: battery_charging
+    name: "Solar Producing"
+    id: solar_producing
+    device_class: power
     lambda: |-
-      if (!id(solar_current).has_state()) return false;
+      // Returning false before the first read would publish a spurious off on
+      // every wake
+      if (!id(solar_current).has_state()) return {};
       return fabsf(id(solar_current).state) > ${charging_current_threshold};
 
 text_sensor:
