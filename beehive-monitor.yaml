@@ -285,6 +285,17 @@ switch:
       - deep_sleep.allow: deep_sleep_control
       - script.stop: ota_mode_timeout
 
+button:
+  # Only reachable while the device is awake, i.e. in OTA mode
+  - platform: template
+    name: "Measure Now"
+    id: measure_now
+    icon: mdi:refresh
+    entity_category: diagnostic
+    on_press:
+      - script.stop: collect_and_sleep
+      - script.execute: collect_and_sleep
+
 script:
   # Guards against a forgotten helper: clears it in Home Assistant so the next
   # wake goes straight back to sleep. Needs "Allow the device to perform Home

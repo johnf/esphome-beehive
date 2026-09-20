@@ -314,7 +314,8 @@ Assistant boolean helper on every wake and stays awake while it is on.
    you pick a different name or run several hives.
 2. Turn the helper on. Within five minutes the device wakes, sees it, and logs
    `OTA mode - staying awake`. It keeps taking readings every
-   `ota_mode_interval` (default five minutes).
+   `ota_mode_interval` (default five minutes); the **Measure Now** button
+   starts a cycle straight away.
 3. Click **Install → Wirelessly** in the ESPHome dashboard. Once an upload
    starts the device will not sleep until it reboots into the new firmware.
 4. After the reboot the device stays awake while the helper is on, so you can
@@ -372,7 +373,8 @@ load cells. Calibrate before trusting any weight reading.
    device logs in the ESPHome dashboard (click **Logs**). Each measurement
    cycle logs seven raw NAU7802 values; use the middle of the range. Cycles
    repeat every `ota_mode_interval` (default 5 minutes); set it to `10s` while
-   calibrating for quicker readings
+   calibrating for quicker readings, or press the **Measure Now** button on
+   the device page in Home Assistant to start a cycle immediately
 2. With no weight on the platform, note the raw value
 3. Place a known weight on the platform and note the raw value. Use at least
    20 kg so the calibration spans a realistic hive weight; a second known
