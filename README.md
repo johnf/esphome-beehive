@@ -310,7 +310,8 @@ Assistant boolean helper on every wake and stays awake while it is on.
    `input_boolean.beehive_ota_mode`. Use the `ota_mode_entity` substitution if
    you pick a different name or run several hives.
 2. Turn the helper on. Within five minutes the device wakes, sees it, and logs
-   `OTA mode - staying awake`. It keeps taking readings every five minutes.
+   `OTA mode - staying awake`. It keeps taking readings every
+   `ota_mode_interval` (default five minutes).
 3. Click **Install → Wirelessly** in the ESPHome dashboard. Once an upload
    starts the device will not sleep until it reboots into the new firmware.
 4. After the reboot the device stays awake while the helper is on, so you can
@@ -364,8 +365,11 @@ logger:
 The package ships with placeholder calibration values that will not match your
 load cells. Calibrate before trusting any weight reading.
 
-1. View the device logs in the ESPHome dashboard (click **Logs**). Each wake
-   logs seven raw NAU7802 values; use the middle of the range
+1. Turn on [OTA mode](#ota-updates) so the device stays awake, and view the
+   device logs in the ESPHome dashboard (click **Logs**). Each measurement
+   cycle logs seven raw NAU7802 values; use the middle of the range. Cycles
+   repeat every `ota_mode_interval` (default 5 minutes); set it to `10s` while
+   calibrating for quicker readings
 2. With no weight on the platform, note the raw value
 3. Place a known weight on the platform and note the raw value. Use at least
    20 kg so the calibration spans a realistic hive weight; a second known

@@ -25,6 +25,9 @@ substitutions:
   ota_mode_entity: input_boolean.beehive_ota_mode
   # Longest the device stays awake in OTA mode before clearing the helper
   ota_mode_max_awake: 30min
+  # Gap between measurement cycles while awake in OTA mode. Shorten it (e.g.
+  # 10s) when calibrating the load cells.
+  ota_mode_interval: 5min
   # GPIO pin that controls power to all sensors (e.g. FeatherS3D LDO2)
   sensor_power_pin: GPIO39
   # INA226 I2C address (A0 and A1 pulled low on the CJMCU-226 module)
@@ -332,7 +335,7 @@ script:
             # Sensor rail stays on: power cycling would lose NAU7802 register
             # state (gain, LDO, calibration) which is only set in setup()
             - logger.log: "OTA mode - staying awake"
-            - delay: 5min
+            - delay: ${ota_mode_interval}
             - script.execute: collect_and_sleep
           else:
             - switch.turn_off: sensor_power
