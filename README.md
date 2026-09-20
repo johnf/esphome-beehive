@@ -172,8 +172,11 @@ Place one cell at each corner of the platform and wire them into a full
 Wheatstone bridge:
 
 1. Number the cells 1 to 4 clockwise.
-2. Join the white wire of each cell to the black wire of the next cell around
-   the platform (1→2, 2→3, 3→4, 4→1), forming a ring.
+2. Join the outer wires of neighbouring cells like colour to like colour,
+   alternating around the platform: white 1 to white 2, black 2 to black 3,
+   white 3 to white 4, black 4 to black 1. Joining white to black instead
+   makes the two gauges in every bridge arm cancel, and the reading barely
+   moves under load.
 3. Connect the four red wires to the NAU7802 as below.
 
 | Cell (red wire) | NAU7802 |
@@ -562,6 +565,15 @@ automation:
 - Check INMP441 wiring, especially L/R pin (must be grounded for left channel)
 - Verify 3.3V power supply is stable
 - Check I2S pin assignments in YAML
+
+### Weight barely changes under load
+
+- A raw value near zero that moves by only tens of counts when you lean on the
+  platform means the bridge is cancelling itself. Check the outer wires are
+  joined white to white and black to black (see [Load Cells](#load-cells));
+  expect a thousand or more counts per kilogram when wired correctly
+- Each cell must be free to flex: support the outer frame and load the centre
+  boss, or the reverse. A cell sitting flat on a surface cannot bend
 
 ### Weight readings unstable
 
