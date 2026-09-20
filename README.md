@@ -487,7 +487,7 @@ load cells. Calibrate before trusting any weight reading.
 Frequency band levels are reported as mean power spectral density in dB
 relative to full scale (dB re FS²/Hz). This is independent of `fft_size` and
 `frames`, so thresholds survive changes to those settings. Sound Level is
-plain dBFS. The INMP441 reaches full scale at roughly 120 dB SPL, so add 120
+plain dBFS, measured above 60 Hz so the microphone's DC offset is excluded. The INMP441 reaches full scale at roughly 120 dB SPL, so add 120
 to convert either figure to an approximate sound pressure level.
 
 Each reading averages four consecutive FFT frames (about one second of audio).
@@ -562,7 +562,7 @@ The audio thresholds are set based on research values. You may need to adjust th
 | Sensor | Unit | Description |
 |--------|------|-------------|
 | Dominant Frequency | Hz | Peak frequency in 60-600 Hz range |
-| Sound Level | dB | Overall RMS sound level |
+| Sound Level | dB | RMS sound level above 60 Hz |
 | Spectral Centroid | Hz | Centre of mass of spectrum |
 | Modulation Index | % | Share of 150-250 Hz envelope power modulating at 10-25 Hz |
 | Modulation Frequency | Hz | Strongest modulation rate of the 150-250 Hz envelope (1-40 Hz) |

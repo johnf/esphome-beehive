@@ -415,8 +415,8 @@ bool BeeAudioComponent::discard_startup_samples_() {
 }
 
 // Captures frames_ consecutive frames and accumulates a Welch-averaged
-// one-sided power spectral density in psd_ (units: FS^2/Hz), plus the RMS
-// level of all samples in rms_db_ (dBFS).
+// one-sided power spectral density in psd_ (units: FS^2/Hz), plus the level
+// above 60 Hz in rms_db_ (dBFS).
 bool BeeAudioComponent::capture_and_analyse_() {
   if (!this->discard_startup_samples_()) {
 
@@ -432,7 +432,6 @@ bool BeeAudioComponent::capture_and_analyse_() {
   esp_err_t ret;
 
   std::memset(this->psd_, 0, num_bins * sizeof(float));
-  double sum_squared = 0.0;
 
   for (uint8_t frame = 0; frame < this->frames_; frame++) {
     ret = i2s_channel_read(this->rx_chan_, this->raw_samples_, bytes_to_read,
@@ -455,7 +454,6 @@ bool BeeAudioComponent::capture_and_analyse_() {
     for (size_t i = 0; i < this->fft_size_; i++) {
       float sample =
           static_cast<float>(this->raw_samples_[i] >> 8) * SAMPLE_SCALE;
-      sum_squared += static_cast<double>(sample) * sample;
       this->fft_data_[i * 2] = sample * this->window_[i];
       this->fft_data_[i * 2 + 1] = 0.0f;
     }
@@ -481,9 +479,13 @@ bool BeeAudioComponent::capture_and_analyse_() {
     this->psd_[k] *= norm;
   }
 
-  const double total_samples =
-      static_cast<double>(this->fft_size_) * this->frames_;
-  this->rms_db_ = 10.0f * log10f(static_cast<float>(sum_squared / total_samples) +
+  // Integrated from the PSD rather than the raw samples: the mic's DC offset
+  // and settling transient sit below 60 Hz and would swamp a time-domain RMS
+  double power = 0.0;
+  for (size_t k = this->hz_to_bin_(60.0f); k < num_bins; k++) {
+    power += this->psd_[k];
+  }
+  this->rms_db_ = 10.0f * log10f(static_cast<float>(power * this->freq_resolution_) +
                                  POWER_FLOOR);
 
   return true;
