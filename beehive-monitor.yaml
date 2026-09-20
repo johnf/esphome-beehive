@@ -304,40 +304,44 @@ script:
 
   - id: collect_and_sleep
     then:
-      - logger.log: "Starting measurement cycle"
-      - wait_until:
+      # Loops rather than re-executing itself, which mode: single rejects
+      - while:
           condition:
-            wifi.connected:
-          timeout: 10s
-      - component.update: bee_monitor
-      # NAU7802 produces a sample every 100ms at the default 10 SPS
-      - repeat:
-          count: 7
+            lambda: return true;
           then:
-            - component.update: hive_weight
-            - delay: 120ms
-      - component.update: hive_climate
-      - component.update: ina226_solar
-      - component.update: fuel_gauge
-      - wait_until:
-          condition:
-            api.connected:
-          timeout: 10s
-      - wait_until:
-          condition:
-            lambda: return id(ota_mode).has_state();
-          timeout: 3s
-      - delay: 300ms
-      - if:
-          condition:
-            switch.is_on: prevent_deep_sleep
-          then:
-            # Sensor rail stays on: power cycling would lose NAU7802 register
-            # state (gain, LDO, calibration) which is only set in setup()
-            - logger.log: "OTA mode - staying awake"
-            - delay: ${ota_mode_interval}
-            - script.execute: collect_and_sleep
-          else:
-            - switch.turn_off: sensor_power
-            - logger.log: "BeeHive: Entering deep sleep"
-            - deep_sleep.enter: deep_sleep_control
+            - logger.log: "Starting measurement cycle"
+            - wait_until:
+                condition:
+                  wifi.connected:
+                timeout: 10s
+            - component.update: bee_monitor
+            # NAU7802 produces a sample every 100ms at the default 10 SPS
+            - repeat:
+                count: 7
+                then:
+                  - component.update: hive_weight
+                  - delay: 120ms
+            - component.update: hive_climate
+            - component.update: ina226_solar
+            - component.update: fuel_gauge
+            - wait_until:
+                condition:
+                  api.connected:
+                timeout: 10s
+            - wait_until:
+                condition:
+                  lambda: return id(ota_mode).has_state();
+                timeout: 3s
+            - delay: 300ms
+            - if:
+                condition:
+                  switch.is_on: prevent_deep_sleep
+                then:
+                  # Sensor rail stays on: power cycling would lose NAU7802 register
+                  # state (gain, LDO, calibration) which is only set in setup()
+                  - logger.log: "OTA mode - staying awake"
+                  - delay: ${ota_mode_interval}
+                else:
+                  - switch.turn_off: sensor_power
+                  - logger.log: "BeeHive: Entering deep sleep"
+                  - deep_sleep.enter: deep_sleep_control
