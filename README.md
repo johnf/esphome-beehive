@@ -395,6 +395,11 @@ Assistant boolean helper on every wake and stays awake while it is on.
    **Toggle** helper and name it `Beehive OTA mode`, so its entity ID is
    `input_boolean.beehive_ota_mode`. Use the `ota_mode_entity` substitution if
    you pick a different name or run several hives.
+
+   Then go to **Settings → Devices & services → ESPHome**, open the device's
+   integration entry, click **Configure** and enable **Allow the device to
+   perform Home Assistant actions**. The device needs this to clear the helper
+   if it's left on (see below).
 2. Turn the helper on. Within five minutes the device wakes, sees it, and logs
    `OTA mode - staying awake`. It keeps taking readings every
    `ota_mode_interval` (default five minutes); the **Measure Now** button
@@ -406,10 +411,9 @@ Assistant boolean helper on every wake and stays awake while it is on.
    straight away.
 
 If the helper is left on, the device clears it after `ota_mode_max_awake`
-(default 30 minutes) and goes back to sleep. For that to work, open the ESPHome
-integration entry for the device in Home Assistant and enable **Allow the device
-to perform Home Assistant actions**. Without it the device still sleeps after
-the timeout, but stays awake again on the next wake until you turn the helper off.
+(default 30 minutes) and goes back to sleep. Without the actions permission
+from step 1 the device still sleeps after the timeout, but stays awake again on
+the next wake until you turn the helper off.
 
 The package defines the `ota` component. To add a password or other options,
 extend it in your device configuration rather than declaring a second one:
@@ -685,6 +689,13 @@ automation:
 - Check the OTA mode helper is off in Home Assistant
 - Verify no other components are blocking sleep
 - Ensure the `run_duration` is sufficient for sensor readings
+
+### "ESPHome is not permitted to perform Home Assistant actions"
+
+The device tried to clear the OTA mode helper after `ota_mode_max_awake`.
+Enable **Allow the device to perform Home Assistant actions** on the device's
+ESPHome integration entry (see [OTA Updates](#ota-updates)), then turn the
+helper off.
 
 ### Battery slowly discharging
 
