@@ -618,7 +618,14 @@ indefinitely; see [Solar Performance](#solar-performance).
 
 ## Home Assistant
 
-Once connected, sensors will automatically appear in Home Assistant. Example automations:
+Once connected, sensors will automatically appear in Home Assistant.
+
+[dashboard.yaml](dashboard.yaml) is a ready-made dashboard with overview, audio and
+power views. Create a new dashboard from scratch, open **Edit dashboard → Raw
+configuration editor**, and paste the file in. Entity IDs assume the device is
+named `Beehive Monitor`; replace `beehive_monitor_` if yours differs.
+
+Example automations:
 
 ```yaml
 automation:

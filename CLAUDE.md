@@ -75,6 +75,7 @@ components/
     bee_audio.cpp     # ESP-IDF I2S + ESP-DSP FFT implementation
 beehive-monitor.yaml  # Main ESPHome package configuration
 example.yaml          # Device config used for local builds and CI
+dashboard.yaml        # Home Assistant dashboard (paste into raw config editor)
 fritzing/             # Fritzing schematic
 ```
 

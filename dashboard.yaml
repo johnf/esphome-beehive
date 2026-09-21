@@ -1,0 +1,395 @@
+# Home Assistant dashboard for the beehive monitor.
+#
+# To use: Settings → Dashboards → Add dashboard → New dashboard from scratch,
+# open it, then ⋮ → Edit dashboard → ⋮ → Raw configuration editor and paste
+# this file in.
+#
+# Entity IDs assume the device is named "Beehive Monitor" as in example.yaml.
+# If yours differs, replace beehive_monitor_ with your device's prefix.
+
+views:
+- title: Overview
+  path: overview
+  icon: mdi:beehive-outline
+  type: sections
+  max_columns: 3
+  sections:
+  - type: grid
+    cards:
+    - type: heading
+      heading: Beehive
+      heading_style: title
+      icon: mdi:bee
+    - type: tile
+      entity: sensor.beehive_monitor_hive_state
+      name: Hive state
+      icon: mdi:bee
+      color: amber
+      grid_options:
+        columns: 12
+    - type: tile
+      entity: binary_sensor.beehive_monitor_queen_piping_detected
+      name: Queen piping
+      icon: mdi:crown
+      color: red
+      grid_options:
+        columns: 12
+    - type: tile
+      entity: sensor.beehive_monitor_hive_weight
+      name: Weight
+      color: brown
+      grid_options:
+        columns: 12
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+    - type: tile
+      entity: sensor.beehive_monitor_hive_temperature
+      name: Temperature
+      color: deep-orange
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+    - type: tile
+      entity: sensor.beehive_monitor_hive_humidity
+      name: Humidity
+      color: blue
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+    - type: tile
+      entity: sensor.beehive_monitor_battery_level
+      name: Battery
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+    - type: tile
+      entity: binary_sensor.beehive_monitor_solar_producing
+      name: Charging
+      icon: mdi:battery-charging
+      color: green
+  - type: grid
+    cards:
+    - type: heading
+      heading: Weight
+      icon: mdi:scale
+    - type: statistics-graph
+      title: Last 7 days
+      entities:
+      - entity: sensor.beehive_monitor_hive_weight
+        name: Weight
+      days_to_show: 7
+      period: hour
+      chart_type: line
+      stat_types:
+      - mean
+      hide_legend: true
+    - type: statistics-graph
+      title: Last 90 days
+      entities:
+      - entity: sensor.beehive_monitor_hive_weight
+        name: Weight
+      days_to_show: 90
+      period: day
+      chart_type: line
+      stat_types:
+      - mean
+      - min
+      - max
+  - type: grid
+    cards:
+    - type: heading
+      heading: History
+      icon: mdi:chart-timeline
+    - type: history-graph
+      title: State
+      hours_to_show: 48
+      entities:
+      - entity: sensor.beehive_monitor_hive_state
+        name: State
+      - entity: binary_sensor.beehive_monitor_queen_piping_detected
+        name: Piping
+    - type: history-graph
+      title: Climate
+      hours_to_show: 48
+      entities:
+      - entity: sensor.beehive_monitor_hive_temperature
+        name: Temperature
+      - entity: sensor.beehive_monitor_hive_humidity
+        name: Humidity
+- title: Audio
+  path: audio
+  icon: mdi:waveform
+  type: sections
+  max_columns: 3
+  sections:
+  - type: grid
+    cards:
+    - type: heading
+      heading: Sound
+      heading_style: title
+      icon: mdi:waveform
+    - type: tile
+      entity: sensor.beehive_monitor_bee_sound_level
+      name: Sound level
+      icon: mdi:volume-high
+      grid_options:
+        columns: 12
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+    - type: tile
+      entity: sensor.beehive_monitor_bee_dominant_frequency
+      name: Dominant frequency
+      icon: mdi:sine-wave
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+    - type: tile
+      entity: sensor.beehive_monitor_bee_spectral_centroid
+      name: Spectral centroid
+      icon: mdi:chart-bell-curve
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+  - type: grid
+    column_span: 2
+    cards:
+    - type: heading
+      heading: Frequency bands
+      icon: mdi:equalizer
+    - type: history-graph
+      hours_to_show: 24
+      grid_options:
+        columns: full
+      entities:
+      - entity: sensor.beehive_monitor_bee_low_frequency_60_100hz
+        name: Low 60-100 Hz
+      - entity: sensor.beehive_monitor_bee_baseline_hum_100_200hz
+        name: Baseline 100-200 Hz
+      - entity: sensor.beehive_monitor_bee_worker_activity_180_260hz
+        name: Worker 180-260 Hz
+      - entity: sensor.beehive_monitor_bee_queen_quacking_200_350hz
+        name: Quacking 200-350 Hz
+      - entity: sensor.beehive_monitor_bee_queen_tooting_350_500hz
+        name: Tooting 350-500 Hz
+      - entity: sensor.beehive_monitor_bee_queenless_mid_478_677hz
+        name: Queenless 478-677 Hz
+      - entity: sensor.beehive_monitor_bee_queenless_high_876_1080hz
+        name: Queenless 876-1080 Hz
+  - type: grid
+    cards:
+    - type: heading
+      heading: Colony strength
+      icon: mdi:account-group
+    - type: tile
+      entity: sensor.beehive_monitor_bee_modulation_index
+      name: Modulation index
+      icon: mdi:pulse
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+    - type: tile
+      entity: sensor.beehive_monitor_bee_modulation_frequency
+      name: Modulation frequency
+      icon: mdi:sine-wave
+    - type: statistics-graph
+      title: Modulation index, 30 days
+      entities:
+      - entity: sensor.beehive_monitor_bee_modulation_index
+        name: Modulation index
+      days_to_show: 30
+      period: day
+      chart_type: line
+      stat_types:
+      - mean
+      - min
+      - max
+    - type: markdown
+      content: 'Uncalibrated. Compare night readings (8-11 pm) against inspections: weak colonies modulate
+        below 10 Hz, strong ones spread up to about 35 Hz.'
+  - type: grid
+    column_span: 2
+    cards:
+    - type: heading
+      heading: Queen indicators
+      icon: mdi:crown
+    - type: history-graph
+      hours_to_show: 72
+      grid_options:
+        columns: full
+      entities:
+      - entity: binary_sensor.beehive_monitor_queen_piping_detected
+        name: Piping
+    - type: history-graph
+      hours_to_show: 72
+      grid_options:
+        columns: full
+      entities:
+      - entity: sensor.beehive_monitor_bee_baseline_hum_100_200hz
+        name: Baseline
+      - entity: sensor.beehive_monitor_bee_queen_quacking_200_350hz
+        name: Quacking
+      - entity: sensor.beehive_monitor_bee_queen_tooting_350_500hz
+        name: Tooting
+      - entity: sensor.beehive_monitor_bee_queenless_mid_478_677hz
+        name: Queenless mid
+      - entity: sensor.beehive_monitor_bee_queenless_high_876_1080hz
+        name: Queenless high
+- title: Power
+  path: power
+  icon: mdi:solar-power
+  type: sections
+  max_columns: 3
+  sections:
+  - type: grid
+    cards:
+    - type: heading
+      heading: Battery
+      heading_style: title
+      icon: mdi:battery
+    - type: tile
+      entity: sensor.beehive_monitor_battery_level
+      name: Battery
+      state_content:
+      - state
+      - last_updated
+      grid_options:
+        columns: 12
+      features:
+      - type: bar-gauge
+        min: 0
+        max: 100
+    - type: tile
+      entity: sensor.beehive_monitor_battery_voltage
+      name: Voltage
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+    - type: tile
+      entity: binary_sensor.beehive_monitor_solar_producing
+      name: Charging
+      icon: mdi:battery-charging
+      color: green
+      state_content:
+      - state
+      - last_changed
+    - type: history-graph
+      title: Last 3 days
+      hours_to_show: 72
+      entities:
+      - entity: sensor.beehive_monitor_battery_level
+        name: Level
+      - entity: sensor.beehive_monitor_battery_voltage
+        name: Voltage
+      - entity: binary_sensor.beehive_monitor_solar_producing
+        name: Charging
+    - type: statistics-graph
+      title: Battery level, 7 days
+      entities:
+      - entity: sensor.beehive_monitor_battery_level
+        name: Level
+      days_to_show: 7
+      period: hour
+      chart_type: line
+      stat_types:
+      - mean
+      hide_legend: true
+    - type: statistics-graph
+      title: Battery level, 30 days
+      entities:
+      - entity: sensor.beehive_monitor_battery_level
+        name: Level
+      days_to_show: 30
+      period: day
+      chart_type: line
+      stat_types:
+      - mean
+      - min
+      - max
+    - type: statistics-graph
+      title: Battery voltage, 30 days
+      entities:
+      - entity: sensor.beehive_monitor_battery_voltage
+        name: Voltage
+      days_to_show: 30
+      period: day
+      chart_type: line
+      stat_types:
+      - mean
+      - min
+      - max
+    - type: markdown
+      content: Charging means the panel is producing during the wake window. The device draws more than
+        the charger supplies while awake, so net charging happens during deep sleep and shows up as the
+        level rising between readings.
+  - type: grid
+    cards:
+    - type: heading
+      heading: Solar
+      heading_style: title
+      icon: mdi:solar-power
+    - type: tile
+      entity: sensor.beehive_monitor_solar_power
+      name: Power
+      color: amber
+      grid_options:
+        columns: 12
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+    - type: tile
+      entity: sensor.beehive_monitor_solar_current
+      name: Current
+      color: amber
+    - type: tile
+      entity: sensor.beehive_monitor_solar_bus_voltage
+      name: Panel voltage
+      color: amber
+    - type: history-graph
+      hours_to_show: 72
+      entities:
+      - entity: sensor.beehive_monitor_solar_power
+        name: Power
+      - entity: binary_sensor.beehive_monitor_solar_producing
+        name: Charging
+    - type: statistics-graph
+      title: Peak solar power, 30 days
+      entities:
+      - entity: sensor.beehive_monitor_solar_power
+        name: Power
+      days_to_show: 30
+      period: day
+      chart_type: bar
+      stat_types:
+      - max
+      hide_legend: true
+  - type: grid
+    cards:
+    - type: heading
+      heading: Maintenance
+      heading_style: title
+      icon: mdi:wrench
+    - type: tile
+      entity: input_boolean.beehive_ota_mode
+      name: OTA mode
+      icon: mdi:upload-network
+      color: red
+      grid_options:
+        columns: 12
+      features:
+      - type: toggle
+    - type: tile
+      entity: switch.beehive_monitor_prevent_deep_sleep
+      name: Prevent deep sleep
+      icon: mdi:sleep-off
+      tap_action:
+        action: more-info
+    - type: tile
+      entity: switch.beehive_monitor_sensor_power
+      name: Sensor power
+      icon: mdi:power-plug
+      tap_action:
+        action: more-info
