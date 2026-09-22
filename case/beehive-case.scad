@@ -85,9 +85,9 @@ nut_t = 2.8;
 nut_depth = 6;
 
 // Face-seal O-ring cord in a groove in the rim, 23% squeeze with the lid flush
-oring_d = 3;
-groove_depth = 2.3;
-groove_w = 3.9;
+oring_d = 2.4;
+groove_depth = 1.85;
+groove_w = 3.1;
 groove_land = 1.6;          // inner wall face to groove
 groove_outer_land = 2;
 rim_ext = groove_land + groove_w + groove_outer_land - wall;
