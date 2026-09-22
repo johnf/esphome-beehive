@@ -76,6 +76,7 @@ components/
 beehive-monitor.yaml  # Main ESPHome package configuration
 example.yaml          # Device config used for local builds and CI
 dashboard.yaml        # Home Assistant dashboard (paste into raw config editor)
+case/                 # OpenSCAD enclosures and exported STLs
 fritzing/             # Fritzing schematic
 ```
 

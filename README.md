@@ -284,6 +284,72 @@ C2 and C3 must sit right at the module pins; long wires in a beehive pick up
 noise, and the INMP441 feeds the FFT analysis. The NAU7802 and SHT40 breakouts
 have onboard decoupling already.
 
+## Enclosure
+
+`case/beehive-case.scad` is a parametric OpenSCAD model of two enclosures, with
+exported STLs in `case/stl/`. Every dimension is a named variable at the top of
+the file.
+
+![Assembly](case/images/assembly.png)
+
+The `layout` view shows where the boards, battery and charger sit:
+
+![Layout](case/images/layout.png)
+![Layout from above](case/images/layout-top.png)
+
+After changing a dimension, re-export the STLs:
+
+```bash
+cd case
+for p in box lid clamp foot fitcheck hive_base hive_lid; do
+  openscad -D "part=\"$p\"" -o stl/$p.stl beehive-case.scad
+done
+openscad -D 'part="layout"' --camera=0,0,0,50,0,25,600 --viewall --autocenter \
+  --imgsize=1600,1100 --colorscheme=Tomorrow -o images/layout.png beehive-case.scad
+```
+
+Open `beehive-case.scad` in OpenSCAD with `part = "layout"` to rotate the layout
+view yourself. Colours only show in preview (F5), not in a full render (F6).
+
+**Main box** sits on the tile beside the hive and holds the main board, battery
+and CN3065. The board rides on two M3 posts down its left edge and two printed
+clamps on its right edge, with the battery and charger underneath. There is 30 mm
+clearance on the terminal edges. Cables enter through three PG9 glands on one
+long wall; an M12 ePTFE vent on the end wall lets it breathe without leaving a
+gap for ants. The lid seals on foam tape and screws into captive nuts in six
+lugs.
+
+**Hive housing** sits loose on the mesh floor inside the brood box. The base is
+solid so the SHT40 reads hive air, not air through the mesh. The board rests on
+ledges and pegs in the lid hold it down. The top and sides are a grid of 2 mm
+holes, too small for bees. The Cat6 leaves through a notch at one end, tied to
+an anchor.
+
+![Hive housing base](case/images/hive-base.png)
+![Hive housing lid](case/images/hive-lid.png)
+
+Print in PLA with the default A1 mini profile. Print `lid` and `hive_lid` as
+exported (outside face down). Print `fitcheck` first and lay the real board on
+it before committing to `box`; it is the box floor, posts and guides with 3 mm
+walls.
+
+| Part | Qty |
+| ---- | --- |
+| `box`, `lid`, `fitcheck` (optional), `hive_base`, `hive_lid` | 1 each |
+| `clamp` | 2 |
+| `foot` (press or glue into the floor) | 4 |
+| PG9 cable gland, 4-8 mm | 3 |
+| M12 ePTFE breather vent | 1 |
+| M3 x 16 screw and hex nut (lid) | 6 |
+| M3 x 8 self-tapping screw (board posts, clamps) | 4 |
+| M3 x 10 self-tapping screw (hive housing) | 2 |
+| Closed-cell foam tape, 6 x 3 mm | ~0.5 m |
+| Adhesive-lined heatshrink (load cell bundle) | 1 |
+| Silica gel sachet | 1 |
+
+Drill the main board's two M3 holes in the outer left column, 15 mm and 74 mm
+from the bottom edge. If you drill elsewhere, update `left_holes_y`.
+
 ## Installation
 
 ### Prerequisites
