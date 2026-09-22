@@ -1,7 +1,7 @@
 // Beehive monitor enclosures. Export one part at a time, e.g.
 //   openscad -D 'part="box"' -o stl/box.stl beehive-case.scad
 // Parts: box, lid, clamp, foot, fitcheck, hive_base, hive_lid
-// Views: assembly, layout
+// Views: assembly, layout, seal_section
 
 part = "assembly";
 
@@ -12,7 +12,7 @@ eps = 0.01;
 
 wall = 2.4;
 floor_t = 2.4;
-corner_r = 4;
+corner_r = 8;               // keeps the O-ring bend radius above 3x its diameter
 
 board = [65, 109];
 board_t = 1.6;
@@ -75,7 +75,8 @@ vent_z = floor_t + 13;
 lug_depth = 14;
 lug_w = 12;
 lug_h = 10;
-lug_y = [10, outer[1] / 2, outer[1] - 10];
+lug_y = [10, outer[1] / 2, outer[1] - 10];  // long sides
+lug_end_x = outer[0] / 2;                     // one on each short side
 screw_offset = 9;
 screw_clear_d = 3.4;
 screw_hole_depth = 13;
@@ -83,12 +84,26 @@ nut_af = 5.9;
 nut_t = 2.8;
 nut_depth = 6;
 
-// Lid and seal (6 x 3 mm foam compressed to 1.5 mm)
+// Face-seal O-ring cord in a groove in the rim, 23% squeeze with the lid flush
+oring_d = 3;
+groove_depth = 2.3;
+groove_w = 3.9;
+groove_land = 1.6;          // inner wall face to groove
+groove_outer_land = 2;
+rim_ext = groove_land + groove_w + groove_outer_land - wall;
+rim_t = groove_depth + 1.2;
+
 lid_t = 4;
-lid_pad_h = 1;
-foam_w = 6.4;
-foam_recess = 0.5;
-lid_end_margin = 5;
+lid_r = 6;
+lid_chamfer = 1;
+skirt_t = 1.6;
+skirt_h = 3;
+skirt_clr = 0.4;
+
+groove_offset = groove_land + groove_w / 2;
+groove_r = corner_r - wall + groove_offset;
+groove_len = 2 * (inner[0] + inner[1] + 4 * groove_offset) - 8 * groove_r + 2 * PI * groove_r;
+echo(str("O-ring cord length: ", round(groove_len), " mm"));
 
 // Press-fit feet
 foot_d = 14;
@@ -196,6 +211,35 @@ module lugs() {
     translate([outer[0], y - lug_w / 2, z]) lug();
     translate([0, y + lug_w / 2, z]) rotate([0, 0, 180]) lug();
   }
+  translate([lug_end_x - lug_w / 2, 0, z]) rotate([0, 0, -90]) lug();
+  translate([lug_end_x + lug_w / 2, outer[1], z]) rotate([0, 0, 90]) lug();
+}
+
+lid_screws = concat(
+  [for (y = lug_y) for (x = [-screw_offset, outer[0] + screw_offset]) [x, y]],
+  [[lug_end_x, -screw_offset], [lug_end_x, outer[1] + screw_offset]]
+);
+
+module inner_outline() {
+  rrect([wall, wall], [outer[0] - wall, outer[1] - wall], corner_r - wall);
+}
+
+module rim() {
+  z0 = outer[2] - rim_t;
+  difference() {
+    hull() {
+      translate([0, 0, z0 - rim_ext]) linear_extrude(eps) rrect([0, 0], [outer[0], outer[1]], corner_r);
+      translate([0, 0, z0]) linear_extrude(rim_t) offset(r = rim_ext) rrect([0, 0], [outer[0], outer[1]], corner_r);
+    }
+    translate([0, 0, z0 - rim_ext - 1]) linear_extrude(rim_t + rim_ext + 2) inner_outline();
+  }
+}
+
+module oring_groove() {
+  translate([0, 0, outer[2] - groove_depth]) linear_extrude(groove_depth + 1) difference() {
+    offset(r = groove_land + groove_w) inner_outline();
+    offset(r = groove_land) inner_outline();
+  }
 }
 
 module clamp_tower() {
@@ -230,11 +274,13 @@ module box() {
   difference() {
     union() {
       shell();
+      rim();
       lugs();
       to_inner() translate([0, 0, -eps]) inner_features();
       for (p = foot_pos) translate([p[0], p[1], floor_t - eps]) cylinder(d = foot_boss_d, h = foot_boss_h);
     }
     to_inner() inner_holes();
+    oring_groove();
     for (y = gland_y)
       translate([outer[0] - wall - 1, y, gland_z]) rotate([0, 90, 0]) cylinder(d = gland_d, h = wall + 2);
     translate([vent_x, -1, vent_z]) rotate([-90, 0, 0]) cylinder(d = vent_d, h = wall + 2);
@@ -253,24 +299,21 @@ module fitcheck() {
   }
 }
 
-module seal_centreline() {
-  rrect([wall / 2, wall / 2], [outer[0] - wall / 2, outer[1] - wall / 2], corner_r - wall / 2);
-}
-
 // Modelled as fitted, underside at z = 0; print it flipped (see export).
 module lid() {
-  screws = [for (y = lug_y) for (x = [-screw_offset, outer[0] + screw_offset]) [x, y]];
+  outline = [[-lug_depth, -lug_depth], [outer[0] + lug_depth, outer[1] + lug_depth]];
   difference() {
     union() {
-      linear_extrude(lid_t)
-        rrect([-lug_depth, -lid_end_margin], [outer[0] + lug_depth, outer[1] + lid_end_margin], corner_r);
-      for (s = screws) translate([s[0], s[1], -lid_pad_h]) cylinder(d = 9, h = lid_pad_h + eps);
+      hull() {
+        linear_extrude(lid_t - lid_chamfer) rrect(outline[0], outline[1], lid_r);
+        linear_extrude(lid_t) offset(delta = -lid_chamfer) rrect(outline[0], outline[1], lid_r);
+      }
+      translate([0, 0, -skirt_h]) linear_extrude(skirt_h + eps) difference() {
+        offset(r = -skirt_clr) inner_outline();
+        offset(r = -skirt_clr - skirt_t) inner_outline();
+      }
     }
-    translate([0, 0, -eps]) linear_extrude(foam_recess + eps) difference() {
-      offset(r = foam_w / 2) seal_centreline();
-      offset(r = -foam_w / 2) seal_centreline();
-    }
-    for (s = screws) translate([s[0], s[1], -lid_pad_h - 1]) cylinder(d = screw_clear_d, h = lid_t + lid_pad_h + 2);
+    for (s = lid_screws) translate([s[0], s[1], -1]) cylinder(d = screw_clear_d, h = lid_t + 2);
   }
 }
 
@@ -420,6 +463,15 @@ module layout() {
   }
 }
 
+// Cross-section through a long wall: uncompressed O-ring overlapping the flush lid shows the squeeze.
+module seal_section() {
+  y = outer[1] / 2 + 20;
+  module cut() projection(cut = true) translate([0, 0, -y]) rotate([-90, 0, 0]) mirror([0, 1, 0]) children();
+  color("steelblue") cut() box();
+  color("orange") cut() translate([0, 0, outer[2]]) lid();
+  color("black", 0.7) translate([wall - groove_offset, outer[2] - groove_depth + oring_d / 2]) circle(d = oring_d);
+}
+
 if (part == "box") box();
 else if (part == "lid") translate([0, 0, lid_t]) mirror([0, 0, 1]) lid();
 else if (part == "clamp") clamp();
@@ -428,10 +480,11 @@ else if (part == "fitcheck") fitcheck();
 else if (part == "hive_base") hive_base();
 else if (part == "hive_lid") translate([0, 0, houter[2]]) mirror([0, 0, 1]) hive_lid();
 else if (part == "layout") layout();
+else if (part == "seal_section") seal_section();
 else if (part == "assembly") {
   box();
   board_dummies();
-  translate([0, 0, outer[2] + lid_pad_h + 30]) lid();
+  translate([0, 0, outer[2] + 30]) lid();
   to_inner() for (y = clamps_y)
     translate([board_right + clamp_gap, board_pos[1] + y - clamp_w / 2, board_z + board_t + 5]) clamp();
   for (p = foot_pos) translate([p[0], p[1], -foot_h - 10]) foot();

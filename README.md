@@ -316,8 +316,15 @@ and CN3065. The board rides on two M3 posts down its left edge and two printed
 clamps on its right edge, with the battery and charger underneath. There is 30 mm
 clearance on the terminal edges. Cables enter through three PG9 glands on one
 long wall; an M12 ePTFE vent on the end wall lets it breathe without leaving a
-gap for ants. The lid seals on foam tape and screws into captive nuts in six
-lugs.
+gap for ants. A 3 mm O-ring cord sits in a groove in the rim. The lid closes
+flush on the rim, which squeezes the cord 23%, and screws into captive nuts in
+eight lugs. A skirt under the lid locates it inside the walls.
+
+![Seal cross-section](case/images/seal-section.png)
+
+To make the seal, cut 3 mm silicone (or nitrile) O-ring cord to 493 mm, which
+is the groove's centre-line length (`groove_len`). Butt-join the ends square
+with cyanoacrylate and press the loop into the groove.
 
 **Hive housing** sits loose on the mesh floor inside the brood box. The base is
 solid so the SHT40 reads hive air, not air through the mesh. The board rests on
@@ -340,10 +347,10 @@ walls.
 | `foot` (press or glue into the floor) | 4 |
 | PG9 cable gland, 4-8 mm | 3 |
 | M12 ePTFE breather vent | 1 |
-| M3 x 16 screw and hex nut (lid) | 6 |
+| M3 x 16 screw and hex nut (lid) | 8 |
 | M3 x 8 self-tapping screw (board posts, clamps) | 4 |
 | M3 x 10 self-tapping screw (hive housing) | 2 |
-| Closed-cell foam tape, 6 x 3 mm | ~0.5 m |
+| 3 mm O-ring cord, silicone or nitrile | 0.5 m |
 | Adhesive-lined heatshrink (load cell bundle) | 1 |
 | Silica gel sachet | 1 |
 
