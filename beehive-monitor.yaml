@@ -81,6 +81,12 @@ deep_sleep:
   run_duration: 60s # Max awake time before forced sleep
   sleep_duration: 5min
 
+# Home Assistant subscribes as soon as the API connects and shows any entity
+# without a state as unknown, so connect only once every reading is taken.
+# Merges with the device config's wifi block.
+wifi:
+  enable_on_boot: false
+
 ota:
   - platform: esphome
     id: ota_esphome
@@ -326,10 +332,6 @@ script:
             lambda: return true;
           then:
             - logger.log: "Starting measurement cycle"
-            - wait_until:
-                condition:
-                  wifi.connected:
-                timeout: 10s
             - component.update: bee_monitor
             # NAU7802 produces a sample every 100ms at the default 10 SPS
             - repeat:
@@ -340,10 +342,11 @@ script:
             - component.update: hive_climate
             - component.update: ina226_solar
             - component.update: fuel_gauge
+            - wifi.enable:
             - wait_until:
                 condition:
                   api.connected:
-                timeout: 10s
+                timeout: 20s
             - wait_until:
                 condition:
                   lambda: return id(ota_mode).has_state();
