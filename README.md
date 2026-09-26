@@ -301,24 +301,33 @@ After changing a dimension, re-export the STLs:
 
 ```bash
 cd case
-for p in box lid clamp foot fitcheck hive_base hive_lid; do
+for p in box lid clamp foot hive_base hive_lid; do
   openscad -D "part=\"$p\"" -o stl/$p.stl beehive-case.scad
 done
 openscad -D 'part="layout"' --camera=0,0,0,50,0,25,600 --viewall --autocenter \
   --imgsize=1600,1100 --colorscheme=Tomorrow -o images/layout.png beehive-case.scad
+openscad -D 'part="layout"' --camera=0,0,0,0,0,0,600 --projection=ortho --viewall \
+  --autocenter --imgsize=1600,1100 --colorscheme=Tomorrow -o images/layout-top.png \
+  beehive-case.scad
+openscad -D 'part="assembly"' --camera=0,0,0,50,0,25,600 --viewall --autocenter \
+  --imgsize=1600,1100 --colorscheme=Tomorrow -o images/assembly.png beehive-case.scad
+openscad -D 'part="seal_section"' --camera=0.99,37.98,0,0,0,0,40 --projection=ortho \
+  --imgsize=1600,1100 --colorscheme=Tomorrow -o images/seal-section.png \
+  beehive-case.scad
 ```
 
 Open `beehive-case.scad` in OpenSCAD with `part = "layout"` to rotate the layout
 view yourself. Colours only show in preview (F5), not in a full render (F6).
 
-**Main box** sits on the tile beside the hive and holds the main board, battery
-and CN3065. The board rides on two M3 posts down its left edge and two printed
-clamps on its right edge, with the battery and charger underneath. There is 30 mm
-clearance on the terminal edges. Cables enter through three PG9 glands on one
-long wall; an M12 ePTFE vent on the end wall lets it breathe without leaving a
-gap for ants. A 2.4 mm O-ring sits in a groove in the rim. The lid closes
-flush on the rim, which squeezes the ring 23%, and screws into captive nuts in
-eight lugs. A skirt under the lid locates it inside the walls.
+**Main box** sits under the hive and holds the main board, battery and CN3065.
+The board rides on two M3 posts down its left edge and two printed clamps on its
+right edge, with the battery and charger underneath. There is 30 mm clearance on
+the terminal edges. Cables enter through three PG9 glands on one long wall; an
+M12 ePTFE vent on the end wall lets it breathe without leaving a gap for ants. A
+2.4 mm O-ring sits in a groove in the rim. The lid closes flush on the rim,
+which squeezes the ring 25%, and screws into heat-set inserts in eight lugs. A
+skirt under the lid locates it inside the walls, and a lip around its edge
+stiffens it and keeps rain off the rim.
 
 ![Seal cross-section](case/images/seal-section.png)
 
@@ -326,32 +335,34 @@ The seal is a 155 mm OD x 2.4 mm nitrile O-ring (about 150 mm ID). It stretches
 about 2% to fit the groove, whose centre line is 490 mm (`groove_len`). A larger
 2.4 mm ring or cord also works: cut it to 490 mm and butt-join the ends with
 cyanoacrylate. For a different cross-section, change `oring_d`, `groove_depth`
-(0.77 x the cross-section) and `groove_w` (1.3 x).
+(0.75 x the cross-section, rounded to a multiple of the layer height) and
+`groove_w` (1.3 x).
 
 **Hive housing** sits loose on the mesh floor inside the brood box. The base is
 solid so the SHT40 reads hive air, not air through the mesh. The board rests on
-ledges and pegs in the lid hold it down. The top and sides are a grid of 2 mm
-holes, too small for bees. The Cat6 leaves through a notch at one end, tied to
-an anchor.
+ledges and ribs on the lid's side walls hold it down. The top and sides are a
+grid of 2 mm holes, too small for bees. The Cat6 leaves through a notch at one
+end, tied to an anchor.
 
 ![Hive housing base](case/images/hive-base.png)
 ![Hive housing lid](case/images/hive-lid.png)
 
 Print in PLA with the default A1 mini profile. Print `lid` and `hive_lid` as
-exported (outside face down). Print `fitcheck` first and lay the real board on
-it before committing to `box`; it is the box floor, posts and guides with 3 mm
-walls.
+exported (outside face down). Each screw hole in `hive_lid` has a one-layer
+bridge at the bottom of its counterbore; push a 3 mm drill through it after
+printing. Press the heat-set inserts into the lid lugs, board posts, clamp
+towers and hive housing posts with a soldering iron before assembly, flush or
+just below the surface; the lid must sit flat on the lugs.
 
 | Part | Qty |
 | ---- | --- |
-| `box`, `lid`, `fitcheck` (optional), `hive_base`, `hive_lid` | 1 each |
+| `box`, `lid`, `hive_base`, `hive_lid` | 1 each |
 | `clamp` | 2 |
-| `foot` (press or glue into the floor) | 4 |
+| `foot` (glue into the floor) | 4 |
 | PG9 cable gland, 4-8 mm | 3 |
 | M12 ePTFE breather vent | 1 |
-| M3 x 16 screw and hex nut (lid) | 8 |
-| M3 x 8 self-tapping screw (board posts, clamps) | 4 |
-| M3 x 10 self-tapping screw (hive housing) | 2 |
+| M3 x 10 socket head cap screw, stainless | 14 |
+| M3 x 5.7 mm heat-set insert, 4.0 mm hole (e.g. ruthex) | 14 |
 | O-ring, 155 mm OD x 2.4 mm, nitrile | 1 |
 | Adhesive-lined heatshrink (load cell bundle) | 1 |
 | Silica gel sachet | 1 |

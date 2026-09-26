@@ -1,12 +1,13 @@
 // Beehive monitor enclosures. Export one part at a time, e.g.
 //   openscad -D 'part="box"' -o stl/box.stl beehive-case.scad
-// Parts: box, lid, clamp, foot, fitcheck, hive_base, hive_lid
+// Parts: box, lid, clamp, foot, hive_base, hive_lid
 // Views: assembly, layout, seal_section
 
 part = "assembly";
 
 $fn = 48;
 eps = 0.01;
+layer_h = 0.2;
 
 /* ---------- Main box ---------- */
 
@@ -36,8 +37,10 @@ board_right = board_pos[0] + board[0];
 // Left edge M3 holes, measured from the board's left and bottom edges
 left_hole_inset = 2.5;
 left_holes_y = [15, board[1] - 35];
-post_d = 7;
-pilot_d = 2.6;              // M3 self-tapper
+post_d = 9;
+insert_d = 4;               // M3 x 5.7 heat-set insert
+insert_depth = 9;           // room for M3 x 10 screws past the insert
+insert_chamfer = 0.5;       // catches plastic displaced when pressing
 
 // Right edge clamps, measured from the board's bottom edge
 clamps_y = [25, board[1] - 20];
@@ -63,7 +66,7 @@ silica = [30, 14, 6];
 
 // PG9 glands on the +x wall: load cells, Cat6, solar
 gland_d = 15.5;
-gland_y = [29, 53, 105];
+gland_y = [28, 58, 106];
 gland_z = floor_t + 13;
 
 // M12 ePTFE vent on the -y wall
@@ -71,22 +74,18 @@ vent_d = 12.2;
 vent_x = 25;
 vent_z = floor_t + 13;
 
-// Lid lugs with captive M3 nuts
+// Lid lugs with heat-set inserts
 lug_depth = 14;
 lug_w = 12;
 lug_h = 10;
-lug_y = [10, outer[1] / 2, outer[1] - 10];  // long sides
+lug_y = [10, 76, outer[1] - 10];  // long sides; middle off-centre to clear the glands
 lug_end_x = outer[0] / 2;                     // one on each short side
 screw_offset = 9;
 screw_clear_d = 3.4;
-screw_hole_depth = 13;
-nut_af = 5.9;
-nut_t = 2.8;
-nut_depth = 6;
 
-// Face-seal O-ring cord in a groove in the rim, 23% squeeze with the lid flush
+// Face-seal O-ring cord in a groove in the rim, 25% squeeze with the lid flush
 oring_d = 2.4;
-groove_depth = 1.85;
+groove_depth = 1.8;         // multiple of layer_h
 groove_w = 3.1;
 groove_land = 1.6;          // inner wall face to groove
 groove_outer_land = 2;
@@ -99,13 +98,16 @@ lid_chamfer = 1;
 skirt_t = 1.6;
 skirt_h = 3;
 skirt_clr = 0.4;
+lip_h = 8;                  // downturned edge: stiffens the lid and sheds rain off the rim
+lip_t = 2;
+lip_clr = 1;                // gap beside each lug
 
 groove_offset = groove_land + groove_w / 2;
 groove_r = corner_r - wall + groove_offset;
 groove_len = 2 * (inner[0] + inner[1] + 4 * groove_offset) - 8 * groove_r + 2 * PI * groove_r;
 echo(str("O-ring cord length: ", round(groove_len), " mm"));
 
-// Press-fit feet
+// Glued-in feet
 foot_d = 14;
 foot_h = 6;
 foot_peg_d = 5;
@@ -120,8 +122,6 @@ foot_pos = [
   [foot_inset, outer[1] - foot_inset],
   [outer[0] - foot_inset, outer[1] - foot_inset]
 ];
-
-fitcheck_wall_h = 3;
 
 /* ---------- Hive board housing ---------- */
 
@@ -143,13 +143,13 @@ hboard_pos = [hclr, hboss_zone + hclr];
 hboard_top = hive_solder + board_t;
 hsplit = hboard_top + 3;
 hledge_w = 2;
-hpost_d = 6;
-hpost_y = [hboss_zone / 2, hinner[1] - hboss_zone / 2];
+hpost_d = 8;
+hpost_y = [hpost_d / 2 - 1, hinner[1] - hpost_d / 2 + 1];  // set into the end walls to clear the board
 htube_d = 8;
 hcbore_d = 6;
 hcbore_floor = 3;
-hpeg = 2.5;
-hpeg_inset = 2;
+hrib = 2.5;
+hrib_inset = 2;
 hcable_d = 8;
 hcable_x = 8;
 hhole_d = 2;
@@ -159,6 +159,12 @@ hhole_pitch = 4;
 
 module rrect(p0, p1, r) {
   translate(p0) translate([r, r]) offset(r = r) square([p1[0] - p0[0] - 2 * r, p1[1] - p0[1] - 2 * r]);
+}
+
+// Top of the hole at the origin
+module insert_hole(depth = insert_depth) {
+  translate([0, 0, -depth]) cylinder(d = insert_d, h = depth + eps);
+  translate([0, 0, -insert_chamfer]) cylinder(d1 = insert_d, d2 = insert_d + 2 * insert_chamfer, h = insert_chamfer + eps);
 }
 
 module to_inner() {
@@ -191,17 +197,13 @@ module shell() {
 }
 
 module lug() {
+  back = wall - 0.4;  // into the wall, so corner lugs meet its curve
   difference() {
     hull() {
-      translate([-eps, 0, lug_depth]) cube([lug_depth + eps, lug_w, lug_h]);
-      translate([-eps, 0, 0]) cube([eps, lug_w, eps]);
+      translate([-back, 0, lug_depth]) cube([lug_depth + back, lug_w, lug_h]);
+      translate([-back, 0, 0]) cube([eps, lug_w, eps]);
     }
-    translate([screw_offset, lug_w / 2, lug_depth + lug_h - screw_hole_depth])
-      cylinder(d = screw_clear_d, h = screw_hole_depth + eps);
-    translate([screw_offset, lug_w / 2, lug_depth + lug_h - nut_depth - nut_t / 2]) {
-      cylinder(d = nut_af / cos(30), h = nut_t, $fn = 6);
-      translate([0, -nut_af / 2, 0]) cube([lug_depth, nut_af, nut_t]);
-    }
+    translate([screw_offset, lug_w / 2, lug_depth + lug_h]) insert_hole();
   }
 }
 
@@ -264,10 +266,9 @@ module inner_features() {
 
 module inner_holes() {
   for (y = left_holes_y)
-    translate([board_pos[0] + left_hole_inset, board_pos[1] + y, 1]) cylinder(d = pilot_d, h = board_z);
+    translate([board_pos[0] + left_hole_inset, board_pos[1] + y, board_z]) insert_hole();
   for (y = clamps_y)
-    translate([board_right + clamp_gap + clamp_col / 2, board_pos[1] + y, tower_top - 10])
-      cylinder(d = pilot_d, h = 10 + eps);
+    translate([board_right + clamp_gap + clamp_col / 2, board_pos[1] + y, tower_top]) insert_hole();
 }
 
 module box() {
@@ -289,16 +290,6 @@ module box() {
   }
 }
 
-module fitcheck() {
-  intersection() {
-    box();
-    union() {
-      translate([-1, -1, -1]) cube([outer[0] + 2, outer[1] + 2, floor_t + fitcheck_wall_h + 1]);
-      translate([wall, wall, 0]) cube([inner[0], inner[1], outer[2]]);
-    }
-  }
-}
-
 // Modelled as fitted, underside at z = 0; print it flipped (see export).
 module lid() {
   outline = [[-lug_depth, -lug_depth], [outer[0] + lug_depth, outer[1] + lug_depth]];
@@ -311,6 +302,11 @@ module lid() {
       translate([0, 0, -skirt_h]) linear_extrude(skirt_h + eps) difference() {
         offset(r = -skirt_clr) inner_outline();
         offset(r = -skirt_clr - skirt_t) inner_outline();
+      }
+      translate([0, 0, -lip_h]) linear_extrude(lip_h + eps) difference() {
+        rrect(outline[0], outline[1], lid_r);
+        offset(r = -lip_t) rrect(outline[0], outline[1], lid_r);
+        for (s = lid_screws) translate(s) square(lug_w + 2 * lip_clr, center = true);
       }
     }
     for (s = lid_screws) translate([s[0], s[1], -1]) cylinder(d = screw_clear_d, h = lid_t + 2);
@@ -368,7 +364,7 @@ module hive_base() {
       }
     }
     for (y = hpost_y)
-      translate([hwall + hinner[0] / 2, hwall + y, hfloor + 0.5]) cylinder(d = pilot_d, h = hsplit);
+      translate([hwall + hinner[0] / 2, hwall + y, hfloor + hsplit]) insert_hole(hfloor + hsplit - 1);
     hive_cable_cut();
   }
 }
@@ -390,9 +386,10 @@ module hive_lid() {
   zt = houter[2];
   tubes = [for (y = hpost_y) [hwall + hinner[0] / 2, hwall + y]];
   wall_rows = [for (z = [zb + 3 : hhole_pitch : zt - htop - 2]) z];
-  // peg centres in top-grid coordinates
-  pegs = [for (x = [hpeg_inset, hive_board[0] - hpeg_inset - hpeg], y = [hpeg_inset, hive_board[1] - hpeg_inset - hpeg])
-    [hboard_pos[0] + x + hpeg / 2, hclr + y + hpeg / 2, hpeg / 2 + hhole_d / 2 + 1]];
+  rib_xs = [hboard_pos[0] + hrib_inset, hboard_pos[0] + hive_board[0] - hrib_inset - hrib];
+  rib_ys = [hrib_inset, hive_board[1] - hrib_inset - hrib];
+  // rib ends over the board, in grid coordinates, for hole avoidance
+  ribs = [for (x = rib_xs, y = rib_ys) [x + hrib / 2, hclr + y + hrib / 2, hrib / 2 + hhole_d / 2 + 1]];
   difference() {
     union() {
       difference() {
@@ -400,20 +397,28 @@ module hive_lid() {
         translate([0, 0, -htop]) hive_cavity();
       }
       for (t = tubes) translate([t[0], t[1], zb]) cylinder(d = htube_d, h = zt - zb);
-      translate([hwall + hboard_pos[0], hwall + hboard_pos[1], hfloor + hboard_top])
-        for (x = [hpeg_inset, hive_board[0] - hpeg_inset - hpeg], y = [hpeg_inset, hive_board[1] - hpeg_inset - hpeg])
-          translate([x, y, 0]) cube([hpeg, hpeg, zt - hfloor - hboard_top - eps]);
+      // Ribs from the side walls press on the board; below the split they stand off the base walls.
+      for (x = rib_xs, y = rib_ys) {
+        x0 = x < hinner[0] / 2 ? 0 : x;
+        x1 = x < hinner[0] / 2 ? x + hrib : hinner[0];
+        translate([hwall, hwall + hboard_pos[1] + y, 0]) {
+          translate([x0, 0, zb - eps]) cube([x1 - x0, hrib, zt - zb]);
+          translate([max(x0, hclr), 0, hfloor + hboard_top])
+            cube([min(x1, hinner[0] - hclr) - max(x0, hclr), hrib, zb - hfloor - hboard_top]);
+        }
+      }
     }
     for (t = tubes) {
-      translate([t[0], t[1], zb - 1]) cylinder(d = screw_clear_d, h = zt - zb + 2);
+      // stops one layer short: a sacrificial bridge over the counterbore, drilled out after printing
+      translate([t[0], t[1], zb - 1]) cylinder(d = screw_clear_d, h = hcbore_floor + 1 - layer_h);
       translate([t[0], t[1], zb + hcbore_floor]) cylinder(d = hcbore_d, h = zt);
     }
     hive_cable_cut();
     translate([hwall, hwall + hboss_zone, zt - htop - 1])
-      hive_grid([hinner[0], hinner[1] - 2 * hboss_zone], pegs) cylinder(d = hhole_d, h = htop + 2, $fn = 12);
+      hive_grid([hinner[0], hinner[1] - 2 * hboss_zone], ribs) cylinder(d = hhole_d, h = htop + 2, $fn = 12);
     for (z = wall_rows, x = [-1, houter[0] - hwall - 1])
       translate([x, hwall + hboss_zone, z])
-        hive_grid([0, hinner[1] - 2 * hboss_zone]) rotate([0, 90, 0]) cylinder(d = hhole_d, h = hwall + 2, $fn = 12);
+        hive_grid([0, hinner[1] - 2 * hboss_zone], [for (r = ribs) [0, r[1], r[2]]]) rotate([0, 90, 0]) cylinder(d = hhole_d, h = hwall + 2, $fn = 12);
     end_xs = [for (x = [hwall + 3 : hhole_pitch : houter[0] - hwall - 3]) if (abs(x - houter[0] / 2) > htube_d / 2 + 2) x];
     for (z = wall_rows, x = end_xs, y = [-1, houter[1] - hwall - 1])
       if (y > 0 || abs(x - hwall - hcable_x) > hcable_d / 2 + 2)
@@ -476,7 +481,6 @@ if (part == "box") box();
 else if (part == "lid") translate([0, 0, lid_t]) mirror([0, 0, 1]) lid();
 else if (part == "clamp") clamp();
 else if (part == "foot") foot();
-else if (part == "fitcheck") fitcheck();
 else if (part == "hive_base") hive_base();
 else if (part == "hive_lid") translate([0, 0, houter[2]]) mirror([0, 0, 1]) hive_lid();
 else if (part == "layout") layout();
