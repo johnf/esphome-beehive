@@ -1,7 +1,7 @@
 // Beehive monitor enclosures. Export one part at a time, e.g.
 //   openscad -D 'part="box"' -o stl/box.stl beehive-case.scad
 // Parts: box, lid, clamp, foot, hive_base, hive_lid
-// Views: assembly, layout, seal_section
+// Views: assembly, layout, seal_section, hive_lid_fitted
 
 part = "assembly";
 
@@ -15,8 +15,8 @@ wall = 2.4;
 floor_t = 2.4;
 corner_r = 8;               // keeps the O-ring bend radius above 3x its diameter
 
-board = [65, 109];
-board_t = 1.6;
+board = [65, 108];
+board_t = 1.3;
 board_gap = 3;              // left and top edges
 connector_clearance = 30;   // right and bottom (terminal) edges
 board_z = 15;               // board underside above the floor
@@ -37,7 +37,7 @@ board_right = board_pos[0] + board[0];
 // Left edge M3 holes, measured from the board's left and bottom edges
 left_hole_inset = 2.5;
 left_holes_y = [15, board[1] - 35];
-post_d = 9;
+post_d = 8;
 insert_d = 4;               // M3 x 5.7 heat-set insert
 insert_depth = 9;           // room for M3 x 10 screws past the insert
 insert_chamfer = 0.5;       // catches plastic displaced when pressing
@@ -45,7 +45,7 @@ insert_chamfer = 0.5;       // catches plastic displaced when pressing
 // Right edge clamps, measured from the board's bottom edge
 clamps_y = [25, board[1] - 20];
 clamp_w = 8;
-clamp_ledge = 4;            // support under the board
+clamp_ledge = 3;            // support under the board
 clamp_gap = 1;              // board edge to clamp column
 clamp_col = 8;
 clamp_t = 2.5;
@@ -53,9 +53,9 @@ clamp_finger = [3, 3];      // overlap onto the board, width
 clamp_preload = 0.3;
 tower_top = board_z + board_t - clamp_preload;
 
-battery = [54, 60, 7];
-battery_pos = [9.5, 68];
-charger = [42, 20, 8];      // CN3065
+battery = [54, 59, 6];
+battery_pos = [10.25, 68];
+charger = [45, 20, 8];      // CN3065
 charger_pos = [12, 36];
 guide_t = 1.2;
 guide_len = 10;
@@ -64,8 +64,8 @@ guide_clr = 0.5;
 silica_pos = [40, 2];
 silica = [30, 14, 6];
 
-// PG9 glands on the +x wall: load cells, Cat6, solar
-gland_d = 15.5;
+// Glands on the +x wall: load cells (PG9), Cat6 (PG9), solar (PG7)
+gland_d = [15.5, 15.5, 12.9];
 gland_y = [28, 58, 106];
 gland_z = floor_t + 13;
 
@@ -126,8 +126,8 @@ foot_pos = [
 
 /* ---------- Hive board housing ---------- */
 
-hive_board = [40, 37];
-hive_component_h = 17;
+hive_board = [39, 36];
+hive_component_h = 14;
 hive_solder = 3;
 hwall = 2;
 hfloor = 2;
@@ -294,8 +294,8 @@ module box() {
     }
     to_inner() inner_holes();
     oring_groove();
-    for (y = gland_y)
-      translate([outer[0] - wall - 1, y, gland_z]) rotate([90, 0, 90]) linear_extrude(wall + 2) wall_hole(gland_d);
+    for (i = [0 : len(gland_y) - 1])
+      translate([outer[0] - wall - 1, gland_y[i], gland_z]) rotate([90, 0, 90]) linear_extrude(wall + 2) wall_hole(gland_d[i]);
     translate([vent_x, wall + 1, vent_z]) rotate([90, 0, 0]) linear_extrude(wall + 2) wall_hole(vent_d);
     for (p = foot_pos)
       translate([p[0], p[1], -eps]) cylinder(d = foot_hole_d, h = floor_t + foot_boss_h - 1);
@@ -495,6 +495,7 @@ else if (part == "clamp") clamp();
 else if (part == "foot") foot();
 else if (part == "hive_base") hive_base();
 else if (part == "hive_lid") translate([0, 0, houter[2]]) mirror([0, 0, 1]) hive_lid();
+else if (part == "hive_lid_fitted") hive_lid();
 else if (part == "layout") layout();
 else if (part == "seal_section") seal_section();
 else if (part == "assembly") {

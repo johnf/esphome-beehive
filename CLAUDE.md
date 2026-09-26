@@ -80,6 +80,27 @@ case/                 # OpenSCAD enclosures and exported STLs
 fritzing/             # Fritzing schematic
 ```
 
+### Enclosure
+
+`case/beehive-case.scad` is printed on a Bambu Lab A1 mini (180 mm cube). After
+changing it, re-export every STL and image with the commands in the README's
+Enclosure section. Images come only from `part` values in the model (the hive
+lid uses the `hive_lid_fitted` view), never from wrapper files.
+
+Validate printability by slicing every STL with PrusaSlicer and
+`case/a1mini.ini` (README has the loop). Treat any new warning as a defect;
+the only expected one is "Floating bridge anchors" on `hive_lid`, from the
+drill-out layer over its counterbores. Keep `a1mini.ini` in step with the print
+settings in the README.
+
+To check fits, intersect parts in a scratch file that includes the model, and
+pass `-D 'part="none"'`. A `part` set inside the scratch file is overridden by
+the one in the model, so the assembly renders instead:
+
+```bash
+openscad -D 'part="none"' -o /tmp/check.stl /tmp/check.scad  # "top level object is empty" = no overlap
+```
+
 ### Dependencies
 
 - ESPHome with ESP-IDF framework

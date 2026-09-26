@@ -297,7 +297,7 @@ The `layout` view shows where the boards, battery and charger sit:
 ![Layout](case/images/layout.png)
 ![Layout from above](case/images/layout-top.png)
 
-After changing a dimension, re-export the STLs:
+After changing a dimension, re-export the STLs and images:
 
 ```bash
 cd case
@@ -314,7 +314,26 @@ openscad -D 'part="assembly"' --camera=0,0,0,50,0,25,600 --viewall --autocenter 
 openscad -D 'part="seal_section"' --camera=0.99,37.98,0,0,0,0,40 --projection=ortho \
   --imgsize=1600,1100 --colorscheme=Tomorrow -o images/seal-section.png \
   beehive-case.scad
+for p in hive_base hive_lid; do
+  openscad -D "part=\"$([ $p = hive_lid ] && echo hive_lid_fitted || echo $p)\"" \
+    --camera=0,0,0,50,0,25,150 --viewall --autocenter --imgsize=1600,1100 \
+    --colorscheme=Tomorrow -o images/${p/_/-}.png beehive-case.scad
+done
 ```
+
+Then slice every STL with PrusaSlicer to catch parts that don't fit the bed or
+need supports. `a1mini.ini` approximates the A1 mini with the settings below and
+gives print times and filament use:
+
+```bash
+for p in box lid clamp foot hive_base hive_lid; do
+  prusa-slicer --export-gcode --load a1mini.ini --center 90,90 \
+    -o /tmp/$p.gcode stl/$p.stl 2>&1 | grep -A3 -i warning
+done
+```
+
+`hive_lid` reports "Floating bridge anchors": that is the one-layer bridge over
+each counterbore that you drill out, and it prints fine.
 
 Open `beehive-case.scad` in OpenSCAD with `part = "layout"` to rotate the layout
 view yourself. Colours only show in preview (F5), not in a full render (F6).
@@ -322,7 +341,7 @@ view yourself. Colours only show in preview (F5), not in a full render (F6).
 **Main box** sits under the hive and holds the main board, battery and CN3065.
 The board rides on two M3 posts down its left edge and two printed clamps on its
 right edge, with the battery and charger underneath. There is 30 mm clearance on
-the terminal edges. Cables enter through three PG9 glands on one long wall; an
+the terminal edges. Cables enter through two PG9 glands and a PG7 on one long wall; an
 M12 ePTFE vent on the end wall lets it breathe without leaving a gap for ants. A
 2.4 mm O-ring sits in a groove in the rim. The lid closes flush on the rim,
 which squeezes the ring 25%, and screws into heat-set inserts in eight lugs. A
@@ -332,8 +351,8 @@ stiffens it and keeps rain off the rim.
 ![Seal cross-section](case/images/seal-section.png)
 
 The seal is a 155 mm OD x 2.4 mm nitrile O-ring (about 150 mm ID). It stretches
-about 2% to fit the groove, whose centre line is 490 mm (`groove_len`). A larger
-2.4 mm ring or cord also works: cut it to 490 mm and butt-join the ends with
+about 2% to fit the groove, whose centre line is 488 mm (`groove_len`). A larger
+2.4 mm ring or cord also works: cut it to 488 mm and butt-join the ends with
 cyanoacrylate. For a different cross-section, change `oring_d`, `groove_depth`
 (0.75 x the cross-section, rounded to a multiple of the layer height) and
 `groove_w` (1.3 x).
@@ -347,8 +366,10 @@ end, tied to an anchor.
 ![Hive housing base](case/images/hive-base.png)
 ![Hive housing lid](case/images/hive-lid.png)
 
-Print in PLA with the default A1 mini profile. Print `lid` and `hive_lid` as
-exported (outside face down). Each screw hole in `hive_lid` has a one-layer
+Print in PLA, starting from the A1 mini 0.20 mm Standard profile with 4 wall
+loops, 35% infill and no brim (`box` and `lid` are 175 mm long on a 180 mm
+bed). Iron the top surface of `lid`, which is its sealing face. Print `lid` and
+`hive_lid` as exported (outside face down). Each screw hole in `hive_lid` has a one-layer
 bridge at the bottom of its counterbore; push a 3 mm drill through it after
 printing. Press the heat-set inserts into the lid lugs, board posts, clamp
 towers and hive housing posts with a soldering iron before assembly, flush or
@@ -359,16 +380,17 @@ just below the surface; the lid must sit flat on the lugs.
 | `box`, `lid`, `hive_base`, `hive_lid` | 1 each |
 | `clamp` | 2 |
 | `foot` (glue into the floor) | 4 |
-| PG9 cable gland, 4-8 mm | 3 |
+| PG9 cable gland, 4-8 mm (load cells, Cat6) | 2 |
+| PG7 cable gland, 3-6.5 mm (solar) | 1 |
 | M12 ePTFE breather vent | 1 |
 | M3 x 10 socket head cap screw, stainless | 14 |
 | M3 x 5.7 mm heat-set insert, 4.0 mm hole (e.g. ruthex) | 14 |
 | O-ring, 155 mm OD x 2.4 mm, nitrile | 1 |
-| Adhesive-lined heatshrink (load cell bundle) | 1 |
+| Adhesive-lined heatshrink (load cell bundle, solar pair) | 2 |
 | Silica gel sachet | 1 |
 | Removable double-sided mounting strip (battery to floor, e.g. 3M Command) | 1 |
 
-Drill the main board's two M3 holes in the outer left column, 15 mm and 74 mm
+Drill the main board's two M3 holes in the outer left column, 15 mm and 73 mm
 from the bottom edge. If you drill elsewhere, update `left_holes_y`.
 
 ## Installation
