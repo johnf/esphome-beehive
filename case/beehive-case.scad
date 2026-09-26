@@ -394,7 +394,7 @@ module hive_lid() {
     union() {
       difference() {
         hive_shell(zb, zt);
-        translate([0, 0, -htop]) hive_cavity();
+        hive_cavity();
       }
       for (t = tubes) translate([t[0], t[1], zb]) cylinder(d = htube_d, h = zt - zb);
       // Ribs from the side walls press on the board; below the split they stand off the base walls.
