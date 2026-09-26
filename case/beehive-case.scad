@@ -73,6 +73,7 @@ gland_z = floor_t + 13;
 vent_d = 12.2;
 vent_x = 25;
 vent_z = floor_t + 13;
+hole_cap = 0.6;             // flat top above the gland and vent holes, kept under their seals
 
 // Lid lugs with heat-set inserts
 lug_depth = 14;
@@ -159,6 +160,17 @@ hhole_pitch = 4;
 
 module rrect(p0, p1, r) {
   translate(p0) translate([r, r]) offset(r = r) square([p1[0] - p0[0] - 2 * r, p1[1] - p0[1] - 2 * r]);
+}
+
+// Side-wall hole, point up: a 45° teardrop cut flat just above the circle prints without support
+module wall_hole(d) {
+  intersection() {
+    hull() {
+      circle(d = d);
+      translate([0, d / 2 * sqrt(2)]) square(eps, center = true);
+    }
+    translate([-d, -d]) square([2 * d, 1.5 * d + hole_cap]);
+  }
 }
 
 // Top of the hole at the origin
@@ -283,8 +295,8 @@ module box() {
     to_inner() inner_holes();
     oring_groove();
     for (y = gland_y)
-      translate([outer[0] - wall - 1, y, gland_z]) rotate([0, 90, 0]) cylinder(d = gland_d, h = wall + 2);
-    translate([vent_x, -1, vent_z]) rotate([-90, 0, 0]) cylinder(d = vent_d, h = wall + 2);
+      translate([outer[0] - wall - 1, y, gland_z]) rotate([90, 0, 90]) linear_extrude(wall + 2) wall_hole(gland_d);
+    translate([vent_x, wall + 1, vent_z]) rotate([90, 0, 0]) linear_extrude(wall + 2) wall_hole(vent_d);
     for (p = foot_pos)
       translate([p[0], p[1], -eps]) cylinder(d = foot_hole_d, h = floor_t + foot_boss_h - 1);
   }
