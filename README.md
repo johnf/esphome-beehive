@@ -366,6 +366,7 @@ just below the surface; the lid must sit flat on the lugs.
 | O-ring, 155 mm OD x 2.4 mm, nitrile | 1 |
 | Adhesive-lined heatshrink (load cell bundle) | 1 |
 | Silica gel sachet | 1 |
+| Removable double-sided mounting strip (battery to floor, e.g. 3M Command) | 1 |
 
 Drill the main board's two M3 holes in the outer left column, 15 mm and 74 mm
 from the bottom edge. If you drill elsewhere, update `left_holes_y`.
