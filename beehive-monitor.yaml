@@ -333,6 +333,9 @@ script:
           then:
             - logger.log: "Starting measurement cycle"
             - component.update: bee_monitor
+            # The NAU7802 starts converting 600ms after setup and needs time
+            # to settle; reading sooner returns no samples after a cold boot
+            - delay: 1s
             # NAU7802 produces a sample every 100ms at the default 10 SPS
             - repeat:
                 count: 7
