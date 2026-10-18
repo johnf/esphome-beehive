@@ -711,8 +711,8 @@ with the battery.
 
 | State | Current Draw | Duration |
 |-------|--------------|----------|
-| Deep Sleep | ~10 µA (ESP32 only, sensor rail off) | 5 minutes |
-| Active | ~150 mA | ~5-15 seconds (WiFi connect, ~1 s audio, ~1 s weight) |
+| Deep Sleep | ~10 µA (ESP32 only, sensor rail off) | Rest of the 5 minute cycle |
+| Active | ~150 mA | ~15 seconds (~1.5 s audio, ~10 s modulation, ~1 s weight, WiFi connect) |
 | **Average** | **~2.3 mA** | - |
 
 The average is measured, not estimated: the fuel gauge fell 2.7% per day over
@@ -790,8 +790,9 @@ automation:
 - Check for loose connections on the NAU7802
 - Recalibrate with weights spanning the real hive weight range; extrapolating
   from a few kilograms magnifies noise
-- Each reading is already the median of five raw samples; if the log shows
-  "No measurements ready!" on every sample, check the NAU7802 power and I2C
+- Each reading is already the median of seven raw samples; if the log shows
+  "No measurements ready!" on every sample, or "weight not published", check
+  the NAU7802 power and I2C
 
 ### WiFi connection issues
 
