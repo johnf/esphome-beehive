@@ -394,8 +394,10 @@ void BeeAudioComponent::free_buffers_() {
   }
 }
 
-// Enables the channel and discards the first samples: the INMP441 needs time
-// to settle after clocks start and the first DMA buffers can contain stale data
+// Enables the channel and discards the first samples. The INMP441 outputs
+// zeros for 2^18 SCK cycles after power-up and 2^14 after leaving standby
+// (SCK stopped); SCK is 64 x sample rate, so that is 4096 and 256 samples at
+// any rate. The first DMA buffers can also hold stale data.
 bool BeeAudioComponent::discard_startup_samples_() {
   esp_err_t ret = i2s_channel_enable(this->rx_chan_);
   if (ret != ESP_OK) {
@@ -406,10 +408,12 @@ bool BeeAudioComponent::discard_startup_samples_() {
 
   int32_t dummy_buffer[256];
   size_t bytes_read = 0;
-  for (int i = 0; i < 3; i++) {
+  const int chunks = this->mic_started_ ? 3 : 18;
+  for (int i = 0; i < chunks; i++) {
     i2s_channel_read(this->rx_chan_, dummy_buffer, sizeof(dummy_buffer),
                      &bytes_read, 100);
   }
+  this->mic_started_ = true;
 
   return true;
 }

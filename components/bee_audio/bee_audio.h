@@ -137,6 +137,7 @@ protected:
 
   i2s_chan_handle_t rx_chan_{nullptr};
   bool fft_initialised_{false};
+  bool mic_started_{false};
 
   int32_t *raw_samples_{nullptr}; // fft_size_ samples, DMA capable
   float *fft_data_{nullptr};      // 2 * fft_size_ interleaved re/im
