@@ -524,6 +524,11 @@ If the helper is left on, the device clears it after `ota_mode_max_awake`
 from step 1 the device still sleeps after the timeout, but stays awake again on
 the next wake until you turn the helper off.
 
+To check which commit a device is running, look at **Firmware** on the device
+page in Home Assistant, or for `Project johnf.esphome-beehive version <commit>`
+in the boot log. A `-dirty` suffix means it was built from a checkout with
+uncommitted changes.
+
 The package defines the `ota` component. To add a password or other options,
 extend it in your device configuration rather than declaring a second one:
 

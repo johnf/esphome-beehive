@@ -5,10 +5,14 @@ Custom component for FFT-based bee colony audio analysis using INMP441 microphon
 Uses ESP-IDF I2S driver and ESP-DSP for FFT processing.
 """
 
+from pathlib import Path
+import subprocess
+
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
-from esphome.const import CONF_ID
+from esphome.const import CONF_ID, CONF_PROJECT
+from esphome.core import CORE
 from esphome.components import esp32
 
 CODEOWNERS = ["@johnf"]
@@ -97,7 +101,32 @@ CONFIG_SCHEMA = cv.Schema(
 ).extend(cv.polling_component_schema("never"))
 
 
+PROJECT_NAME = "johnf.esphome-beehive"
+
+
+def _git_version():
+    """Commit of the checkout this component was loaded from, e.g. c01fd4f-dirty."""
+    try:
+        return subprocess.run(
+            ["git", "describe", "--always", "--dirty"],
+            cwd=Path(__file__).parent,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return "unknown"
+
+
 async def to_code(config):
+    # Logged at boot and shown as the firmware version in Home Assistant. A
+    # project set in the device config takes precedence.
+    if CONF_PROJECT not in CORE.config["esphome"]:
+        version = _git_version()
+        cg.add_define("ESPHOME_PROJECT_NAME", PROJECT_NAME)
+        cg.add_define("ESPHOME_PROJECT_VERSION", version)
+        cg.add_define("ESPHOME_PROJECT_VERSION_30", version[:29])
+
     var = cg.new_Pvariable(config[CONF_ID])
     await cg.register_component(var, config)
 
