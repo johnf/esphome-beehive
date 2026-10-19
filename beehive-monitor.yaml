@@ -344,12 +344,14 @@ script:
           then:
             - logger.log: "Starting measurement cycle"
             - component.update: hive_climate
-            - component.update: ina226_solar
             - component.update: fuel_gauge
             # The NAU7802 powers the load cells from a 600ms timer after setup,
             # which cannot fire while the audio capture blocks the main loop.
             # Starting it first lets the cells warm up during the capture.
             - delay: 700ms
+            # Bus voltage and current read 0 until the INA226 finishes its
+            # first averaged conversion after setup (~9ms)
+            - component.update: ina226_solar
             - component.update: bee_monitor
             - lambda: |-
                 id(weight_samples) = 0;
