@@ -69,6 +69,12 @@ views:
       name: Charging
       icon: mdi:battery-charging
       color: green
+    - type: tile
+      entity: sensor.beehive_monitor_last_wake
+      name: Last wake
+      icon: mdi:sleep-off
+      grid_options:
+        columns: 12
   - type: grid
     cards:
     - type: heading

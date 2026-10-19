@@ -96,6 +96,11 @@ ota:
     on_begin:
       - switch.turn_on: prevent_deep_sleep
 
+# Synced from Home Assistant when the API connects
+time:
+  - platform: homeassistant
+    id: ha_time
+
 # Custom bee audio component (INMP441 microphone)
 # Pins (configured via substitutions):
 #   - LRCLK (WS): GPIO1 (i2s_lrclk_pin)
@@ -280,6 +285,13 @@ text_sensor:
     hive_state:
       name: "Hive State"
       id: hive_state
+  # A text sensor because a float timestamp only resolves to ~2 minutes
+  - platform: template
+    name: "Last Wake"
+    id: last_wake
+    device_class: timestamp
+    entity_category: diagnostic
+    update_interval: never
 
 globals:
   - id: weight_samples
@@ -384,6 +396,18 @@ script:
                 condition:
                   lambda: return id(ota_mode).has_state();
                 timeout: 3s
+            - wait_until:
+                condition:
+                  time.has_time: {}
+                timeout: 3s
+            - if:
+                condition:
+                  time.has_time: {}
+                then:
+                  - lambda: |-
+                      const time_t woke = id(ha_time).timestamp_now() - millis() / 1000;
+                      id(last_wake).publish_state(
+                          ESPTime::from_epoch_utc(woke).strftime("%Y-%m-%dT%H:%M:%SZ"));
             - delay: 300ms
             - if:
                 condition:
