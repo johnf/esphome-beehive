@@ -71,9 +71,6 @@ esphome:
         - lambda: delay(10);
     - priority: -100 # Run after all components initialised
       then:
-        # The clock survives deep sleep, so after the first sync this goes out
-        # with the initial states rather than racing the sleep
-        - script.execute: publish_last_wake
         - script.execute: collect_and_sleep
 
 external_components:
@@ -350,17 +347,6 @@ script:
       - script.stop: collect_and_sleep
       - script.execute: collect_and_sleep
 
-  - id: publish_last_wake
-    then:
-      - if:
-          condition:
-            time.has_time: {}
-          then:
-            - lambda: |-
-                const time_t woke = id(ha_time).timestamp_now() - millis() / 1000;
-                id(last_wake).publish_state(
-                    ESPTime::from_epoch_utc(woke).strftime("%Y-%m-%dT%H:%M:%SZ"));
-
   - id: collect_and_sleep
     then:
       # Loops rather than re-executing itself, which mode: single rejects
@@ -410,15 +396,18 @@ script:
                 condition:
                   lambda: return id(ota_mode).has_state();
                 timeout: 3s
+            - wait_until:
+                condition:
+                  time.has_time: {}
+                timeout: 3s
             - if:
                 condition:
-                  lambda: return !id(last_wake).has_state();
+                  time.has_time: {}
                 then:
-                  - wait_until:
-                      condition:
-                        time.has_time: {}
-                      timeout: 3s
-                  - script.execute: publish_last_wake
+                  - lambda: |-
+                      const time_t woke = id(ha_time).timestamp_now() - millis() / 1000;
+                      id(last_wake).publish_state(
+                          ESPTime::from_epoch_utc(woke).strftime("%Y-%m-%dT%H:%M:%SZ"));
             - delay: 300ms
             - if:
                 condition:
