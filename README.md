@@ -190,7 +190,25 @@ board.
 | J_CELLS | Main (11-22, 40) | 12 pins, see [Load Cells](#load-cells) | | | | | | | |
 
 The hive cable is wired pin for pin. Ground sits between SCL and the I2S
-clocks so the cable can run a metre or two. JST-XH is 2.5 mm pitch, which
+clocks so the cable can run a metre or two. With Cat5e or Cat6, pair the wires
+by signal, not in T568A/B order, which puts SCL with WS and SCK with SD:
+
+| Pair | Pin | Signal | Colour |
+| --- | --- | --- | --- |
+| Blue | 7 | SCK | Blue |
+| | 4 | GND | White/blue |
+| Green | 3 | SCL | Green |
+| | 5 | GND | White/green |
+| Orange | 2 | SDA | Orange |
+| | 1 | 3V3 | White/orange |
+| Brown | 6 | WS | Brown |
+| | 8 | SD | White/brown |
+
+Each clock shares its pair with a ground. WS and SD can share a pair because
+both change on the falling edge of SCK and SD is read on the rising edge. Keep
+the untwisted length at each connector under about 15 mm.
+
+JST-XH is 2.5 mm pitch, which
 fits the 2.54 mm stripboard grid with a little lean on the 8-way socket and
 about half a millimetre over the 12-way. Every socket sits on a board edge, so
 side-entry (S*B-XH-A) or top-entry (B*B-XH-A) housings both work.
