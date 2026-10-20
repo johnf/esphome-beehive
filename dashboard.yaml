@@ -275,9 +275,17 @@ views:
       - type: trend-graph
         hours_to_show: 24
     - type: tile
-      entity: binary_sensor.beehive_monitor_solar_producing
+      entity: binary_sensor.beehive_monitor_charging
       name: Charging
       icon: mdi:battery-charging
+      color: green
+      state_content:
+      - state
+      - last_changed
+    - type: tile
+      entity: binary_sensor.beehive_monitor_battery_charged
+      name: Full
+      icon: mdi:battery-check
       color: green
       state_content:
       - state
@@ -290,7 +298,7 @@ views:
         name: Level
       - entity: sensor.beehive_monitor_battery_voltage
         name: Voltage
-      - entity: binary_sensor.beehive_monitor_solar_producing
+      - entity: binary_sensor.beehive_monitor_charging
         name: Charging
     - type: statistics-graph
       title: Battery level, 7 days
@@ -328,9 +336,29 @@ views:
       - min
       - max
     - type: markdown
-      content: Charging means the panel is producing during the wake window. The device draws more than
+      content: Charging and Full come from the charger during the wake window. The device draws more than
         the charger supplies while awake, so net charging happens during deep sleep and shows up as the
         level rising between readings.
+    - type: tile
+      entity: sensor.beehive_monitor_wake_charge
+      name: Charge per wake
+      icon: mdi:battery-arrow-down
+      grid_options:
+        columns: 12
+      features:
+      - type: trend-graph
+        hours_to_show: 24
+    - type: statistics-graph
+      title: Charge per wake, 30 days
+      entities:
+      - entity: sensor.beehive_monitor_wake_charge
+        name: Charge
+      days_to_show: 30
+      period: day
+      chart_type: line
+      stat_types:
+      - mean
+      - max
   - type: grid
     cards:
     - type: heading

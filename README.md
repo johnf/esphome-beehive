@@ -11,8 +11,9 @@ temperature, and humidity monitoring.
 - **Weight Monitoring**: Track hive weight changes using 4x 50kg load cells via
   NAU7802 ADC
 - **Environmental Sensing**: Temperature and humidity via SHT40 sensor
-- **Power Monitoring**: Solar current, voltage and power via INA226; battery voltage
-  and state of charge via the FeatherS3D's onboard MAX17048 fuel gauge
+- **Power Monitoring**: Solar current, voltage and power via INA226; the charge
+  each wake costs via a second INA226; charger status from the BQ24210; battery
+  voltage and state of charge via the FeatherS3D's onboard MAX17048 fuel gauge
 - **Battery Optimised**: Deep sleep between 5-minute measurement cycles
 - **Home Assistant Integration**: Automatic sensor discovery and state reporting
 
@@ -426,7 +427,8 @@ from the bottom edge. If you drill elsewhere, update `left_holes_y`.
      sda: GPIO8
      scl: GPIO9
      scan: true
-     frequency: 400kHz
+     # 100 kHz: fast mode's rise time fails on the 1-2 m hive cable
+     frequency: 100kHz
 
    # WiFi configuration (required)
    wifi:
@@ -670,6 +672,10 @@ bee_audio:
 | Battery Voltage | V | Cell voltage from the MAX17048 |
 | Battery Level | % | State of charge from the MAX17048 ModelGauge |
 | Solar Producing | on/off | Solar current above `charging_current_threshold`. Panel output, not net battery current: the device draws more than the charger supplies during the wake window, so the battery only gains during deep sleep |
+| Wake Charge | mAh | Charge the device drew from the battery during the last wake, from the load INA226 sampled every 250 ms |
+| Charging | on/off | BQ24210 charging. Only asserted for the first charge cycle after the panel comes up |
+| Charger Input Present | on/off | The panel is supplying the charger |
+| Battery Charged | on/off | Panel present but not charging |
 
 ### Hive State Classification
 

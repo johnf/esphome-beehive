@@ -1,7 +1,7 @@
 """
 Bee Audio Component for ESPHome
 
-Custom component for FFT-based bee colony audio analysis using INMP441 microphone.
+Custom component for FFT-based bee colony audio analysis using an ICS-43434 I2S microphone.
 Uses ESP-IDF I2S driver and ESP-DSP for FFT processing.
 """
 
@@ -71,13 +71,24 @@ BAND_SCHEMA = cv.All(
     _validate_band,
 )
 
+def _validate_sample_rate(value):
+    """The ICS-43434 only runs in its low-power (6.25-18.75 kHz) or
+    high-performance (23-51.6 kHz) mode; between and below them it stops."""
+    value = cv.int_(value)
+    if 6250 <= value <= 18750 or 23000 <= value <= 48000:
+        return value
+    raise cv.Invalid(
+        "sample_rate must be 6250-18750 Hz or 23000-48000 Hz for the ICS-43434"
+    )
+
+
 CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(BeeAudioComponent),
         cv.Required(CONF_I2S_LRCLK_PIN): pins.internal_gpio_output_pin_number,
         cv.Required(CONF_I2S_BCLK_PIN): pins.internal_gpio_output_pin_number,
         cv.Required(CONF_I2S_DIN_PIN): pins.internal_gpio_input_pin_number,
-        cv.Optional(CONF_SAMPLE_RATE, default=8000): cv.int_range(min=4000, max=48000),
+        cv.Optional(CONF_SAMPLE_RATE, default=8000): _validate_sample_rate,
         cv.Optional(CONF_FFT_SIZE, default=2048): cv.one_of(*VALID_FFT_SIZES, int=True),
         cv.Optional(CONF_FRAMES, default=4): cv.int_range(min=1, max=32),
         cv.Optional(CONF_BANDS, default={}): cv.Schema(

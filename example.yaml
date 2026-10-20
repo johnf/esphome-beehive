@@ -37,7 +37,8 @@ i2c:
   sda: GPIO8
   scl: GPIO9
   scan: true
-  frequency: 400kHz
+  # 100 kHz: fast mode's rise time fails on the 1-2 m hive cable
+  frequency: 100kHz
 
 wifi:
   ssid: !secret wifi_ssid

@@ -22,7 +22,7 @@ to detect bee colony health indicators.
 
 | Parameter | Range | Default |
 |-----------|-------|---------|
-| sample_rate | 4000-48000 Hz | 8000 Hz |
+| sample_rate | 6250-18750 or 23000-48000 Hz (ICS-43434 modes) | 8000 Hz |
 | fft_size | 256, 512, 1024, 2048, 4096 | 2048 |
 | frames | 1-32 | 4 |
 | bands.<name>.low/high | frequency | research defaults in bee_audio.h |

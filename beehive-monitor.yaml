@@ -1,10 +1,11 @@
 # ESPHome Beehive Monitoring Package
 #
 # Battery-powered ESP32 beehive monitor with:
-# - INMP441 microphone for FFT-based audio analysis
+# - ICS-43434 microphone for FFT-based audio analysis
 # - NAU7802 ADC for 4x 50kg load cells (weight)
 # - SHT40 temperature and humidity sensor
-# - INA226 for solar power monitoring, onboard MAX17048 fuel gauge for battery
+# - INA226s for solar and load power, BQ24210 charger status, onboard
+#   MAX17048 fuel gauge for battery
 # - Deep sleep for power efficiency (5 minute intervals)
 #
 # Usage: Include this as a package in your device configuration.
@@ -17,7 +18,7 @@ substitutions:
   bee_audio_source: github://johnf/esphome-beehive
   # I2C bus ID (user must define the i2c bus externally)
   i2c_bus_id: i2c_bus
-  # I2S pins for INMP441 microphone
+  # I2S pins for the ICS-43434 microphone
   i2s_lrclk_pin: GPIO1
   i2s_bclk_pin: GPIO3
   i2s_din_pin: GPIO7
@@ -32,8 +33,12 @@ substitutions:
   measurement_interval_ms: "300000"
   # GPIO pin that controls power to all sensors (e.g. FeatherS3D LDO2)
   sensor_power_pin: GPIO39
-  # INA226 I2C address (A0 and A1 pulled low on the CJMCU-226 module)
+  # INA226 I2C addresses, strapped on the main board
   ina226_solar_address: "0x40"
+  ina226_load_address: "0x41"
+  # BQ24210 open-drain status outputs
+  charger_chg_pin: GPIO5
+  charger_pg_pin: GPIO6
   # Solar current (A) above which the panel counts as producing
   charging_current_threshold: "0.02"
   # Audio analysis. Band levels are mean power spectral density in dB re
@@ -102,14 +107,11 @@ time:
   - platform: homeassistant
     id: ha_time
 
-# Custom bee audio component (INMP441 microphone)
-# Pins (configured via substitutions):
+# Custom bee audio component (ICS-43434 microphone on the hive board, LR
+# grounded for the left channel). Pins (configured via substitutions):
 #   - LRCLK (WS): GPIO1 (i2s_lrclk_pin)
 #   - BCLK (SCK): GPIO3 (i2s_bclk_pin)
 #   - DIN (SD):   GPIO7 (i2s_din_pin)
-#   - VDD:        3.3V
-#   - GND:        GND
-#   - L/R:        GND (left channel)
 bee_audio:
   id: bee_monitor
   i2s_lrclk_pin: ${i2s_lrclk_pin}
@@ -212,6 +214,9 @@ sensor:
     address: ${ina226_solar_address}
     id: ina226_solar
     update_interval: never
+    # 0.1 ohm shunts read at most 819 mA; a matching max_current gives the
+    # finest current step
+    max_current: 0.8A
     current:
       name: "Solar Current"
       id: solar_current
@@ -224,6 +229,35 @@ sensor:
     shunt_voltage:
       name: "Solar Shunt Voltage"
       id: solar_shunt_voltage
+
+  # Load side - everything the Feather draws from the battery. Only powered
+  # while awake, which is where nearly all the charge goes, so it is sampled
+  # through each wake and integrated into the charge that wake cost
+  - platform: ina226
+    i2c_id: ${i2c_bus_id}
+    address: ${ina226_load_address}
+    id: ina226_load
+    update_interval: 250ms
+    max_current: 0.8A
+    current:
+      id: load_current
+      internal: true
+
+  - platform: integration
+    id: wake_charge_ah
+    sensor: load_current
+    time_unit: h
+    integration_method: trapezoid
+    internal: true
+
+  - platform: template
+    name: "Wake Charge"
+    id: wake_charge
+    unit_of_measurement: mAh
+    state_class: measurement
+    accuracy_decimals: 2
+    update_interval: never
+    lambda: return id(wake_charge_ah).state * 1000.0f;
 
   # Battery voltage and state of charge from the FeatherS3D's onboard MAX17048
   # fuel gauge (register-compatible with the MAX17043). It is on the always-on
@@ -280,6 +314,32 @@ binary_sensor:
       // every wake
       if (!id(solar_current).has_state()) return {};
       return fabsf(id(solar_current).state) > ${charging_current_threshold};
+  # BQ24210 status. CHG is only asserted for the first charge cycle after the
+  # panel comes up, so later top-ups show as charged rather than charging
+  - platform: gpio
+    name: "Charging"
+    id: charging
+    device_class: battery_charging
+    pin:
+      number: ${charger_chg_pin}
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+  - platform: gpio
+    name: "Charger Input Present"
+    id: charger_power_good
+    device_class: power
+    pin:
+      number: ${charger_pg_pin}
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+  - platform: template
+    name: "Battery Charged"
+    id: battery_charged
+    lambda: return id(charger_power_good).state && !id(charging).state;
 
 text_sensor:
   - platform: bee_audio
@@ -357,6 +417,7 @@ script:
             lambda: return true;
           then:
             - logger.log: "Starting measurement cycle"
+            - sensor.integration.reset: wake_charge_ah
             - component.update: hive_climate
             - component.update: fuel_gauge
             # The NAU7802 powers the load cells from a 600ms timer after setup,
@@ -410,6 +471,7 @@ script:
                       const time_t woke = id(ha_time).timestamp_now() - millis() / 1000;
                       id(last_wake).publish_state(
                           ESPTime::from_epoch_utc(woke).strftime("%Y-%m-%dT%H:%M:%SZ"));
+            - component.update: wake_charge
             - delay: 300ms
             - if:
                 condition:

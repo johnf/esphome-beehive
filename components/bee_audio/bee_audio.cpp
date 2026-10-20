@@ -18,7 +18,7 @@ static const char *const BAND_NAMES[BAND_COUNT] = {
 // Floor for log10 of power values, keeps silence finite (-200 dB)
 static const float POWER_FLOOR = 1e-20f;
 
-// INMP441 outputs 24-bit data left-justified in a 32-bit word
+// The ICS-43434 outputs 24-bit data left-justified in a 32-bit word
 static const float SAMPLE_SCALE = 1.0f / 8388608.0f; // 2^23
 
 // Modulation spectrum STFT: 100 ms window, 12.5 ms hop (Abdollahi et al.)
@@ -237,7 +237,7 @@ bool BeeAudioComponent::init_i2s_() {
     return false;
   }
 
-  // INMP441 is Philips I2S: the MSB follows the WS edge by one BCLK. MSB
+  // The ICS-43434 is Philips I2S: the MSB follows the WS edge by one BCLK. MSB
   // (left-justified) framing latches a bit early, so the sign bit lands in
   // bit 30 and every negative sample reads as near positive full scale.
   i2s_std_config_t std_cfg = {
@@ -260,7 +260,7 @@ bool BeeAudioComponent::init_i2s_() {
           },
   };
 
-  // INMP441 outputs on left channel when L/R is grounded
+  // The ICS-43434 outputs on the left channel when LR is grounded
   std_cfg.slot_cfg.slot_mask = I2S_STD_SLOT_LEFT;
 
   ret = i2s_channel_init_std_mode(this->rx_chan_, &std_cfg);
@@ -396,10 +396,10 @@ void BeeAudioComponent::free_buffers_() {
   }
 }
 
-// Enables the channel and discards the first samples. The INMP441 outputs
-// zeros for 2^18 SCK cycles after power-up and 2^14 after leaving standby
-// (SCK stopped); SCK is 64 x sample rate, so that is 4096 and 256 samples at
-// any rate. The first DMA buffers can also hold stale data.
+// Enables the channel and discards the first samples. The ICS-43434 takes
+// under 20 ms to start after power-up or leaving standby (SCK stopped), and
+// the first DMA buffers can hold stale data, so at least 50 ms and three
+// buffers are dropped.
 bool BeeAudioComponent::discard_startup_samples_() {
   esp_err_t ret = i2s_channel_enable(this->rx_chan_);
   if (ret != ESP_OK) {
@@ -410,12 +410,11 @@ bool BeeAudioComponent::discard_startup_samples_() {
 
   int32_t dummy_buffer[256];
   size_t bytes_read = 0;
-  const int chunks = this->mic_started_ ? 3 : 18;
-  for (int i = 0; i < chunks; i++) {
+  const uint32_t chunks = std::max<uint32_t>(3, this->sample_rate_ / 20 / 256 + 2);
+  for (uint32_t i = 0; i < chunks; i++) {
     i2s_channel_read(this->rx_chan_, dummy_buffer, sizeof(dummy_buffer),
                      &bytes_read, 100);
   }
-  this->mic_started_ = true;
 
   return true;
 }
