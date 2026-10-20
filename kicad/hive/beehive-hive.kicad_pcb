@@ -88,7 +88,7 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "C2"
-			(at 0 -1.43 90)
+			(at 1.9 0 0)
 			(layer "F.SilkS")
 			(uuid "c5858e2c-81d0-43b3-be86-32c900b3fabf")
 			(effects
@@ -255,6 +255,7 @@
 		(property "Reference" "TP5"
 			(at 0 -1.648 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0325c9d3-d774-4580-80ff-07854b8efea3")
 			(effects
 				(font
@@ -264,14 +265,15 @@
 			)
 		)
 		(property "Value" "WS"
-			(at 0 1.75 0)
-			(layer "F.Fab")
+			(at 0 0 0)
+			(layer "B.SilkS")
 			(uuid "99ecf65a-0c72-48a1-a889-24521501bef0")
 			(effects
 				(font
-					(size 1 1)
-					(thickness 0.15)
+					(size 0.8 0.6)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -523,6 +525,7 @@
 		(property "Reference" "TP2"
 			(at 0 -1.648 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f57a7caa-982a-458f-a12d-ae7b37dd7783")
 			(effects
 				(font
@@ -532,14 +535,15 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 0 1.75 0)
-			(layer "F.Fab")
+			(at 0 0 0)
+			(layer "B.SilkS")
 			(uuid "ba2067eb-b5fd-4918-9d63-d414597497d7")
 			(effects
 				(font
-					(size 1 1)
-					(thickness 0.15)
+					(size 0.8 0.6)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -624,7 +628,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R2"
-			(at 0 -1.43 0)
+			(at -2.1 0 0)
 			(layer "F.SilkS")
 			(uuid "02c5bc45-d6e8-4666-acc0-4e77f3aa2820")
 			(effects
@@ -956,6 +960,7 @@
 		(property "Reference" "TP6"
 			(at 0 -1.648 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0498551f-9819-4897-a546-75b02ca7a0d6")
 			(effects
 				(font
@@ -965,14 +970,15 @@
 			)
 		)
 		(property "Value" "SCK"
-			(at 0 1.75 0)
-			(layer "F.Fab")
+			(at 0 0 0)
+			(layer "B.SilkS")
 			(uuid "d328b5d9-d939-4fc9-aee9-a6a134abdf15")
 			(effects
 				(font
-					(size 1 1)
-					(thickness 0.15)
+					(size 0.8 0.6)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -1168,6 +1174,7 @@
 		(property "Reference" "TP4"
 			(at 0 -1.648 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "346b890d-1fd4-465a-ba60-0d569fbe55b0")
 			(effects
 				(font
@@ -1177,14 +1184,15 @@
 			)
 		)
 		(property "Value" "SCL"
-			(at 0 1.75 0)
-			(layer "F.Fab")
+			(at 0 0 0)
+			(layer "B.SilkS")
 			(uuid "d492fea9-4432-46be-a9f9-0058a36e8b67")
 			(effects
 				(font
-					(size 1 1)
-					(thickness 0.15)
+					(size 0.8 0.6)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -1380,6 +1388,7 @@
 		(property "Reference" "TP7"
 			(at 0 -1.648 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "254357b3-4aef-413b-8456-e9e9cb75f9e5")
 			(effects
 				(font
@@ -1389,14 +1398,15 @@
 			)
 		)
 		(property "Value" "SD"
-			(at 0 1.75 0)
-			(layer "F.Fab")
+			(at 0 0 0)
+			(layer "B.SilkS")
 			(uuid "ec43e294-02de-432f-b48f-ff0a31bce1ea")
 			(effects
 				(font
-					(size 1 1)
-					(thickness 0.15)
+					(size 0.8 0.6)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -1887,6 +1897,7 @@
 		(property "Reference" "TP3"
 			(at 0 -1.648 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "0360d005-a6e1-4c74-88c6-31d12c045e8b")
 			(effects
 				(font
@@ -1896,14 +1907,15 @@
 			)
 		)
 		(property "Value" "SDA"
-			(at 0 1.75 0)
-			(layer "F.Fab")
+			(at 0 0 0)
+			(layer "B.SilkS")
 			(uuid "c925f927-5544-4096-94b6-3823503b2df3")
 			(effects
 				(font
-					(size 1 1)
-					(thickness 0.15)
+					(size 0.8 0.6)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -2359,6 +2371,7 @@
 		(property "Reference" "TP1"
 			(at 0 -1.648 0)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c24f1838-f59d-48fa-819b-ed0de4e00ff4")
 			(effects
 				(font
@@ -2368,14 +2381,15 @@
 			)
 		)
 		(property "Value" "3V3"
-			(at 0 1.75 0)
-			(layer "F.Fab")
+			(at 0 0 0)
+			(layer "B.SilkS")
 			(uuid "ae23cfca-e505-4f98-acf2-879143c9fc11")
 			(effects
 				(font
-					(size 1 1)
-					(thickness 0.15)
+					(size 0.8 0.6)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
