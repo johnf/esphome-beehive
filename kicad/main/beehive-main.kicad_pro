@@ -70,7 +70,12 @@
         }
       },
       "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "starved_thermal|143000000|129175000|0cb884b0-6526-4f5a-9162-0ca55f711505|1f624ecd-8bfb-43d2-9e4e-ac1a33c01f68|F.Cu",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
