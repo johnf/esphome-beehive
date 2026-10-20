@@ -5566,6 +5566,281 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "beehive:BQ24210"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at 0 10.1600 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "BQ24210"
+				(at 0 -15.2400 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "https://www.ti.com/lit/ds/symlink/bq24210.pdf"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "BQ24210_0_1"
+				(rectangle
+					(start -10.1600 -12.7000)
+					(end 10.1600 7.6200)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(pin power_in line
+					(at -12.7 5.08 0)
+					(length 2.54)
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 0 0)
+					(length 2.54)
+					(name "EN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -12.7 -2.54 0)
+					(length 2.54)
+					(name "TS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at -12.7 -5.08 0)
+					(length 2.54)
+					(name "VTSB"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 12.7 5.08 180)
+					(length 2.54)
+					(name "BAT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin open_collector line
+					(at 12.7 0 180)
+					(length 2.54)
+					(name "~{CHG}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin open_collector line
+					(at 12.7 -2.54 180)
+					(length 2.54)
+					(name "~{PG}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 12.7 -5.08 180)
+					(length 2.54)
+					(name "ISET"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 12.7 -7.62 180)
+					(length 2.54)
+					(name "VDPM"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at -2.54 -15.24 90)
+					(length 2.54)
+					(name "VSS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -15.24 90)
+					(length 2.54)
+					(name "EP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
 	(no_connect
 		(at 106.68 96.52)
@@ -5715,20 +5990,6 @@
 	)
 	(wire
 		(pts
-			(xy 152.4 68.58)
-			(xy 152.4 71.12)
-		)
-		(uuid "e35081c4-9330-4934-a284-ea977d026fc9")
-	)
-	(wire
-		(pts
-			(xy 162.56 58.42)
-			(xy 165.1 58.42)
-		)
-		(uuid "b85e1c4c-81e8-447f-b552-f257c4b97cb4")
-	)
-	(wire
-		(pts
 			(xy 127 69.85)
 			(xy 127 72.39)
 		)
@@ -5740,13 +6001,6 @@
 			(xy 182.88 72.39)
 		)
 		(uuid "35841c3a-1b88-4baf-a9a5-9396e5e8bee4")
-	)
-	(wire
-		(pts
-			(xy 172.72 80.01)
-			(xy 172.72 82.55)
-		)
-		(uuid "0bba6b3f-3415-49cc-a62f-a8bf49bc7f9a")
 	)
 	(wire
 		(pts
@@ -6037,13 +6291,6 @@
 	)
 	(wire
 		(pts
-			(xy 142.24 50.8)
-			(xy 139.7 50.8)
-		)
-		(uuid "5b544a19-1921-416b-a8cd-0e6c745fd1e1")
-	)
-	(wire
-		(pts
 			(xy 127 62.23)
 			(xy 127 59.69)
 		)
@@ -6055,20 +6302,6 @@
 			(xy 139.7 259.08)
 		)
 		(uuid "4ec361e4-b951-490e-a538-d2da646fe94a")
-	)
-	(wire
-		(pts
-			(xy 162.56 53.34)
-			(xy 165.1 53.34)
-		)
-		(uuid "45ca9f9a-e916-4ba7-a35d-f2375d62b551")
-	)
-	(wire
-		(pts
-			(xy 162.56 50.8)
-			(xy 165.1 50.8)
-		)
-		(uuid "4435d90b-25d9-45cc-bd1c-53f68295747b")
 	)
 	(wire
 		(pts
@@ -6366,13 +6599,6 @@
 	)
 	(wire
 		(pts
-			(xy 142.24 55.88)
-			(xy 139.7 55.88)
-		)
-		(uuid "749ad0fb-0cbf-4332-94d2-1c4855bbb349")
-	)
-	(wire
-		(pts
 			(xy 50.8 187.96)
 			(xy 53.34 187.96)
 		)
@@ -6380,31 +6606,10 @@
 	)
 	(wire
 		(pts
-			(xy 142.24 58.42)
-			(xy 139.7 58.42)
-		)
-		(uuid "cd115521-4593-4104-b87d-5deddbb52b88")
-	)
-	(wire
-		(pts
 			(xy 50.8 185.42)
 			(xy 53.34 185.42)
 		)
 		(uuid "78821e70-ce76-41a2-a548-f79cbf896e31")
-	)
-	(wire
-		(pts
-			(xy 162.56 60.96)
-			(xy 165.1 60.96)
-		)
-		(uuid "f8b690cf-2d54-40c6-9f0e-81c1fc74a301")
-	)
-	(wire
-		(pts
-			(xy 172.72 72.39)
-			(xy 172.72 69.85)
-		)
-		(uuid "53577cf0-9e6c-4667-b402-a9172e995996")
 	)
 	(wire
 		(pts
@@ -6847,6 +7052,125 @@
 		)
 		(uuid "37244ff0-6f5b-4f52-a017-72044869170b")
 	)
+	(wire
+		(pts
+			(xy 142.24 50.8)
+			(xy 139.7 50.8)
+		)
+		(uuid "e26e1748-30af-4fb6-9786-18111b3a458e")
+	)
+	(wire
+		(pts
+			(xy 142.24 55.88)
+			(xy 139.7 55.88)
+		)
+		(uuid "2328bc10-6a84-46bd-b0f3-73ef40ead232")
+	)
+	(wire
+		(pts
+			(xy 152.4 71.12)
+			(xy 152.4 73.66)
+		)
+		(uuid "a3593d25-4c50-411f-95d9-ed8016be60b0")
+	)
+	(wire
+		(pts
+			(xy 157.48 71.12)
+			(xy 157.48 73.66)
+		)
+		(uuid "77289411-f73e-4036-abaf-931614b80ecd")
+	)
+	(wire
+		(pts
+			(xy 193.04 80.01)
+			(xy 193.04 82.55)
+		)
+		(uuid "d595fe42-342b-4e56-9a70-1f9b78a5f412")
+	)
+	(wire
+		(pts
+			(xy 142.24 58.42)
+			(xy 139.7 58.42)
+		)
+		(uuid "55b37642-25e4-43ed-9efb-2eee25b3d1d2")
+	)
+	(wire
+		(pts
+			(xy 134.62 72.39)
+			(xy 134.62 69.85)
+		)
+		(uuid "ffae210e-641c-4c7e-a290-bedbaad42656")
+	)
+	(wire
+		(pts
+			(xy 142.24 60.96)
+			(xy 139.7 60.96)
+		)
+		(uuid "af96c809-db66-4b5f-8441-92fcf1c4a2f4")
+	)
+	(wire
+		(pts
+			(xy 134.62 80.01)
+			(xy 134.62 82.55)
+		)
+		(uuid "515eb60f-30a2-4095-8aac-d19bc3c6c65d")
+	)
+	(wire
+		(pts
+			(xy 167.64 50.8)
+			(xy 170.18 50.8)
+		)
+		(uuid "c1df21c9-1ed7-43fc-8784-af2c00da87f6")
+	)
+	(wire
+		(pts
+			(xy 167.64 55.88)
+			(xy 170.18 55.88)
+		)
+		(uuid "7dea3ac2-6a35-4240-b71d-972c0a7c0dc7")
+	)
+	(wire
+		(pts
+			(xy 167.64 58.42)
+			(xy 170.18 58.42)
+		)
+		(uuid "04406589-a3aa-4207-ae3e-87a5dc7ba46a")
+	)
+	(wire
+		(pts
+			(xy 167.64 60.96)
+			(xy 170.18 60.96)
+		)
+		(uuid "a2b7c978-0edc-4f69-be5f-cd9612bb4bcb")
+	)
+	(wire
+		(pts
+			(xy 167.64 63.5)
+			(xy 170.18 63.5)
+		)
+		(uuid "cb05b2a7-2f89-43c8-8712-457f1a4451d4")
+	)
+	(wire
+		(pts
+			(xy 193.04 72.39)
+			(xy 193.04 69.85)
+		)
+		(uuid "9e8b99b4-6731-4451-b52c-5e13a0cf6547")
+	)
+	(wire
+		(pts
+			(xy 182.88 92.71)
+			(xy 182.88 90.17)
+		)
+		(uuid "ae750968-110e-4b4e-874f-e191b07ad722")
+	)
+	(wire
+		(pts
+			(xy 182.88 100.33)
+			(xy 182.88 102.87)
+		)
+		(uuid "e9b0551f-b2cb-4d52-b70b-f3261ec7ea57")
+	)
 	(text "FeatherS3D on female headers (Unexpected Maker pinout card)\nJ2, USB-end row: 1 RST, 2 3V3, 3 IO0, 4 GND, 5 IO17, 6 IO18, 7 IO14, 8 IO12,\n  9 IO6 (DONE), 10 IO5 (CHRG), 11 IO36, 12 IO35, 13 IO37, 14 IO44/RX, 15 IO43/TX, 16 LDO2 (+3V3)\nJ3, opposite row: 1 IO8/SDA, 2 IO9/SCL, 3 IO33, 4 IO38, 5 IO1 (WS), 6 IO3 (SCK),\n  7 IO7 (SD), 8 IO10, 9 IO11, 10 5V, 11 EN, 12 VBAT\nJ3 pin 1 sits opposite J2 pin 16; J3 pin 12 opposite J2 pin 5."
 		(at 25.4 220.98 0)
 		(effects
@@ -6856,6 +7180,26 @@
 			(justify left bottom)
 		)
 		(uuid "a5974520-4768-479c-830b-ff445abb28f6")
+	)
+	(text "Hive cable ESD: VP left open so the steering diodes\ncannot back-power +3V3 while LDO2 is off."
+		(at 160.02 248.92 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "096efb7b-018c-4eb4-ab95-936bcd17c9c2")
+	)
+	(text "I2C pull-ups on the Feather's always-on 3V3 so they\ncannot feed the sensor rail while LDO2 is off."
+		(at 139.7 142.24 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e887c23d-8d38-4c2d-a681-1a357eb91d4b")
 	)
 	(label "GND"
 		(at 38.1 55.88 0)
@@ -6918,26 +7262,6 @@
 		(uuid "3dc4c38c-31ac-40f1-bfff-93319d55f119")
 	)
 	(label "GND"
-		(at 152.4 71.12 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "25644ef3-e274-4b0d-bf2e-bd927fc9ecfb")
-	)
-	(label "GND"
-		(at 165.1 58.42 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "5415b0f3-d318-47ad-aa70-5e3810948731")
-	)
-	(label "GND"
 		(at 127 72.39 0)
 		(effects
 			(font
@@ -6956,16 +7280,6 @@
 			(justify left bottom)
 		)
 		(uuid "f85473a8-e4ef-4ea0-8670-b3ad6bc4c5ec")
-	)
-	(label "GND"
-		(at 172.72 82.55 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "3aad3001-935f-4d1e-8717-34ab1f96a736")
 	)
 	(label "GND"
 		(at 270.51 86.36 0)
@@ -7358,16 +7672,6 @@
 		(uuid "68f3787d-0be1-4289-bbed-982d8e97cf42")
 	)
 	(label "CHG_IN"
-		(at 139.7 50.8 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "5411182d-0876-4c8e-8872-6bbcf94639bc")
-	)
-	(label "CHG_IN"
 		(at 127 59.69 0)
 		(effects
 			(font
@@ -7386,26 +7690,6 @@
 			(justify left bottom)
 		)
 		(uuid "35bc2aa7-042d-41cd-ab7c-0d30f962f14f")
-	)
-	(label "BAT+"
-		(at 165.1 53.34 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "6efeacc2-02a2-42e3-bc59-4a780dd09005")
-	)
-	(label "BAT+"
-		(at 165.1 50.8 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "dcd5491f-958f-418d-8e83-7a035a04663e")
 	)
 	(label "BAT+"
 		(at 182.88 59.69 0)
@@ -7826,66 +8110,6 @@
 			(justify right bottom)
 		)
 		(uuid "659159b8-51e0-4882-a2f6-1f8fbbc8f30e")
-	)
-	(label "CHRG"
-		(at 139.7 55.88 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "3add2c57-1ea5-4288-9ed2-fd94f2e6a603")
-	)
-	(label "CHRG"
-		(at 53.34 187.96 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "83de6f41-c89c-4beb-90ec-f2df9a9536b1")
-	)
-	(label "DONE"
-		(at 139.7 58.42 180)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "94f5022c-f496-4d66-9876-c4c0ac9e3c7d")
-	)
-	(label "DONE"
-		(at 53.34 185.42 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "92a35f51-a9b3-41a6-ad3b-c6c8e0736c4d")
-	)
-	(label "ISET"
-		(at 165.1 60.96 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "762d9bc1-c1f3-4539-8f69-b72519226346")
-	)
-	(label "ISET"
-		(at 172.72 69.85 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "ec915dcb-6750-48c6-8c67-ff4fa459cac9")
 	)
 	(label "DW_OD"
 		(at 236.22 99.06 0)
@@ -8377,26 +8601,6 @@
 		)
 		(uuid "65a19073-b121-42d5-904b-b6d41d467cbb")
 	)
-	(label "CHRG"
-		(at 393.7 182.88 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "bfa6d24e-3b96-4ed0-836d-6d598d56401d")
-	)
-	(label "DONE"
-		(at 393.7 195.58 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "2e954aa8-95dc-4fbf-a91a-1941b16cfd6f")
-	)
 	(label "DRDY"
 		(at 393.7 208.28 0)
 		(effects
@@ -8537,16 +8741,216 @@
 		)
 		(uuid "f22d5d47-4cbb-489b-8ade-4385fe65b9c9")
 	)
-  (text "Hive cable ESD: VP left open so the steering diodes\ncannot back-power +3V3 while LDO2 is off."
-    (at 160.02 248.92 0)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid "096efb7b-018c-4eb4-ab95-936bcd17c9c2")
-  )
-  (text "I2C pull-ups on the Feather's always-on 3V3 so they\ncannot feed the sensor rail while LDO2 is off."
-    (at 139.7 142.24 0)
-    (effects (font (size 1.27 1.27)) (justify left bottom))
-    (uuid "e887c23d-8d38-4c2d-a681-1a357eb91d4b")
-  )
+	(label "CHG_IN"
+		(at 139.7 50.8 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "8f129745-590d-4d98-b980-590648598012")
+	)
+	(label "GND"
+		(at 139.7 55.88 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "fdc5aefc-5ba4-48e2-97e1-3f6ffe2b2d78")
+	)
+	(label "GND"
+		(at 152.4 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "a0ef47b3-3ef2-41a2-a50f-b29362efa331")
+	)
+	(label "GND"
+		(at 157.48 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "734a9368-9d0d-420b-b41b-825ef6261124")
+	)
+	(label "GND"
+		(at 193.04 82.55 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "55c55295-96b8-43a9-8e31-2186af4fa236")
+	)
+	(label "BQ_TS"
+		(at 139.7 58.42 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "53bc7b30-65ac-4a2f-8bc1-95d88d46cf9b")
+	)
+	(label "BQ_TS"
+		(at 134.62 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c4c8d1e1-7925-4b8a-bb1d-308d3cea3e35")
+	)
+	(label "VTSB"
+		(at 139.7 60.96 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "e86deb32-25e7-4cc2-81c0-8f99da86156b")
+	)
+	(label "VTSB"
+		(at 134.62 82.55 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "1a75d83a-22a7-4ec2-9c58-195ec45b749f")
+	)
+	(label "BAT+"
+		(at 170.18 50.8 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "cbb41ad4-8c8a-4681-9d09-060c356e0915")
+	)
+	(label "CHG"
+		(at 170.18 55.88 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "14d1b16d-cfea-46a0-9bf9-5af5da553e45")
+	)
+	(label "PG"
+		(at 170.18 58.42 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4af94567-fde1-4f4a-b655-de53485eca32")
+	)
+	(label "ISET"
+		(at 170.18 60.96 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "2f0829a3-5754-4132-ad1e-9e1b2aa8797b")
+	)
+	(label "VDPM"
+		(at 170.18 63.5 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "71542632-a819-4cba-9996-f9d3d25f15cf")
+	)
+	(label "VDPM"
+		(at 193.04 69.85 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e45cc763-b092-4c23-930e-17ade8657683")
+	)
+	(label "CHG"
+		(at 53.34 187.96 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c74d4966-e206-416e-b7db-77816468d60c")
+	)
+	(label "PG"
+		(at 53.34 185.42 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "4ef36e18-2a9c-4304-9f91-afce5bdabe95")
+	)
+	(label "CHG"
+		(at 393.7 182.88 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "39e24c1c-9556-4b63-9d18-50b11e6b2b65")
+	)
+	(label "PG"
+		(at 393.7 195.58 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "70c1742c-7e0e-4b5e-94a0-68912d890a31")
+	)
+	(label "ISET"
+		(at 182.88 90.17 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f887f50c-6310-4d9d-a23e-f0fcbbc38874")
+	)
+	(label "GND"
+		(at 182.88 102.87 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "131c874d-95b2-4926-84fe-5e4fa6cfdb37")
+	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x02")
 		(at 30.48 53.34 0)
@@ -8916,75 +9320,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Battery_Management:CN3163")
-		(at 152.4 55.88 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "58a566d7-a436-47d6-b166-a6c9db801531")
-		(property "Reference" "U2"
-			(at 145.796 44.196 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "CN3163"
-			(at 156.464 44.196 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Package_SO:SOIC-8-1EP_3.9x4.9mm_P1.27mm_EP2.41x3.3mm_ThermalVias"
-			(at 152.4 55.88 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" "http://www.consonance-elec.com/en/static/upload/file/20220425/1650867248788667.pdf"
-			(at 152.4 55.88 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Constant-current/constant voltage linear charger for single cell Li-ion and Li Polymer batteries ideally suited for solar powered systems, 1A, SOIC-8-1EP"
-			(at 152.4 55.88 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C559031"
-			(at 152.4 55.88 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "U2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C")
 		(at 127 66.04 0)
 		(unit 1)
@@ -9121,75 +9456,6 @@
 			(project "beehive-main"
 				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
 					(reference "C2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 172.72 76.2 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "0a757dcf-e98a-4311-97cb-a67d3476a6cd")
-		(property "Reference" "R2"
-			(at 174.752 76.2 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "2.4k"
-			(at 172.72 76.2 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 172.72 76.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 172.72 76.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Resistor"
-			(at 172.72 76.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "LCSC" "C22940"
-			(at 172.72 76.2 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R2")
 					(unit 1)
 				)
 			)
@@ -12804,7 +13070,7 @@
 				)
 			)
 		)
-		(property "Value" "CHRG"
+		(property "Value" "CHG"
 			(at 386.08 182.88 0)
 			(effects
 				(font
@@ -12864,7 +13130,7 @@
 				)
 			)
 		)
-		(property "Value" "DONE"
+		(property "Value" "PG"
 			(at 386.08 195.58 0)
 			(effects
 				(font
@@ -13081,15 +13347,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "U6")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C558418"
 			(at 175.26 226.06 0)
 			(hide yes)
@@ -13098,7 +13355,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U6")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Power_Protection:SRV05-4")
 		(at 210.82 226.06 0)
@@ -13152,15 +13418,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "U7")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C558418"
 			(at 210.82 226.06 0)
 			(hide yes)
@@ -13169,5 +13426,299 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "beehive:BQ24210")
+		(at 154.94 55.88 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b933011f-dce4-4c39-8ea6-f95aa7ade24d")
+		(property "Reference" "U2"
+			(at 154.94 45.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "BQ24210"
+			(at 154.94 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_SON:WSON-10-1EP_2x3mm_P0.5mm_EP0.84x2.4mm_ThermalVias"
+			(at 154.94 55.88 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/bq24210.pdf"
+			(at 154.94 55.88 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 154.94 55.88 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C524795"
+			(at 154.94 55.88 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "BQ24210DQCR"
+			(at 154.94 55.88 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 182.88 96.52 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c093a113-39ac-424d-ab4e-2113493f30b6")
+		(property "Reference" "R2"
+			(at 184.912 96.52 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "820"
+			(at 182.88 96.52 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 182.88 96.52 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 182.88 96.52 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 182.88 96.52 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C23253"
+			(at 182.88 96.52 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 193.04 76.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c84ef2fd-ef1d-45af-af4d-3c2a7db6bab8")
+		(property "Reference" "R12"
+			(at 195.072 76.2 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 193.04 76.2 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 193.04 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 193.04 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 193.04 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C25804"
+			(at 193.04 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 134.62 76.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "b4006cca-eb68-4464-a62b-a75c74ea54fd")
+		(property "Reference" "R13"
+			(at 136.652 76.2 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10k"
+			(at 134.62 76.2 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 134.62 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 134.62 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 134.62 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC" "C25804"
+			(at 134.62 76.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R13")
+					(unit 1)
+				)
+			)
+		)
+	)
 )

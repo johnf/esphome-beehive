@@ -15,16 +15,24 @@ and badly angled, the same panel gave 5-50 mW. Siting matters far more than
 panel size, and panels added for margin go in parallel; series gains nothing
 because the charger pulls its input down regardless.
 
+Unloaded, the same panel measured 7.18 V in sun. That is above the 6.5 V
+absolute maximum of the CN3065 and its successors, and the panel is unloaded
+whenever the cell is full.
+
 ## Decision
 
-- **Charger:** CN3163, from the CN3065's maker, which also throttles its
-  current to hold up a weak panel. Its ESOP-8 leads can be inspected and
-  reworked, and KiCad ships its symbol and footprint. An MPPT charger (CN3791) was
-  rejected: perhaps 10-20% more current for three times the board area and an
-  inductor, MOSFET, diode and sense resistor.
+- **Charger:** TI BQ24210, a linear charger rated to 20 V on its input with
+  over-voltage cut-off at 7.3-7.7 V. Its input regulation holds the panel at
+  5.0 V (10 kΩ on VDPM), and TS is tied to VTSB to select its solar
+  limited-power mode, which suspends the safety timers. Charge current is
+  about 475 mA (0.25C, 820 Ω on ISET). Rejected:
+  - CN3163: 6.5 V absolute maximum, below the panel's open-circuit voltage.
+  - A zener clamp in front of it: it burns 0.6-1 W for every sunny hour after
+    the cell fills, beside the cell in a sealed box.
+  - CN3791 MPPT: perhaps 10-20% more current for three times the board area
+    and an inductor, MOSFET, diode and sense resistor.
 - **Solar monitor:** INA226 (0x40, 0.1 Ω shunt) high-side between the panel
-  and the charger input, behind a reverse-polarity MOSFET. The charge current
-  is set to 500 mA (0.25C); the charger throttles below that on weak sun.
+  and the charger input, behind a reverse-polarity MOSFET.
 - **Load monitor:** a second INA226 (0x41, 0.1 Ω) between the battery and the
   Feather's VBAT pin. The awake window is over 99.8% of the device's charge,
   and this monitor is powered for all of it, so it measures the cost of each
@@ -48,7 +56,15 @@ because the charger pulls its input down regardless.
 ## Consequences
 
 - The charger burns the panel-to-cell voltage difference as heat inside the
-  case, which is negligible at ~120 mA.
+  case, about 0.2 W while charging and nothing once the cell is full.
+- A full cell leaves the panel at open circuit. On a cold, bright day that can
+  exceed the over-voltage threshold; the charger then stays off until the
+  panel warms below it, which costs nothing while the cell is full.
+- Status comes from ~CHG (IO5, low while charging, first cycle only) and ~PG
+  (IO6, low when the panel is up), read with the ESP32's internal pull-ups.
+  A full cell shows as PG low with CHG high.
+- The BQ24210 is a WSON-10 with hidden leads: JLCPCB places it, but it cannot
+  be inspected by eye or easily reworked.
 - Solar current is only sampled while awake, so panel output during deep sleep
   is invisible.
 - The two protection circuits in series trip at slightly different voltages;
