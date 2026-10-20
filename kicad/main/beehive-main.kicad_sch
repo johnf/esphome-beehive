@@ -9194,7 +9194,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:TSSOP-10_3x3mm_P0.5mm"
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
 			(at 96.52 88.9 0)
 			(hide yes)
 			(effects
@@ -9980,7 +9980,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SO:TSSOP-10_3x3mm_P0.5mm"
+		(property "Footprint" "Package_SO:MSOP-10_3x3mm_P0.5mm"
 			(at 312.42 88.9 0)
 			(hide yes)
 			(effects
@@ -13460,7 +13460,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Package_SON:WSON-10-1EP_2x3mm_P0.5mm_EP0.84x2.4mm_ThermalVias"
+		(property "Footprint" "Package_SON:WSON-10-1EP_2x3mm_P0.5mm_EP0.84x2.4mm"
 			(at 154.94 55.88 0)
 			(hide yes)
 			(effects
