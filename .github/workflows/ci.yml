@@ -57,6 +57,13 @@ jobs:
           -o erc.rpt kicad/${{ matrix.board }}/beehive-${{ matrix.board }}.kicad_sch
           || { cat erc.rpt; exit 1; }
 
+      - name: DRC
+        run: >
+          kicad-cli pcb drc --exit-code-violations --severity-error
+          --schematic-parity --refill-zones
+          -o drc.rpt kicad/${{ matrix.board }}/beehive-${{ matrix.board }}.kicad_pcb
+          || { cat drc.rpt; exit 1; }
+
       - name: Export schematic and BOM
         run: |
           kicad-cli sch export pdf -o beehive-${{ matrix.board }}.pdf kicad/${{ matrix.board }}/beehive-${{ matrix.board }}.kicad_sch
@@ -68,5 +75,6 @@ jobs:
           name: kicad-${{ matrix.board }}
           path: |
             erc.rpt
+            drc.rpt
             beehive-${{ matrix.board }}.pdf
             beehive-${{ matrix.board }}-bom.csv
