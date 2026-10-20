@@ -26,6 +26,7 @@ to detect bee colony health indicators.
 | fft_size | 256, 512, 1024, 2048, 4096 | 2048 |
 | frames | 1-32 | 4 |
 | bands.<name>.low/high | frequency | research defaults in bee_audio.h |
+| colony_prominence_threshold | dB | 3dB |
 | queenless_threshold | dB | 6dB |
 | queen_piping_threshold | dB | 10dB |
 | active_threshold | dB | -95dB |

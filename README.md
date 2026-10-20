@@ -650,6 +650,7 @@ tuning for your microphone placement, hive size and background noise:
 
 | Substitution | Default | Meaning |
 |--------------|---------|---------|
+| `audio_colony_prominence_threshold` | 3dB | Worker band less than this above the low-frequency band → `no_colony` |
 | `audio_active_threshold` | -95dB | Worker band above this → `active` |
 | `audio_normal_threshold` | -105dB | Baseline band above this → `normal`, below → `quiet` |
 | `audio_queenless_threshold` | 6dB | Both queenless bands this far above baseline → `queenless` |
@@ -726,6 +727,7 @@ The system classifies the hive into one of these states:
 | `queen_activity` | Queen piping detected (tooting or quacking) |
 | `queenless` | Elevated mid/high frequency bands indicating queenless colony |
 | `pre_swarm` | Elevated spectral centroid with high activity |
+| `no_colony` | No bee hum: the worker band isn't above the low-frequency background. Checked first |
 
 ## Power Consumption
 

@@ -27,6 +27,7 @@ CONF_FRAMES = "frames"
 CONF_BANDS = "bands"
 CONF_LOW = "low"
 CONF_HIGH = "high"
+CONF_COLONY_PROMINENCE_THRESHOLD = "colony_prominence_threshold"
 CONF_QUEENLESS_THRESHOLD = "queenless_threshold"
 CONF_QUEEN_PIPING_THRESHOLD = "queen_piping_threshold"
 CONF_ACTIVE_THRESHOLD = "active_threshold"
@@ -82,6 +83,7 @@ CONFIG_SCHEMA = cv.Schema(
         cv.Optional(CONF_BANDS, default={}): cv.Schema(
             {cv.Optional(key): BAND_SCHEMA for key in BANDS}
         ),
+        cv.Optional(CONF_COLONY_PROMINENCE_THRESHOLD, default="3dB"): cv.decibel,
         cv.Optional(CONF_QUEENLESS_THRESHOLD, default="6dB"): cv.decibel,
         cv.Optional(CONF_QUEEN_PIPING_THRESHOLD, default="10dB"): cv.decibel,
         cv.Optional(CONF_ACTIVE_THRESHOLD, default="-95dB"): cv.decibel,
@@ -141,6 +143,11 @@ async def to_code(config):
         if band_conf := config[CONF_BANDS].get(key):
             cg.add(var.set_band(band, band_conf[CONF_LOW], band_conf[CONF_HIGH]))
 
+    cg.add(
+        var.set_colony_prominence_threshold(
+            config[CONF_COLONY_PROMINENCE_THRESHOLD]
+        )
+    )
     cg.add(var.set_queenless_threshold(config[CONF_QUEENLESS_THRESHOLD]))
     cg.add(var.set_queen_piping_threshold(config[CONF_QUEEN_PIPING_THRESHOLD]))
     cg.add(var.set_active_threshold(config[CONF_ACTIVE_THRESHOLD]))

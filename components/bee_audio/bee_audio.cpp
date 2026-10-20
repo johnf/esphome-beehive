@@ -202,6 +202,8 @@ void BeeAudioComponent::dump_config() {
     ESP_LOGCONFIG(TAG, "  Band %s: %.0f-%.0f Hz", BAND_NAMES[b],
                   this->bands_[b].low_hz, this->bands_[b].high_hz);
   }
+  ESP_LOGCONFIG(TAG, "  Colony Prominence Threshold: %.1f dB",
+                this->colony_prominence_threshold_db_);
   ESP_LOGCONFIG(TAG, "  Queenless Threshold: %.1f dB",
                 this->queenless_threshold_db_);
   ESP_LOGCONFIG(TAG, "  Queen Piping Threshold: %.1f dB",
@@ -737,6 +739,14 @@ HiveState BeeAudioComponent::classify_hive_state_(float centroid) const {
            this->band_power_[BAND_QUEENLESS_MID],
            this->band_power_[BAND_QUEENLESS_HIGH], centroid);
 
+  // Without bees the spectrum falls off with frequency; a colony's hum lifts
+  // the worker band above the low-frequency background.
+  if (worker - this->band_power_[BAND_LOW_FREQ] <
+      this->colony_prominence_threshold_db_) {
+
+    return HiveState::NO_COLONY;
+  }
+
   if ((this->band_power_[BAND_QUEENLESS_MID] - baseline) >
           this->queenless_threshold_db_ &&
       (this->band_power_[BAND_QUEENLESS_HIGH] - baseline) >
@@ -789,6 +799,9 @@ const char *BeeAudioComponent::hive_state_to_string_(HiveState state) {
   case HiveState::PRE_SWARM:
 
     return "pre_swarm";
+  case HiveState::NO_COLONY:
+
+    return "no_colony";
   default:
 
     return "unknown";

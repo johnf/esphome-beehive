@@ -39,6 +39,7 @@ substitutions:
   # Audio analysis. Band levels are mean power spectral density in dB re
   # full-scale^2/Hz, independent of fft_size. See README "Audio Baseline".
   audio_frames: "4"
+  audio_colony_prominence_threshold: "3dB"
   audio_queenless_threshold: "6dB"
   audio_queen_piping_threshold: "10dB"
   audio_active_threshold: "-95dB"
@@ -118,6 +119,7 @@ bee_audio:
   fft_size: 2048
   # Number of consecutive FFT frames averaged per reading (~256ms each)
   frames: ${audio_frames}
+  colony_prominence_threshold: ${audio_colony_prominence_threshold}
   queenless_threshold: ${audio_queenless_threshold}
   queen_piping_threshold: ${audio_queen_piping_threshold}
   active_threshold: ${audio_active_threshold}

@@ -2,7 +2,8 @@
 Bee Audio Text Sensor Platform
 
 Exposes hive state classification as a text sensor.
-Possible states: quiet, normal, active, queenless, queen_activity, pre_swarm
+Possible states: quiet, normal, active, queenless, queen_activity, pre_swarm,
+no_colony
 """
 
 import esphome.codegen as cg

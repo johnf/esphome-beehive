@@ -46,7 +46,8 @@ enum class HiveState {
   ACTIVE,
   QUEEN_ACTIVITY,
   QUEENLESS,
-  PRE_SWARM
+  PRE_SWARM,
+  NO_COLONY
 };
 
 class BeeAudioComponent : public PollingComponent {
@@ -68,6 +69,9 @@ public:
   // Analysis configuration
   void set_band(Band band, float low_hz, float high_hz) {
     this->bands_[band] = {low_hz, high_hz};
+  }
+  void set_colony_prominence_threshold(float db) {
+    this->colony_prominence_threshold_db_ = db;
   }
   void set_queenless_threshold(float db) { this->queenless_threshold_db_ = db; }
   void set_queen_piping_threshold(float db) {
@@ -125,6 +129,7 @@ protected:
   FrequencyBand bands_[BAND_COUNT] = {
       DEFAULT_BANDS[0], DEFAULT_BANDS[1], DEFAULT_BANDS[2], DEFAULT_BANDS[3],
       DEFAULT_BANDS[4], DEFAULT_BANDS[5], DEFAULT_BANDS[6]};
+  float colony_prominence_threshold_db_{3.0f};
   float queenless_threshold_db_{6.0f};
   float queen_piping_threshold_db_{10.0f};
   float active_threshold_db_{-95.0f};
