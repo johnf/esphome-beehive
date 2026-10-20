@@ -78,8 +78,12 @@ beehive-monitor.yaml  # Main ESPHome package configuration
 example.yaml          # Device config used for local builds and CI
 dashboard.yaml        # Home Assistant dashboard (paste into raw config editor)
 case/                 # OpenSCAD enclosures and exported STLs
+docs/adr/             # Architecture decision records
 fritzing/             # Fritzing schematic
 ```
+
+Design rationale belongs in an ADR, not the README; the README covers building
+and using the monitor.
 
 ### Enclosure
 

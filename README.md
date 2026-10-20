@@ -40,25 +40,11 @@ temperature, and humidity monitoring.
 
 ## Power Architecture
 
-The battery is charged by the CN3065 solar charge controller. An INA226 sits
-high-side between the solar panel and the CN3065 solar input. The battery connects
-directly to the CN3065 battery terminal.
-
-The CN3065 output feeds the FeatherS3D's **VBAT pin**, so the board's own LDO
-regulates 3.3V. Feeding the 3.3V pin instead would leave LDO2 unpowered, as its
-input is the VBAT/USB node rather than the 3.3V rail.
-
-The FeatherS3D's onboard charger only has power while USB is plugged in, so in the
-field the CN3065 is the only charger. On USB, both chargers are 4.2V CC/CV parts and
-share the cell harmlessly, with the DW01+ PCM as a backstop.
-
-Battery voltage and state of charge come from the FeatherS3D's onboard MAX17048 fuel
-gauge (I2C 0x36), which sees the cell via the VBAT pin. It sits on the always-on
-LDO1 rail, so its ModelGauge state survives deep sleep.
-
-The FeatherS3D's **LDO2** (GPIO39) provides a switchable 3.3V rail that is automatically
-disabled during deep sleep, used to power-gate sensors that aren't needed during sleep.
-All sensors, including the I2C pull-ups on their breakouts, are on this rail.
+The CN3065 solar charger charges the battery, with an INA226 measuring the panel
+on the way in. The charger output feeds the FeatherS3D's **VBAT pin**, not 3V3.
+The Feather's MAX17048 fuel gauge reports battery voltage and state of charge,
+and its switchable **LDO2** rail (GPIO39) powers every sensor and turns them off
+in deep sleep. The reasoning is in [ADR 0003](docs/adr/0003-power-architecture.md).
 
 The INA226 address pins A0 and A1 are left unconnected. The CJMCU-226 module
 has 10 kΩ pull-downs on both, which gives address 0x40. Confirm this on your
@@ -74,37 +60,18 @@ leads.
 
 ### Solar Performance
 
-The CN3065 regulates its own input voltage. In direct sun it held the panel at
-4.77V for over an hour while the current drifted, well below the 6V maximum
-power point of a nominal 6V panel. Panel power is therefore capped near 0.8W no
-matter how much sun a 1W panel sees.
-
-That cap matters less than it looks. The CN3065 is a linear charger, so it
-passes current through roughly one-for-one and burns the voltage difference as
-heat. Charge current, not panel watts, is what fills the cell.
-
-Measured on a 110 x 60 mm 1W 6V polycrystalline panel in direct spring sun
-(Sydney, sun about 52° above the horizon, panel not aimed):
+A 1W 6V panel is ample: half an hour of direct sun covers a day's use. A healthy
+110 x 60 mm 1W panel in direct sun reads:
 
 | Quantity | Value |
 |----------|-------|
-| Panel voltage | 4.77V (clamped by the CN3065) |
+| Panel voltage | 4.77V (the charger holds it there) |
 | Panel current | 113-121 mA |
 | Panel power | 0.54-0.58W |
-| Fraction of nameplate | 55-58% |
 
-At ~113 mA against an average draw of ~2.3 mA, roughly half an hour of direct
-sun per day covers the device's entire daily consumption, and four good hours
-put in over eight times what it uses. A 1W panel is ample for this load.
-
-Siting buys far more than panel size. The same panel shaded and badly angled
-produced 5-50 mW, one to two orders of magnitude below its direct-sun output,
-and the battery fell 2.7% per day through it. If the battery is losing ground,
-move the panel before buying a bigger one.
-
-If you do want more margin, wire two panels in **parallel** to roughly double
-the current at the clamped voltage. Series gains nothing, because the charger
-regulates its input down regardless of what the panels could deliver.
+The same panel shaded and badly angled gives 5-50 mW, and the battery loses
+ground. Move the panel before buying a bigger one. For more margin, add a
+second panel in **parallel**; series gains nothing.
 
 ### Battery Specifications
 
@@ -204,9 +171,7 @@ by signal, not in T568A/B order, which puts SCL with WS and SCK with SD:
 | Brown | 6 | WS | Brown |
 | | 8 | SD | White/brown |
 
-Each clock shares its pair with a ground. WS and SD can share a pair because
-both change on the falling edge of SCK and SD is read on the rising edge. Keep
-the untwisted length at each connector under about 15 mm.
+Keep the untwisted length at each connector under about 15 mm.
 
 JST-XH is 2.5 mm pitch, which
 fits the 2.54 mm stripboard grid with a little lean on the 8-way socket and
@@ -271,9 +236,8 @@ platform. Place one cell at each corner and number them 1 to 4 clockwise.
 
 The jumpers on row 38 bridge pins 2-3, 5-6, 8-9 and 11-12, joining like
 colours round the platform (white 1-2, black 2-3, white 3-4, black 4-1) into a
-full Wheatstone bridge. Like must join like: in each cell the white and black
-halves change in opposite directions under load, so a white-to-black ring
-cancels in every bridge arm and the output barely moves. The four red wires
+full Wheatstone bridge. Like must join like, or the bridge cancels itself and
+the output barely moves. The four red wires
 land on row 38 under the NAU7802 screw terminal and run into it with short
 leads:
 
@@ -672,14 +636,6 @@ bee_audio:
       high: 280Hz
 ```
 
-### Audio Baseline
-
-The audio thresholds are set based on research values. You may need to adjust them in `components/bee_audio/bee_audio.cpp` based on:
-
-- Microphone placement within the hive
-- Hive size and colony population
-- Background noise levels
-
 ## Sensors
 
 ### Frequency Bands
@@ -872,6 +828,8 @@ CI runs the same two commands on every push and pull request.
 
 `setup-dev.sh` clones ESPHome, ESP-IDF and ESP-DSP into `cdeps/` so that
 `clangd` can resolve headers when editing the C++ component.
+
+Design decisions and their reasoning are recorded in [docs/adr/](docs/adr/).
 
 ### Releasing
 
