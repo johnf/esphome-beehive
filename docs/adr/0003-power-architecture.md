@@ -39,9 +39,11 @@ because the charger pulls its input down regardless.
   4.2 V CC/CV and share the cell harmlessly.
 - **Fuel gauge:** the Feather's MAX17048 (I2C 0x36) sees the cell through VBAT
   and sits on the always-on LDO1, so its ModelGauge state survives deep sleep.
-- **Sensor rail:** every sensor and the I2C pull-ups run from LDO2 (GPIO39),
-  which turns off in deep sleep. Anything powered elsewhere draws standby
-  current all night.
+- **Sensor rail:** every sensor runs from LDO2 (GPIO39), which turns off in
+  deep sleep. Anything powered elsewhere draws standby current all night.
+- **I2C pull-ups:** 3.3 kΩ to the Feather's always-on 3V3, beside its own
+  10 kΩ ones, so the 1-2 m hive cable has a strong enough pull-up. On LDO2
+  they would feed the sleeping sensor rail from the always-on bus.
 
 ## Consequences
 

@@ -17,6 +17,9 @@ case.
   3-6, 4-5, 7-8), so any straight patch lead twists each clock with a ground
   and the cable can run a metre or two. WS and SD can share a pair because
   both change on the falling edge of SCK and SD is sampled on the rising edge.
+  Each end drives its clocks or data through 33 Ω, and two SRV05-4 arrays per
+  board clamp every cable line for ESD. Their VP pin is left open so the
+  steering diodes cannot back-power the sensor rail while LDO2 is off.
 - **Load cells:** four 3-way pluggable screw terminals, CELL 1 to CELL 4, each
   taking one cell's red, white and black leads. The board joins the outer
   wires like to like round the platform (white 1-2, black 2-3, white 3-4,

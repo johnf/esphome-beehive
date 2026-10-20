@@ -4888,6 +4888,684 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Power_Protection:SRV05-4"
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "U"
+				(at -5.08 11.43 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Value" "SRV05-4"
+				(at 2.54 11.43 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
+				(at 17.78 -11.43 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" "http://www.onsemi.com/pub/Collateral/SRV05-4-D.PDF"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "ESD Protection Diodes with Low Clamping Voltage, SOT-23-6"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "ESD protection diodes"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "SOT?23*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "SRV05-4_0_0"
+				(rectangle
+					(start -5.715 6.477)
+					(end 5.715 -6.604)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -3.175 -6.604)
+						(xy -3.175 6.477)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.175 6.477)
+						(xy 3.175 -6.604)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SRV05-4_0_1"
+				(polyline
+					(pts
+						(xy -7.747 2.54)
+						(xy -3.175 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(rectangle
+					(start -7.62 10.16)
+					(end 7.62 -10.16)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+				(polyline
+					(pts
+						(xy -7.62 -2.54)
+						(xy -5.715 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center -5.715 -2.54)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy -5.08 5.08)
+						(xy -6.35 5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -5.08 3.81)
+						(xy -6.35 3.81)
+						(xy -5.715 5.08)
+						(xy -5.08 3.81)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -5.08 -3.81)
+						(xy -6.35 -3.81)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -5.08 -5.08)
+						(xy -6.35 -5.08)
+						(xy -5.715 -3.81)
+						(xy -5.08 -5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center -3.175 6.477)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center -3.175 2.54)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center -3.175 -6.604)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 5.08)
+						(xy -3.81 5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 3.81)
+						(xy -3.81 3.81)
+						(xy -3.175 5.08)
+						(xy -2.54 3.81)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 -3.81)
+						(xy -3.81 -3.81)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy -2.54 -5.08)
+						(xy -3.81 -5.08)
+						(xy -3.175 -3.81)
+						(xy -2.54 -5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 10.16)
+						(xy 0 -10.16)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 0 6.477)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 0 -6.604)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.635 0.889)
+						(xy -0.635 0.889)
+						(xy -0.635 0.635)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.635 -0.381)
+						(xy -0.635 -0.381)
+						(xy 0 0.889)
+						(xy 0.635 -0.381)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 3.175 6.477)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 3.175 -2.54)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 3.175 -6.604)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.81 5.08)
+						(xy 2.54 5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.81 3.81)
+						(xy 2.54 3.81)
+						(xy 3.175 5.08)
+						(xy 3.81 3.81)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.81 -3.81)
+						(xy 2.54 -3.81)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.81 -5.08)
+						(xy 2.54 -5.08)
+						(xy 3.175 -3.81)
+						(xy 3.81 -5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 5.715 2.54)
+					(radius 0.2794)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 6.35 5.08)
+						(xy 5.08 5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 6.35 3.81)
+						(xy 5.08 3.81)
+						(xy 5.715 5.08)
+						(xy 6.35 3.81)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 6.35 -3.81)
+						(xy 5.08 -3.81)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 6.35 -5.08)
+						(xy 5.08 -5.08)
+						(xy 5.715 -3.81)
+						(xy 6.35 -5.08)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 2.54)
+						(xy 5.715 2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 7.62 -2.54)
+						(xy 3.175 -2.54)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "SRV05-4_1_1"
+				(pin passive line
+					(at -12.7 2.54 0)
+					(length 5.08)
+					(name "IO1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -12.7 90)
+					(length 2.54)
+					(name "VN"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -12.7 -2.54 0)
+					(length 5.08)
+					(name "IO2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 12.7 2.54 180)
+					(length 5.08)
+					(name "IO3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 12.7 270)
+					(length 2.54)
+					(name "VP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 12.7 -2.54 180)
+					(length 5.08)
+					(name "IO4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 	)
 	(no_connect
 		(at 106.68 96.52)
@@ -4912,10 +5590,6 @@
 	(no_connect
 		(at 50.8 165.1)
 		(uuid "16aba066-932e-42dc-9ce0-64a90359ddcf")
-	)
-	(no_connect
-		(at 50.8 167.64)
-		(uuid "b716f9fb-fff2-4151-875a-d7dade94880f")
 	)
 	(no_connect
 		(at 50.8 170.18)
@@ -4980,6 +5654,22 @@
 	(no_connect
 		(at 91.44 195.58)
 		(uuid "509f5716-3511-42ab-87d8-a487bc0af4ca")
+	)
+	(no_connect
+		(at 175.26 213.36)
+		(uuid "d24e7e54-ee62-4e25-a35a-c1b2256c04e5")
+	)
+	(no_connect
+		(at 210.82 213.36)
+		(uuid "df90f4d8-e799-4979-b5d8-e732bebf0330")
+	)
+	(no_connect
+		(at 223.52 223.52)
+		(uuid "ac9e39a5-e412-48b8-87ad-025cc0ada61c")
+	)
+	(no_connect
+		(at 223.52 228.6)
+		(uuid "4afdc656-c73b-443c-827a-e8c65e62e6a0")
 	)
 	(wire
 		(pts
@@ -6094,6 +6784,69 @@
 		)
 		(uuid "2603df45-727f-4a54-8c58-d3b21b960fcf")
 	)
+	(wire
+		(pts
+			(xy 50.8 167.64)
+			(xy 53.34 167.64)
+		)
+		(uuid "03c2f91b-bc49-4f7e-83cb-03e0ec7d61fb")
+	)
+	(wire
+		(pts
+			(xy 162.56 223.52)
+			(xy 160.02 223.52)
+		)
+		(uuid "a5902bbf-a06d-4380-ac1d-afc64a02e35a")
+	)
+	(wire
+		(pts
+			(xy 162.56 228.6)
+			(xy 160.02 228.6)
+		)
+		(uuid "c6be467b-b47c-49fa-be04-b069a3acde85")
+	)
+	(wire
+		(pts
+			(xy 187.96 223.52)
+			(xy 190.5 223.52)
+		)
+		(uuid "16269c67-0bf3-466b-a282-0f3333eaad55")
+	)
+	(wire
+		(pts
+			(xy 187.96 228.6)
+			(xy 190.5 228.6)
+		)
+		(uuid "e343a0a3-d6c3-4b16-8525-186ecc44a52e")
+	)
+	(wire
+		(pts
+			(xy 198.12 223.52)
+			(xy 195.58 223.52)
+		)
+		(uuid "f0893798-c3c5-4d0c-bf23-6b64fd0c5be3")
+	)
+	(wire
+		(pts
+			(xy 198.12 228.6)
+			(xy 195.58 228.6)
+		)
+		(uuid "f42ceb67-539b-4058-af29-fa14948bf4b7")
+	)
+	(wire
+		(pts
+			(xy 175.26 238.76)
+			(xy 175.26 241.3)
+		)
+		(uuid "5778ffd9-6e2b-4888-8c96-c8182ec4ac47")
+	)
+	(wire
+		(pts
+			(xy 210.82 238.76)
+			(xy 210.82 241.3)
+		)
+		(uuid "37244ff0-6f5b-4f52-a017-72044869170b")
+	)
 	(text "FeatherS3D on female headers (Unexpected Maker pinout card)\nJ2, USB-end row: 1 RST, 2 3V3, 3 IO0, 4 GND, 5 IO17, 6 IO18, 7 IO14, 8 IO12,\n  9 IO6 (DONE), 10 IO5 (CHRG), 11 IO36, 12 IO35, 13 IO37, 14 IO44/RX, 15 IO43/TX, 16 LDO2 (+3V3)\nJ3, opposite row: 1 IO8/SDA, 2 IO9/SCL, 3 IO33, 4 IO38, 5 IO1 (WS), 6 IO3 (SCK),\n  7 IO7 (SD), 8 IO10, 9 IO11, 10 5V, 11 EN, 12 VBAT\nJ3 pin 1 sits opposite J2 pin 16; J3 pin 12 opposite J2 pin 5."
 		(at 25.4 220.98 0)
 		(effects
@@ -6473,26 +7226,6 @@
 			(justify left bottom)
 		)
 		(uuid "65d1b278-af4a-414f-b22e-302dca26670f")
-	)
-	(label "+3V3"
-		(at 147.32 151.13 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "2ed3b7f1-631d-42ce-89f8-14ad91aa9ef1")
-	)
-	(label "+3V3"
-		(at 157.48 151.13 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "f1047029-2a94-4edf-9e57-928bf401cce6")
 	)
 	(label "+3V3"
 		(at 172.72 151.13 0)
@@ -7694,6 +8427,126 @@
 		)
 		(uuid "e3cbfc04-c18d-42a8-a2a7-5045235b32ea")
 	)
+	(label "3V3_AON"
+		(at 147.32 151.13 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c3fbe840-e62d-42e8-9790-957d84e391c9")
+	)
+	(label "3V3_AON"
+		(at 157.48 151.13 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d6b377f5-5c10-4dc2-98d2-7e0f8cb16922")
+	)
+	(label "3V3_AON"
+		(at 53.34 167.64 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "6d7256a1-5ad3-476c-9b77-063ae93d191b")
+	)
+	(label "SDA"
+		(at 160.02 223.52 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "dcc22730-342d-464c-9c0f-d722249c0030")
+	)
+	(label "SCL"
+		(at 160.02 228.6 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "0b5ea9c6-81a1-4b64-a1ae-800c4581a766")
+	)
+	(label "WS"
+		(at 190.5 223.52 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "09a07bd3-1a1d-41e3-a084-55e1c2563943")
+	)
+	(label "SCK"
+		(at 190.5 228.6 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c63014c5-eb3d-475d-a84a-06e9e90449c1")
+	)
+	(label "SD"
+		(at 195.58 223.52 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "153d44aa-626d-4dc6-b12f-e4ebc9817472")
+	)
+	(label "+3V3"
+		(at 195.58 228.6 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "3c4641b8-5815-4e5e-b185-2557c758e765")
+	)
+	(label "GND"
+		(at 175.26 241.3 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "52b4ff39-42f1-40ed-be41-8eb5b69c6dc2")
+	)
+	(label "GND"
+		(at 210.82 241.3 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f22d5d47-4cbb-489b-8ade-4385fe65b9c9")
+	)
+  (text "Hive cable ESD: VP left open so the steering diodes\ncannot back-power +3V3 while LDO2 is off."
+    (at 160.02 248.92 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "096efb7b-018c-4eb4-ab95-936bcd17c9c2")
+  )
+  (text "I2C pull-ups on the Feather's always-on 3V3 so they\ncannot feed the sensor rail while LDO2 is off."
+    (at 139.7 142.24 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid "e887c23d-8d38-4c2d-a681-1a357eb91d4b")
+  )
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x02")
 		(at 30.48 53.34 0)
@@ -7746,15 +8599,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J4")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C395830"
 			(at 30.48 53.34 0)
 			(hide yes)
@@ -7772,7 +8616,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J4")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Transistor_FET:AO3401A")
 		(at 60.96 50.8 90)
@@ -7826,15 +8679,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "Q1")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C15127"
 			(at 60.96 50.8 0)
 			(hide yes)
@@ -7843,7 +8687,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "Q1")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 96.52 50.8 90)
@@ -7895,15 +8748,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R1")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C25334"
 			(at 96.52 50.8 0)
 			(hide yes)
@@ -7912,7 +8756,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R1")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Sensor_Energy:INA226")
 		(at 96.52 88.9 0)
@@ -7964,15 +8817,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "U1")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C49851"
 			(at 96.52 88.9 0)
 			(hide yes)
@@ -7990,7 +8834,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U1")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 116.84 76.2 0)
@@ -8044,15 +8897,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C12")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C14663"
 			(at 116.84 76.2 0)
 			(hide yes)
@@ -8061,7 +8905,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C12")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Battery_Management:CN3163")
 		(at 152.4 55.88 0)
@@ -8113,15 +8966,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "U2")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C559031"
 			(at 152.4 55.88 0)
 			(hide yes)
@@ -8130,7 +8974,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U2")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 127 66.04 0)
@@ -8148,7 +9001,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10u"
+		(property "Value" "10u 25V"
 			(at 127.635 68.58 0)
 			(effects
 				(font
@@ -8184,6 +9037,15 @@
 				)
 			)
 		)
+		(property "LCSC" "C96446"
+			(at 127 66.04 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "beehive-main"
 				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
@@ -8192,16 +9054,7 @@
 				)
 			)
 		)
-	
-		(property "LCSC" "C19702"
-			(at 127 66.04 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		))
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 182.88 66.04 0)
@@ -8255,15 +9108,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C2")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C19702"
 			(at 182.88 66.04 0)
 			(hide yes)
@@ -8272,7 +9116,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C2")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 172.72 76.2 0)
@@ -8324,15 +9177,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R2")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C22940"
 			(at 172.72 76.2 0)
 			(hide yes)
@@ -8341,7 +9185,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R2")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x02")
 		(at 208.28 50.8 0)
@@ -8359,7 +9212,7 @@
 				)
 			)
 		)
-		(property "Value" "BATTERY"
+		(property "Value" "BATTERY (1 -, 2 +)"
 			(at 208.28 55.88 0)
 			(effects
 				(font
@@ -8394,15 +9247,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J5")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C131337"
 			(at 208.28 50.8 0)
 			(hide yes)
@@ -8420,7 +9264,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J5")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Battery_Management:DW01A")
 		(at 238.76 88.9 0)
@@ -8472,15 +9325,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "U3")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C351410"
 			(at 238.76 88.9 0)
 			(hide yes)
@@ -8489,7 +9333,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U3")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "beehive:FS8205A")
 		(at 243.84 119.38 0)
@@ -8541,15 +9394,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "Q2")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C908265"
 			(at 243.84 119.38 0)
 			(hide yes)
@@ -8558,7 +9402,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "Q2")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 213.36 81.28 0)
@@ -8610,15 +9463,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R3")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C22775"
 			(at 213.36 81.28 0)
 			(hide yes)
@@ -8627,7 +9471,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R3")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 213.36 96.52 0)
@@ -8681,15 +9534,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C3")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C14663"
 			(at 213.36 96.52 0)
 			(hide yes)
@@ -8698,7 +9542,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C3")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 264.16 86.36 90)
@@ -8750,15 +9603,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R4")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C21190"
 			(at 264.16 86.36 0)
 			(hide yes)
@@ -8767,7 +9611,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R4")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 312.42 50.8 90)
@@ -8819,15 +9672,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R5")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C25334"
 			(at 312.42 50.8 0)
 			(hide yes)
@@ -8836,7 +9680,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R5")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Sensor_Energy:INA226")
 		(at 312.42 88.9 0)
@@ -8888,15 +9741,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "U4")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C49851"
 			(at 312.42 88.9 0)
 			(hide yes)
@@ -8914,7 +9758,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U4")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 332.74 76.2 0)
@@ -8968,15 +9821,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C13")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C14663"
 			(at 332.74 76.2 0)
 			(hide yes)
@@ -8985,7 +9829,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C13")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C_Polarized")
 		(at 360.68 60.96 0)
@@ -9039,15 +9892,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C4")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C335982"
 			(at 360.68 60.96 0)
 			(hide yes)
@@ -9065,7 +9909,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C4")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Connector:Conn_01x16_Socket")
 		(at 45.72 182.88 0)
@@ -9118,15 +9971,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J2")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C2905421"
 			(at 45.72 182.88 0)
 			(hide yes)
@@ -9144,7 +9988,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J2")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Connector:Conn_01x12_Socket")
 		(at 96.52 182.88 0)
@@ -9196,15 +10049,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J3")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C2905419"
 			(at 96.52 182.88 0)
 			(hide yes)
@@ -9222,7 +10066,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J3")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 147.32 157.48 0)
@@ -9274,15 +10127,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R8")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C22978"
 			(at 147.32 157.48 0)
 			(hide yes)
@@ -9291,7 +10135,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R8")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 157.48 157.48 0)
@@ -9343,15 +10196,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R9")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C22978"
 			(at 157.48 157.48 0)
 			(hide yes)
@@ -9360,7 +10204,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R9")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 152.4 187.96 90)
@@ -9412,15 +10265,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R10")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C23140"
 			(at 152.4 187.96 0)
 			(hide yes)
@@ -9429,7 +10273,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R10")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 152.4 198.12 90)
@@ -9481,15 +10334,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R11")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C23140"
 			(at 152.4 198.12 0)
 			(hide yes)
@@ -9498,7 +10342,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R11")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 172.72 157.48 0)
@@ -9552,15 +10405,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C14")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C19702"
 			(at 172.72 157.48 0)
 			(hide yes)
@@ -9569,7 +10413,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C14")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Connector:RJ45_Shielded")
 		(at 205.74 187.96 0)
@@ -9624,15 +10477,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J1")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C464586"
 			(at 205.74 187.96 0)
 			(hide yes)
@@ -9650,7 +10494,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J1")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "beehive:NAU7802")
 		(at 330.2 200.66 0)
@@ -9702,15 +10555,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "U5")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C2614351"
 			(at 330.2 200.66 0)
 			(hide yes)
@@ -9728,7 +10572,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U5")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 307.34 167.64 0)
@@ -9782,15 +10635,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C5")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C15849"
 			(at 307.34 167.64 0)
 			(hide yes)
@@ -9799,7 +10643,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C5")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 355.6 167.64 0)
@@ -9853,15 +10706,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C6")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C15849"
 			(at 355.6 167.64 0)
 			(hide yes)
@@ -9870,7 +10714,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C6")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 299.72 231.14 0)
@@ -9924,15 +10777,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C8")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C14663"
 			(at 299.72 231.14 0)
 			(hide yes)
@@ -9941,7 +10785,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C8")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 287.02 167.64 0)
@@ -9995,15 +10848,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C9")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C14663"
 			(at 287.02 167.64 0)
 			(hide yes)
@@ -10012,7 +10856,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C9")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 284.48 198.12 90)
@@ -10064,15 +10917,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R6")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C23182"
 			(at 284.48 198.12 0)
 			(hide yes)
@@ -10081,7 +10925,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R6")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:R")
 		(at 284.48 208.28 90)
@@ -10133,15 +10986,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "R7")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C23182"
 			(at 284.48 208.28 0)
 			(hide yes)
@@ -10150,7 +10994,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "R7")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 297.18 203.2 0)
@@ -10204,15 +11057,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C10")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C14663"
 			(at 297.18 203.2 0)
 			(hide yes)
@@ -10221,7 +11065,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C10")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Device:C")
 		(at 358.14 231.14 0)
@@ -10275,15 +11128,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "C11")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C1664"
 			(at 358.14 231.14 0)
 			(hide yes)
@@ -10292,7 +11136,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "C11")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x03")
 		(at 241.3 162.56 0)
@@ -10345,15 +11198,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J6")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C430551"
 			(at 241.3 162.56 0)
 			(hide yes)
@@ -10371,7 +11215,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J6")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x03")
 		(at 241.3 182.88 0)
@@ -10424,15 +11277,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J7")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C430551"
 			(at 241.3 182.88 0)
 			(hide yes)
@@ -10450,7 +11294,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J7")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x03")
 		(at 241.3 203.2 0)
@@ -10503,15 +11356,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J8")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C430551"
 			(at 241.3 203.2 0)
 			(hide yes)
@@ -10529,7 +11373,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J8")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Connector:Screw_Terminal_01x03")
 		(at 241.3 223.52 0)
@@ -10582,15 +11435,6 @@
 				)
 			)
 		)
-		(instances
-			(project "beehive-main"
-				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
-					(reference "J9")
-					(unit 1)
-				)
-			)
-		)
-	
 		(property "LCSC" "C430551"
 			(at 241.3 223.52 0)
 			(hide yes)
@@ -10608,7 +11452,16 @@
 					(size 1.27 1.27)
 				)
 			)
-		))
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "J9")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(symbol
 		(lib_id "Mechanical:MountingHole")
 		(at 40.64 259.08 0)
@@ -12175,4 +13028,146 @@
 			)
 		)
 	)
+	(symbol
+		(lib_id "Power_Protection:SRV05-4")
+		(at 175.26 226.06 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "202000c6-ef8d-4ad0-9cd3-81f42a87e35b")
+		(property "Reference" "U6"
+			(at 170.18 214.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SRV05-4"
+			(at 177.8 214.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
+			(at 175.26 226.06 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://www.onsemi.com/pub/Collateral/SRV05-4-D.PDF"
+			(at 175.26 226.06 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "ESD Protection Diodes with Low Clamping Voltage, SOT-23-6"
+			(at 175.26 226.06 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U6")
+					(unit 1)
+				)
+			)
+		)
+	
+		(property "LCSC" "C558418"
+			(at 175.26 226.06 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		))
+	(symbol
+		(lib_id "Power_Protection:SRV05-4")
+		(at 210.82 226.06 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f38a1b44-c983-4986-8680-20129650e894")
+		(property "Reference" "U7"
+			(at 205.74 214.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "SRV05-4"
+			(at 213.36 214.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
+			(at 210.82 226.06 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" "http://www.onsemi.com/pub/Collateral/SRV05-4-D.PDF"
+			(at 210.82 226.06 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "ESD Protection Diodes with Low Clamping Voltage, SOT-23-6"
+			(at 210.82 226.06 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "beehive-main"
+				(path "/b28aead9-338e-4432-8e1f-dcfd3aef420b"
+					(reference "U7")
+					(unit 1)
+				)
+			)
+		)
+	
+		(property "LCSC" "C558418"
+			(at 210.82 226.06 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		))
 )
