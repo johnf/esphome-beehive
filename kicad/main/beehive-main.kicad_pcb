@@ -83,7 +83,6 @@
 		)
 		(capping no)
 		(filling no)
-		(zone_defaults)
 		(pcbplotparams
 			(layerselection 0x00000000_00000000_55555555_5755f5ff)
 			(plot_on_all_layers_selection 0x00000000_00000000_00000000_00000000)
@@ -128,7 +127,7 @@
 		(descr "Resistor SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R5"
-			(at 0 -1.83 0)
+			(at -3.288691 0 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "464f188c-dcaf-4ce9-bbdb-cc9d33b2ce51")
@@ -282,6 +281,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "629e077d-9396-45c9-baff-1f6e2951eb35")
 			(effects
 				(font
@@ -291,16 +291,17 @@
 			)
 		)
 		(property "Value" "DRDY"
-			(at 0 1.75 0)
+			(at 0 -0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "8f2551e9-6145-4284-9116-803c784f9431")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -381,6 +382,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "66b15398-a39a-46bb-9c1b-20a08fb0a5fb")
 			(effects
 				(font
@@ -390,16 +392,17 @@
 			)
 		)
 		(property "Value" "AVDD"
-			(at 0 1.75 0)
+			(at 0 0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "b0544dd4-9298-46c7-bcb3-8055e1635f45")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -480,6 +483,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "156fa508-41ce-467f-8d93-e1ed5e3577bf")
 			(effects
 				(font
@@ -489,16 +493,17 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 0 1.75 0)
+			(at -0.000001 0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "20f67a11-9ae6-4bbb-8490-198723cf74db")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -579,6 +584,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f1f1c3dc-1c92-487d-8d8a-c629135070f7")
 			(effects
 				(font
@@ -588,16 +594,17 @@
 			)
 		)
 		(property "Value" "SCK"
-			(at 0 1.75 0)
+			(at 0 -0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "b0353a02-e262-4236-b22d-812e01e833a7")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -829,6 +836,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "724e70d8-969d-4872-8da4-4b6261dcbf01")
 			(effects
 				(font
@@ -838,16 +846,17 @@
 			)
 		)
 		(property "Value" "BAT-"
-			(at 0 1.75 0)
+			(at -0.000001 0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "72eeeb5b-5c6a-4b67-9e47-067e067aaef8")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -928,6 +937,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "f8067234-b6e6-47a1-8dbd-1ab116f1b16c")
 			(effects
 				(font
@@ -937,16 +947,17 @@
 			)
 		)
 		(property "Value" "SD"
-			(at 0 1.75 0)
+			(at 0 0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "6f6d337e-3df1-4cb0-a40d-31576208074a")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -1027,6 +1038,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8f81d30f-597e-4f14-8740-7d6e96b017d2")
 			(effects
 				(font
@@ -1036,16 +1048,17 @@
 			)
 		)
 		(property "Value" "PG"
-			(at 0 1.75 0)
+			(at -0.000001 0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "22c022f4-c7e3-4d89-8a55-2f5b4a3d53b5")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -1123,7 +1136,7 @@
 		(descr "Generic Phoenix Contact connector footprint for: MC_1,5/3-G-3.5; number of pins: 03; pin pitch: 3.50mm; Angled || order number: 1844223 8A 160V")
 		(tags "phoenix_contact connector MC_01x03_G_3.5mm")
 		(property "Reference" "J7"
-			(at 3.5 -3 90)
+			(at 3.1 -3.754644 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "67f040cb-855b-4744-a9e1-93a17091cd48")
@@ -1547,7 +1560,7 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "C6"
-			(at 0 -1.43 90)
+			(at 2.229375 0 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "035e6056-fa6d-4c73-bef2-4c6a135684ea")
@@ -1698,7 +1711,7 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "C12"
-			(at 0 -1.430001 0)
+			(at -2.964881 0 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "aaf8e45a-6440-42d8-9e63-3a8e292684de")
@@ -1852,6 +1865,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "17ab5eef-cc8e-4a6a-bceb-3d257fb9beef")
 			(effects
 				(font
@@ -1861,16 +1875,17 @@
 			)
 		)
 		(property "Value" "BAT+"
-			(at 0 1.75 0)
+			(at 0 -0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "fffbf528-9b2d-4283-afde-1445ba3f8d6e")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -1951,6 +1966,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3d58a618-aa14-453f-a08e-b35d3fee18e4")
 			(effects
 				(font
@@ -1960,16 +1976,17 @@
 			)
 		)
 		(property "Value" "SCL"
-			(at 0 1.75 0)
+			(at 0 -0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "91a311d4-9522-4ffc-95aa-f015c79fb00e")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -2201,6 +2218,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "c18f35d1-ac2a-44c3-abc0-ddd4fd77a23b")
 			(effects
 				(font
@@ -2210,16 +2228,17 @@
 			)
 		)
 		(property "Value" "SOLAR"
-			(at 0 1.75 0)
+			(at 0 0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "73157921-449e-40ef-8f95-7f449122eb09")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -2297,7 +2316,7 @@
 		(descr "SOT, 6 Pin (JEDEC MO-178 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=MO-178)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "U3"
-			(at 0 -2.4 0)
+			(at -3.0875 -0.14 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "6986d26f-37b7-4ebe-bfe6-78dec3658dcd")
@@ -2645,6 +2664,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "54634b68-dc91-4663-89e5-cb4ee7e817b5")
 			(effects
 				(font
@@ -2654,16 +2674,17 @@
 			)
 		)
 		(property "Value" "VBAT_F"
-			(at 0 1.75 0)
+			(at 0 -0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "8bd19961-9c88-4ffd-8c10-885e21047d52")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -2744,6 +2765,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "d6ae2661-a051-4534-805e-75e711aadcc7")
 			(effects
 				(font
@@ -2753,16 +2775,17 @@
 			)
 		)
 		(property "Value" "CHG_IN"
-			(at 0 1.75 0)
+			(at 0 -0.550001 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "53ac735b-8e98-4634-b2ea-ce77d65cf5de")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -2840,7 +2863,7 @@
 		(descr "Mounting Hole 3.2mm, M3, no annular, generated by kicad-footprint-generator mountinghole.py")
 		(tags "mountinghole M3")
 		(property "Reference" "H3"
-			(at 0 -4.15 0)
+			(at 0 -2.604375 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "78a4774b-23d5-490a-a830-29a6f970ce25")
@@ -2954,6 +2977,7 @@
 			(at 0 -1.43 90)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "bc015972-5787-4b7d-b6a1-262c56eb2b4d")
 			(effects
 				(font
@@ -3213,7 +3237,7 @@
 		(descr "SMD capacitor, aluminum electrolytic, Nichicon, 6.3x7.7mm")
 		(tags "capacitor electrolytic")
 		(property "Reference" "C4"
-			(at 0 -4.35 0)
+			(at 5.71369 0 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "d5eeca39-8cfa-4070-ab29-e40e07eba1e5")
@@ -3653,7 +3677,7 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "C9"
-			(at 0 -1.43 90)
+			(at -0.4 -1.783691 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "f6448517-ca54-4320-91fc-e47e4ce6eb38")
@@ -3807,6 +3831,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "8d188ce7-51aa-4d91-92e8-982b1d0172bb")
 			(effects
 				(font
@@ -3816,16 +3841,17 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 0 1.75 0)
+			(at 0 -0.550001 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "b1b1db79-a9da-4864-a222-c81a1de53d7e")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -4208,6 +4234,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "3b875ceb-f939-44ab-8609-b3892f0b4d4a")
 			(effects
 				(font
@@ -4217,16 +4244,17 @@
 			)
 		)
 		(property "Value" "WS"
-			(at 0 1.75 0)
+			(at -0.000001 0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "b8db8c75-794b-4a76-93fd-bf92d79b9c12")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -4304,7 +4332,7 @@
 		(descr "MSOP, 10 Pin (JEDEC MO-187 variation BA, 0.85mm body thickness, https://www.jedec.org/system/files/docs/mo-187F.pdf)")
 		(tags "MSOP SO TSSOP-10_3x3mm_P0.5mm")
 		(property "Reference" "U1"
-			(at 0 -2.45 0)
+			(at -4.1375 -0.08 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "4c6d0d58-e036-47cb-9269-7ae9da571c22")
@@ -4832,7 +4860,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R12"
-			(at 0 -1.43 0)
+			(at 0 1.536875 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "edf6a416-14dd-4d3c-aa90-92743bf0ae3c")
@@ -4983,7 +5011,7 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "C11"
-			(at 0 -1.43 90)
+			(at 2.229375 0 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "f00be256-dcec-43ab-8c6e-b7162eaf4919")
@@ -5134,7 +5162,7 @@
 		(descr "MSOP, 10 Pin (JEDEC MO-187 variation BA, 0.85mm body thickness, https://www.jedec.org/system/files/docs/mo-187F.pdf)")
 		(tags "MSOP SO TSSOP-10_3x3mm_P0.5mm")
 		(property "Reference" "U4"
-			(at 0 -2.45 0)
+			(at -3.854375 -0.08 90)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "2e0b7fbe-67c9-4afa-9a58-2f5db3a274a5")
@@ -5511,7 +5539,7 @@
 		(descr "Capacitor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 76, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "capacitor")
 		(property "Reference" "C13"
-			(at 0 -1.430001 0)
+			(at -2.964881 0 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "dc998c45-dd90-4801-928f-77b038cd111f")
@@ -5773,7 +5801,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R9"
-			(at 0 -1.43 0)
+			(at 0 1.536875 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "104503e4-a143-4faa-bfd2-b3a0b49ad2f0")
@@ -8658,7 +8686,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R7"
-			(at 0 -1.43 0)
+			(at 1.2 -1.536876 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "11334b46-a402-4cc1-9d27-b91feb93923c")
@@ -8809,7 +8837,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R4"
-			(at 0 -1.43 90)
+			(at 0 1.79619 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "95c252c8-3ba5-4348-b51b-e22b4a8e3b40")
@@ -8960,7 +8988,7 @@
 		(descr "Resistor SMD 0603 (1608 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R10"
-			(at 0 -1.43 0)
+			(at 0 1.536875 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "6968e2e3-cc2e-43ac-a517-ac6d300f260c")
@@ -9111,7 +9139,7 @@
 		(descr "Resistor SMD 1206 (3216 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf)")
 		(tags "resistor")
 		(property "Reference" "R1"
-			(at 0 -1.83 0)
+			(at -3.288691 0 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "3ec096ba-9b81-4f95-820b-7f3a58913f83")
@@ -9960,7 +9988,7 @@
 		(descr "SOT, 6 Pin (JEDEC MO-178 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=MO-178)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "Q2"
-			(at 0 -2.4 0)
+			(at 3.087499 -0.14 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "96918a07-2938-4b02-8ac6-b60c51d5c325")
@@ -10653,6 +10681,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "250a8462-c253-4261-8db2-fbd78202e1ce")
 			(effects
 				(font
@@ -10662,16 +10691,17 @@
 			)
 		)
 		(property "Value" "SDA"
-			(at 0 1.75 0)
+			(at 0 0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "c84c3531-61b3-4866-9f6f-938b90e3c6ee")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
@@ -10749,7 +10779,7 @@
 		(descr "SOT, 3 Pin (JEDEC TO-236 Var AB https://www.jedec.org/document_search?search_api_views_fulltext=TO-236)")
 		(tags "SOT TO_SOT_SMD")
 		(property "Reference" "Q1"
-			(at 0 -2.4 0)
+			(at 2.962499 0 0)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(uuid "6887c7d3-eb14-495b-82a2-4cc4580edf73")
@@ -12074,6 +12104,7 @@
 			(at 0 -1.648 0)
 			(unlocked yes)
 			(layer "F.SilkS")
+			(hide yes)
 			(uuid "5949b1df-f882-4e99-8f66-bf00209c2db5")
 			(effects
 				(font
@@ -12083,16 +12114,17 @@
 			)
 		)
 		(property "Value" "CHG"
-			(at 0 1.75 0)
+			(at 0 -0.55 0)
 			(unlocked yes)
-			(layer "F.SilkS")
-			(hide yes)
+			(layer "B.SilkS")
 			(uuid "ba8c0c49-fecc-413e-a16f-008bd2ecac16")
 			(effects
 				(font
-					(size 1 1)
+					(size 0.8 0.6)
 					(line_spacing 0)
+					(thickness 0.12)
 				)
+				(justify mirror)
 			)
 		)
 		(property "Datasheet" ""
