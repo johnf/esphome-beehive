@@ -70,7 +70,32 @@
         }
       },
       "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "lib_footprint_mismatch|107920000|126417500|d1ea6ca2-f480-4d3b-86c2-3597a421d9db|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "lib_footprint_mismatch|119342500|128000000|cd4daf80-91e5-40c7-a39d-087517dc5bd5|00000000-0000-0000-0000-000000000000",
+          ""
+        ],
+        [
+          "starved_thermal|103862500|120000000|76470d72-dd03-4890-b59b-574bce38e867|cd0b04a0-ce30-42af-9a0e-e351e0230fb0|F.Cu",
+          ""
+        ],
+        [
+          "starved_thermal|107516000|109980000|76470d72-dd03-4890-b59b-574bce38e867|7280388b-38c0-45fa-8397-a65ef20f6178|F.Cu",
+          ""
+        ],
+        [
+          "starved_thermal|107516000|109980000|c40d27c3-4906-4059-b665-067f0c2c577e|7280388b-38c0-45fa-8397-a65ef20f6178|B.Cu",
+          ""
+        ],
+        [
+          "starved_thermal|111580000|109980000|76470d72-dd03-4890-b59b-574bce38e867|396ba5bc-0caf-44a0-be93-6745ba51bf5a|F.Cu",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
