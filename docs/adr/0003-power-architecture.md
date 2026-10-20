@@ -17,8 +17,9 @@ because the charger pulls its input down regardless.
 
 ## Decision
 
-- **Charger:** CN3165, the CN3065's successor from the same maker, which also
-  throttles its current to hold up a weak panel. An MPPT charger (CN3791) was
+- **Charger:** CN3163, from the CN3065's maker, which also throttles its
+  current to hold up a weak panel. Its ESOP-8 leads can be inspected and
+  reworked, and KiCad ships its symbol and footprint. An MPPT charger (CN3791) was
   rejected: perhaps 10-20% more current for three times the board area and an
   inductor, MOSFET, diode and sense resistor.
 - **Solar monitor:** INA226 high-side between the panel and the charger input,
