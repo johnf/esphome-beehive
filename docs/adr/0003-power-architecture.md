@@ -22,8 +22,14 @@ because the charger pulls its input down regardless.
   reworked, and KiCad ships its symbol and footprint. An MPPT charger (CN3791) was
   rejected: perhaps 10-20% more current for three times the board area and an
   inductor, MOSFET, diode and sense resistor.
-- **Solar monitor:** INA226 high-side between the panel and the charger input,
-  behind a reverse-polarity MOSFET.
+- **Solar monitor:** INA226 (0x40, 0.1 Ω shunt) high-side between the panel
+  and the charger input, behind a reverse-polarity MOSFET. The charge current
+  is set to 500 mA (0.25C); the charger throttles below that on weak sun.
+- **Load monitor:** a second INA226 (0x41, 0.1 Ω) between the battery and the
+  Feather's VBAT pin. The awake window is over 99.8% of the device's charge,
+  and this monitor is powered for all of it, so it measures the cost of each
+  wake. Battery-side monitoring was rejected: it is unpowered in deep sleep
+  and the fuel gauge already reports state of charge.
 - **Protection:** DW01A and FS8205A on the main board between the cell and the
   load, in addition to the cell's own protection board, so a replacement cell
   without one is still covered.
