@@ -20,8 +20,10 @@ rail, the MAX17048 fuel gauge and the battery path.
   brood box, joined by a cable (ADR 0004). The hive board holds only the
   SHT40, the microphone, its connector and decoupling.
 - Both boards are as small as sensible; the case is redesigned around them.
-- Four layers, with a solid ground plane for the NAU7802 and a forgiving first
-  layout, provided the quote is no more than about US$20 above two layers.
+- Two layers, with the bottom kept as an almost unbroken ground plane under
+  the NAU7802. Four layers were wanted for a forgiving first layout if they cost
+  under about US$20 more, but five 72 x 56 mm boards quoted at US$74 against
+  US$4.
 - The first revision is the JLCPCB minimum order, with test pads on every
   power rail and on the I2C and I2S lines.
 - Firmware is not kept compatible with the stripboard units. Pins, addresses
