@@ -79,7 +79,22 @@ example.yaml          # Device config used for local builds and CI
 dashboard.yaml        # Home Assistant dashboard (paste into raw config editor)
 case/                 # OpenSCAD enclosures and exported STLs
 docs/adr/             # Architecture decision records
-fritzing/             # Fritzing schematic
+fritzing/             # Fritzing schematic (stripboard build, being retired)
+kicad/
+  main/               # Main board project (beehive-main)
+  hive/               # Hive board project (beehive-hive)
+  lib/                # Shared symbols, footprints and 3D models
+```
+
+### KiCad
+
+Edit KiCad files only through the Konnect MCP tools, never as text. Both
+projects reference `kicad/lib/` via `${KIPRJMOD}/../lib/`. Every part carries
+an `LCSC` field with its JLCPCB part number. CI runs ERC and exports the
+schematic PDF and BOM for each board:
+
+```bash
+kicad-cli sch erc --exit-code-violations --severity-all kicad/main/beehive-main.kicad_sch
 ```
 
 Design rationale belongs in an ADR, not the README; the README covers building

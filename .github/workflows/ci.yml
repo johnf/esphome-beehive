@@ -39,3 +39,34 @@ jobs:
 
       - name: Compile firmware
         run: esphome compile example.yaml
+
+  kicad:
+    runs-on: ubuntu-latest
+    container:
+      image: kicad/kicad:10.0.6
+      options: --user root
+    strategy:
+      matrix:
+        board: [main, hive]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ERC
+        run: >
+          kicad-cli sch erc --exit-code-violations --severity-all
+          -o erc.rpt kicad/${{ matrix.board }}/beehive-${{ matrix.board }}.kicad_sch
+          || { cat erc.rpt; exit 1; }
+
+      - name: Export schematic and BOM
+        run: |
+          kicad-cli sch export pdf -o beehive-${{ matrix.board }}.pdf kicad/${{ matrix.board }}/beehive-${{ matrix.board }}.kicad_sch
+          kicad-cli sch export bom -o beehive-${{ matrix.board }}-bom.csv kicad/${{ matrix.board }}/beehive-${{ matrix.board }}.kicad_sch
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kicad-${{ matrix.board }}
+          path: |
+            erc.rpt
+            beehive-${{ matrix.board }}.pdf
+            beehive-${{ matrix.board }}-bom.csv
