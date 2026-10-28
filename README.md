@@ -759,6 +759,33 @@ power views. Create a new dashboard from scratch, open **Edit dashboard → Raw
 configuration editor**, and paste the file in. Entity IDs assume the device is
 named `Beehive Monitor`; replace `beehive_monitor_` if yours differs.
 
+### Battery days remaining
+
+The power view's "Days until flat" tile needs two helpers (Settings → Devices &
+services → Helpers → Create helper):
+
+1. **Statistics**, named `Beehive Monitor Battery Drain Rate`, on
+   `sensor.beehive_monitor_battery_level`. Characteristic: *change per second*;
+   sampling size 3000; max age 7 days; keep last sample on; precision 8.
+2. **Template → sensor**, named `Beehive Monitor Battery Days Remaining`. Unit
+   `d`, device class *duration*, state class *measurement*, device *Beehive
+   Monitor*. State:
+
+   ```jinja
+   {% set rate = states('sensor.beehive_monitor_battery_drain_rate') | float %}
+   {{ (states('sensor.beehive_monitor_battery_level') | float / (-rate * 86400)) | round(1) if rate < 0 else none }}
+   ```
+
+   Availability (under advanced options):
+
+   ```jinja
+   {{ has_value('sensor.beehive_monitor_battery_drain_rate') and has_value('sensor.beehive_monitor_battery_level') }}
+   ```
+
+The estimate is a straight line through the last week, which averages out the
+day/night solar cycle. It reads unknown while the battery is holding or gaining
+charge, and lags a week behind changes in the weather.
+
 Example automations:
 
 ```yaml

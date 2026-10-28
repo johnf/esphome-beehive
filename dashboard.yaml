@@ -6,6 +6,7 @@
 #
 # Entity IDs assume the device is named "Beehive Monitor" as in example.yaml.
 # If yours differs, replace beehive_monitor_ with your device's prefix.
+# The battery days remaining tile needs the helpers described in the README.
 
 views:
 - title: Overview
@@ -282,6 +283,15 @@ views:
       state_content:
       - state
       - last_changed
+    - type: tile
+      entity: sensor.beehive_monitor_battery_days_remaining
+      name: Days until flat
+      icon: mdi:battery-clock
+      grid_options:
+        columns: 12
+      features:
+      - type: trend-graph
+        hours_to_show: 168
     - type: history-graph
       title: Last 3 days
       hours_to_show: 72
