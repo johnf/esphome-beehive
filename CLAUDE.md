@@ -91,13 +91,13 @@ kicad/
 Edit KiCad files only through the Konnect MCP tools, never as text. Both
 projects reference `kicad/lib/` via `${KIPRJMOD}/../lib/`. Every part carries
 an `LCSC` field with its JLCPCB part number. CI runs ERC and DRC and exports the
-schematic PDF and BOM for each board. DRC fails on errors only and honours
+schematic PDF and BOM for each board. DRC fails on any finding and honours
 the exclusions saved in each `.kicad_pro` (exclude benign findings in the GUI
 DRC dialog):
 
 ```bash
 kicad-cli sch erc --exit-code-violations --severity-all kicad/main/beehive-main.kicad_sch
-kicad-cli pcb drc --exit-code-violations --severity-error --schematic-parity --refill-zones kicad/main/beehive-main.kicad_pcb
+kicad-cli pcb drc --exit-code-violations --severity-error --severity-warning --schematic-parity --refill-zones kicad/main/beehive-main.kicad_pcb
 ```
 
 Design rationale belongs in an ADR, not the README; the README covers building

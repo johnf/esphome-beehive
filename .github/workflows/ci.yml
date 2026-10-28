@@ -59,7 +59,7 @@ jobs:
 
       - name: DRC
         run: >
-          kicad-cli pcb drc --exit-code-violations --severity-error
+          kicad-cli pcb drc --exit-code-violations --severity-error --severity-warning
           --schematic-parity --refill-zones
           -o drc.rpt kicad/${{ matrix.board }}/beehive-${{ matrix.board }}.kicad_pcb
           || { cat drc.rpt; exit 1; }
